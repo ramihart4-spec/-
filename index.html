@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>مجموعة غرزالدين - نظام الفروع والأقسام</title>
+<title>مجموعة غرزالدين - نظام إدارة متكامل</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="icon" id="dynamicFavicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛍️%3C/text%3E%3C/svg%3E">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -50,9 +50,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .sec-title{font-size:20px;font-weight:800}
 .filter-bar{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
 .filter-select{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 12px;color:var(--text);font-family:inherit;flex:1;min-width:120px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
-.chip{padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
-.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.branch-buttons,.dept-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.branch-btn,.dept-btn{padding:8px 16px;border-radius:30px;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;font-weight:700}
+.branch-btn.active,.dept-btn.active{background:var(--accent);color:#fff}
 .search-box{margin-bottom:16px}
 .search-box input{width:100%;padding:10px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;color:var(--text)}
 .pg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
@@ -88,7 +88,15 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .mini-table{width:100%;border-collapse:collapse}
 .mini-table th,.mini-table td{padding:10px;text-align:right;border-bottom:1px solid var(--border);font-size:13px}
 .mini-table th{background:var(--bg3)}
-.report-actions{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1000;visibility:hidden;opacity:0;transition:all 0.3s}
+.modal.active{visibility:visible;opacity:1}
+.modal-content{background:var(--card2);border-radius:24px;padding:24px;width:90%;max-width:500px;max-height:90vh;overflow-y:auto}
+.modal-content h3{margin-bottom:20px}
+.modal-content .fg{margin-bottom:15px}
+.modal-content .fg label{display:block;font-size:13px;margin-bottom:5px}
+.modal-content input,.modal-content select{width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text)}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions button{flex:1}
 </style>
 </head>
 <body>
@@ -143,6 +151,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
     <div class="panel" id="pInventory"></div>
     <div class="panel" id="pReports"></div>
     <div class="panel" id="pEmployees"></div>
+    <div class="panel" id="pSettings"></div>
   </div>
   <div class="bottom-nav">
     <button class="bn-item active" data-panel="pStore">🏠 الرئيسية</button>
@@ -150,43 +159,44 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
     <button class="bn-item" data-panel="pInventory">📦 المخزون</button>
     <button class="bn-item" data-panel="pReports">📊 التقارير</button>
     <button class="bn-item" data-panel="pEmployees">👥 الموظفون</button>
+    <button class="bn-item" data-panel="pSettings">⚙️ إعدادات</button>
   </div>
 </div>
 
 <script>
 // ------------------- البيانات الأساسية -------------------
-const branches = [
-  { id: 'north', name: 'فرع الشمال' },
-  { id: 'central', name: 'فرع الوسط' },
-  { id: 'south', name: 'فرع الجنوب' }
+let branches = JSON.parse(localStorage.getItem('branches')) || [
+  { id: 'north', name: 'فرع الشمال', managerUsername: 'north' },
+  { id: 'central', name: 'فرع الوسط', managerUsername: 'central' },
+  { id: 'south', name: 'فرع الجنوب', managerUsername: 'south' }
+];
+let categories = JSON.parse(localStorage.getItem('categories')) || [
+  'مواد غذائية', 'ملابس', 'أحذية', 'ميك أب', 'عطور', 'ألعاب', 'أدوات منزلية'
 ];
 
-// الأقسام المطلوبة
-const categories = ['مواد غذائية', 'ملابس', 'أحذية', 'ميك أب', 'عطور', 'ألعاب', 'أدوات منزلية'];
-
-// المنتجات (تم إنشاء 3-4 منتجات لكل قسم)
-let products = JSON.parse(localStorage.getItem('products')) || (() => {
+// المنتجات (توليد تلقائي)
+let products = JSON.parse(localStorage.getItem('products')) || (()=>{
   let initial = [];
-  let id = 1;
-  const catProducts = {
-    'مواد غذائية': ['أرز بسمتي', 'زيت زيتون', 'سكر أبيض', 'دقيق أبيض'],
-    'ملابس': ['قميص قطني', 'بنطال جينز', 'جاكيت شتوي'],
-    'أحذية': ['حذاء رياضي', 'صندل جلدي', 'حذاء رسمي'],
-    'ميك أب': ['أحمر شفاه', 'كحل سائل', 'فاونديشن'],
-    'عطور': ['عطر فرنسي', 'عود خشبي', 'ماء عطر'],
-    'ألعاب': ['سيارة تحكم عن بعد', 'دمية ناطقة', 'تركيب ليغو'],
-    'أدوات منزلية': ['طنجرة ضغط', 'مكنسة كهربائية', 'أكواب زجاجية']
+  let id=1;
+  let catProducts = {
+    'مواد غذائية': ['أرز بسمتي', 'زيت زيتون', 'سكر', 'دقيق'],
+    'ملابس': ['قميص', 'بنطال', 'جاكيت'],
+    'أحذية': ['حذاء رياضي', 'صندل', 'حذاء رسمي'],
+    'ميك أب': ['أحمر شفاه', 'كحل', 'فاونديشن'],
+    'عطور': ['عطر فرنسي', 'عود', 'ماء عطر'],
+    'ألعاب': ['سيارة', 'دمية', 'ليغو'],
+    'أدوات منزلية': ['طنجرة', 'مكنسة', 'أكواب']
   };
-  for (let cat of categories) {
-    let items = catProducts[cat] || ['منتج عام'];
-    for (let item of items) {
-      let price = Math.floor(Math.random() * 100) + 20;
+  for(let cat of categories){
+    let items = catProducts[cat] || ['منتج'];
+    for(let item of items){
+      let price = Math.floor(Math.random()*100)+20;
       initial.push({
         id: id++,
         name: item,
         category: cat,
         price: price,
-        stock: { north: Math.floor(Math.random() * 20) + 1, central: Math.floor(Math.random() * 20) + 1, south: Math.floor(Math.random() * 20) + 1 },
+        stock: { north: Math.floor(Math.random()*20)+1, central: Math.floor(Math.random()*20)+1, south: Math.floor(Math.random()*20)+1 },
         image: ''
       });
     }
@@ -196,12 +206,12 @@ let products = JSON.parse(localStorage.getItem('products')) || (() => {
 
 // المستخدمون
 let users = JSON.parse(localStorage.getItem('users')) || [
-  { id:1, name:'المدير العام', username:'admin', password:'admin123', role:'super_admin', branch:null, dept:null },
-  { id:2, name:'رئيس فرع الشمال', username:'north', password:'123', role:'branch_manager', branch:'north', dept:null },
-  { id:3, name:'رئيس فرع الوسط', username:'central', password:'123', role:'branch_manager', branch:'central', dept:null },
-  { id:4, name:'رئيس فرع الجنوب', username:'south', password:'123', role:'branch_manager', branch:'south', dept:null },
-  { id:5, name:'رئيس قسم ملابس', username:'clothes', password:'123', role:'dept_manager', branch:null, dept:'ملابس' },
-  { id:6, name:'موظف عادي', username:'emp1', password:'emp123', role:'employee', branch:'north', dept:null }
+  { id:1, name:'المدير العام', username:'admin', password:'admin123', role:'super_admin', branchId:null, dept:null },
+  { id:2, name:'رئيس فرع الشمال', username:'north', password:'123', role:'branch_manager', branchId:'north', dept:null },
+  { id:3, name:'رئيس فرع الوسط', username:'central', password:'123', role:'branch_manager', branchId:'central', dept:null },
+  { id:4, name:'رئيس فرع الجنوب', username:'south', password:'123', role:'branch_manager', branchId:'south', dept:null },
+  { id:5, name:'رئيس قسم ملابس', username:'clothes', password:'123', role:'dept_manager', branchId:null, dept:'ملابس' },
+  { id:6, name:'موظف عادي', username:'emp1', password:'emp123', role:'employee', branchId:'north', dept:null }
 ];
 
 let sales = JSON.parse(localStorage.getItem('sales')) || [];
@@ -245,31 +255,39 @@ function uploadImage(type) {
   };
   input.click();
 }
-
-// دوال مساعدة
-function saveAll() { localStorage.setItem('products', JSON.stringify(products)); localStorage.setItem('users', JSON.stringify(users)); localStorage.setItem('sales', JSON.stringify(sales)); }
 function showNotification(msg) { let toast = document.createElement('div'); toast.className='toast show'; toast.innerText=msg; document.body.appendChild(toast); setTimeout(()=>toast.remove(),2500); }
-function checkLowStock() { if(!currentUser) return; let branch = currentUser.branch; products.forEach(p => { let stock = (branch && p.stock[branch]!==undefined) ? p.stock[branch] : (p.stock.north + p.stock.central + p.stock.south); if (stock<5 && stock>0) showNotification(`⚠️ مخزون منخفض: ${p.name} (${stock})`); }); }
+function saveAll() {
+  localStorage.setItem('branches', JSON.stringify(branches));
+  localStorage.setItem('categories', JSON.stringify(categories));
+  localStorage.setItem('products', JSON.stringify(products));
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('sales', JSON.stringify(sales));
+  if(currentUser?.role === 'super_admin') renderSettings();
+  renderEmployees();
+  renderReports();
+}
 
-// عملية البيع مع اختيار الفرع والكمية
+// ------------------- عملية البيع -------------------
 function sellProduct(productId) {
   let prod = products.find(p => p.id == productId);
   if (!prod) return;
-  let selectedBranch = null;
-  if (currentUser.branch) selectedBranch = currentUser.branch;
-  else if (currentUser.role === 'super_admin') selectedBranch = prompt('اختر الفرع (north/central/south):', 'north');
-  else selectedBranch = prompt('اختر الفرع (north/central/south):', 'north');
-  if (!selectedBranch || !branches.find(b=>b.id===selectedBranch)) { showNotification('فرع غير صالح'); return; }
-  let stock = prod.stock[selectedBranch];
+  let selectedBranchId = null;
+  if (currentUser.branchId) selectedBranchId = currentUser.branchId;
+  else {
+    let branchNames = branches.map(b => `${b.id} (${b.name})`).join(', ');
+    selectedBranchId = prompt(`اختر الفرع: ${branchNames}`, branches[0]?.id);
+    if (!selectedBranchId || !branches.find(b=>b.id===selectedBranchId)) { showNotification('فرع غير صالح'); return; }
+  }
+  let stock = prod.stock[selectedBranchId];
   if (stock <= 0) { showNotification('المنتج غير متوفر في هذا الفرع'); return; }
   let qty = parseInt(prompt(`الكمية المتاحة: ${stock}\nأدخل الكمية:`, '1'));
   if (isNaN(qty) || qty < 1 || qty > stock) { showNotification('كمية غير صالحة'); return; }
   let total = prod.price * qty;
-  prod.stock[selectedBranch] -= qty;
+  prod.stock[selectedBranchId] -= qty;
   let sale = {
     id: Date.now(),
-    branch: selectedBranch,
-    branchName: branches.find(b=>b.id===selectedBranch).name,
+    branchId: selectedBranchId,
+    branchName: branches.find(b=>b.id===selectedBranchId).name,
     productId: prod.id,
     productName: prod.name,
     category: prod.category,
@@ -283,201 +301,275 @@ function sellProduct(productId) {
   sales.unshift(sale);
   saveAll();
   showNotification(`✅ بيع: ${qty} × ${prod.name} = ${total} دينار (${sale.branchName})`);
-  checkLowStock();
-  renderStore(); renderProductsList(); renderInventory(); renderReports(); // تحديث فوري
+  renderStore(); renderProductsList(); renderInventory(); renderReports();
 }
-
-// عرض المنتجات (صفحة المنتجات)
-function renderProductsList() {
-  let container = document.getElementById('pProducts');
-  if (!container) return;
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📋 جميع المنتجات</div></div><div class="chips" id="prodChips"></div><div class="search-box"><input id="prodSearch" placeholder="🔍 بحث"></div><div class="pg" id="prodGrid"></div>`;
-  let chipsDiv = document.getElementById('prodChips');
-  let activeCat = localStorage.getItem('prodCat') || 'الكل';
-  chipsDiv.innerHTML = `<button class="chip ${activeCat=='الكل'?'active':''}" data-cat="الكل">الكل</button>` + categories.map(c => `<button class="chip ${activeCat==c?'active':''}" data-cat="${c}">${c}</button>`).join('');
-  chipsDiv.querySelectorAll('.chip').forEach(btn => btn.addEventListener('click', () => { localStorage.setItem('prodCat', btn.dataset.cat); renderProductsList(); }));
-  let searchInput = document.getElementById('prodSearch');
-  const render = () => {
-    let search = searchInput.value.toLowerCase();
-    let filtered = products.filter(p => (activeCat=='الكل'||p.category==activeCat) && (p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search)));
-    let grid = document.getElementById('prodGrid');
-    if(filtered.length==0) { grid.innerHTML='<div class="empty">لا توجد منتجات</div>'; return; }
-    grid.innerHTML = filtered.map(p => `<div class="pc"><div class="pc-img">${p.image?`<img src="${p.image}">`:'<span>📦</span>'}</div><div class="pc-body"><div class="pc-name">${p.name}</div><div class="pc-cat">${p.category}</div><div class="pc-price">${p.price} دينار</div><button class="btn-sell" onclick="sellProduct(${p.id})">💰 بيع</button></div></div>`).join('');
-  };
-  searchInput.addEventListener('input', render);
-  render();
-}
-// صفحة الرئيسية
+// ------------------- دوال العرض -------------------
 function renderStore() {
   let container = document.getElementById('pStore');
   if(!container) return;
-  container.innerHTML = `<div style="background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px;text-align:center"><h2>أهلاً وسهلاً بك في <span style="color:var(--accent)">مجموعة غرزالدين التجارية</span></h2><p>ثلاثة فروع - أقسام متعددة - نظام بيع متكامل</p><button class="btn btn-acc" onclick="openWA()" style="margin-top:8px">📞 تواصل عبر واتساب</button></div><div class="chips" id="storeChips"></div><div class="search-box"><input id="storeSearch" placeholder="🔍 بحث"></div><div class="pg" id="storeGrid"></div>`;
-  let chipsDiv = document.getElementById('storeChips');
-  let activeCat = localStorage.getItem('storeCat') || 'الكل';
-  chipsDiv.innerHTML = `<button class="chip ${activeCat=='الكل'?'active':''}" data-cat="الكل">الكل</button>` + categories.map(c => `<button class="chip ${activeCat==c?'active':''}" data-cat="${c}">${c}</button>`).join('');
-  chipsDiv.querySelectorAll('.chip').forEach(btn => btn.addEventListener('click', () => { localStorage.setItem('storeCat', btn.dataset.cat); renderStore(); }));
+  let userBranchId = currentUser.branchId;
+  let userDept = currentUser.dept;
+  let availableBranches = (userBranchId ? branches.filter(b=>b.id===userBranchId) : branches);
+  let availableDepts = (userDept ? [userDept] : categories);
+  let selectedBranch = localStorage.getItem('storeBranch') || (availableBranches[0]?.id || 'north');
+  let selectedDept = localStorage.getItem('storeDept') || 'الكل';
+  container.innerHTML = `
+    <div style="background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px;text-align:center">
+      <h2>أهلاً وسهلاً بك في <span style="color:var(--accent)">مجموعة غرزالدين التجارية</span></h2>
+      <p>اختر الفرع والقسم لعرض المنتجات المتاحة</p>
+      <div class="branch-buttons" id="branchButtons"></div>
+      <div class="dept-buttons" id="deptButtons"></div>
+      <div class="search-box"><input id="storeSearch" placeholder="🔍 بحث"></div>
+      <div class="pg" id="storeGrid"></div>
+    </div>
+  `;
+  let branchDiv = document.getElementById('branchButtons');
+  branchDiv.innerHTML = availableBranches.map(b => `<button class="branch-btn ${selectedBranch===b.id ? 'active' : ''}" data-branch="${b.id}">${b.name}</button>`).join('');
+  branchDiv.querySelectorAll('.branch-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    localStorage.setItem('storeBranch', btn.dataset.branch);
+    renderStore();
+  }));
+  let deptDiv = document.getElementById('deptButtons');
+  deptDiv.innerHTML = `<button class="dept-btn ${selectedDept==='الكل'?'active':''}" data-dept="الكل">الكل</button>` + availableDepts.map(d => `<button class="dept-btn ${selectedDept===d?'active':''}" data-dept="${d}">${d}</button>`).join('');
+  deptDiv.querySelectorAll('.dept-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    localStorage.setItem('storeDept', btn.dataset.dept);
+    renderStore();
+  }));
   let searchInput = document.getElementById('storeSearch');
+  const renderProducts = () => {
+    let search = searchInput.value.toLowerCase();
+    let filtered = products.filter(p => (selectedDept==='الكل' || p.category===selectedDept) && (p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search)));
+    let grid = document.getElementById('storeGrid');
+    if(filtered.length===0) { grid.innerHTML='<div class="empty">لا توجد منتجات</div>'; return; }
+    grid.innerHTML = filtered.map(p => {
+      let stockInBranch = p.stock[selectedBranch] || 0;
+      return `<div class="pc"><div class="pc-img">${p.image?`<img src="${p.image}">`:'<span>📦</span>'}</div><div class="pc-body"><div class="pc-name">${p.name}</div><div class="pc-cat">${p.category}</div><div class="pc-price">${p.price} دينار</div><div class="pc-price" style="color:var(--text2)">المتبقي: ${stockInBranch}</div><button class="btn-sell" onclick="sellProduct(${p.id})">💰 بيع</button></div></div>`;
+    }).join('');
+  };
+  searchInput.addEventListener('input', renderProducts);
+  renderProducts();
+}
+function renderProductsList() {
+  let container = document.getElementById('pProducts');
+  if(!container) return;
+  let userDept = currentUser.dept;
+  let availableDepts = (userDept ? [userDept] : categories);
+  let selectedDept = localStorage.getItem('prodDept') || 'الكل';
+  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📋 جميع المنتجات</div></div><div class="dept-buttons" id="prodDeptButtons"></div><div class="search-box"><input id="prodSearch" placeholder="🔍 بحث"></div><div class="pg" id="prodGrid"></div>`;
+  let deptDiv = document.getElementById('prodDeptButtons');
+  deptDiv.innerHTML = `<button class="dept-btn ${selectedDept==='الكل'?'active':''}" data-dept="الكل">الكل</button>` + availableDepts.map(d => `<button class="dept-btn ${selectedDept===d?'active':''}" data-dept="${d}">${d}</button>`).join('');
+  deptDiv.querySelectorAll('.dept-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    localStorage.setItem('prodDept', btn.dataset.dept);
+    renderProductsList();
+  }));
+  let searchInput = document.getElementById('prodSearch');
   const render = () => {
     let search = searchInput.value.toLowerCase();
-    let filtered = products.filter(p => (activeCat=='الكل'||p.category==activeCat) && (p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search)));
-    let grid = document.getElementById('storeGrid');
-    if(filtered.length==0) { grid.innerHTML='<div class="empty">لا توجد منتجات</div>'; return; }
+    let filtered = products.filter(p => (selectedDept==='الكل' || p.category===selectedDept) && (p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search)));
+    let grid = document.getElementById('prodGrid');
+    if(filtered.length===0) { grid.innerHTML='<div class="empty">لا توجد منتجات</div>'; return; }
     grid.innerHTML = filtered.map(p => `<div class="pc"><div class="pc-img">${p.image?`<img src="${p.image}">`:'<span>📦</span>'}</div><div class="pc-body"><div class="pc-name">${p.name}</div><div class="pc-cat">${p.category}</div><div class="pc-price">${p.price} دينار</div><button class="btn-sell" onclick="sellProduct(${p.id})">💰 بيع</button></div></div>`).join('');
   };
   searchInput.addEventListener('input', render);
   render();
 }
-// المخزون
 function renderInventory() {
   let container = document.getElementById('pInventory');
   if(!container) return;
   let canEdit = (currentUser.role === 'super_admin' || currentUser.role === 'branch_manager');
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📦 المخزون والجرد</div>${canEdit ? '<button class="btn btn-acc btn-sm" onclick="addOrEditProduct()">+ منتج</button>' : ''}</div><div class="search-box"><input id="invSearch" placeholder="🔍 بحث"></div><div class="inv-grid" id="invGrid"></div>`;
+  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📦 المخزون والجرد</div>${canEdit ? '<button class="btn btn-acc btn-sm" onclick="openProductModal()">+ منتج</button>' : ''}</div><div class="search-box"><input id="invSearch" placeholder="🔍 بحث"></div><div class="inv-grid" id="invGrid"></div>`;
   let searchInput = document.getElementById('invSearch');
   const render = () => {
     let search = searchInput.value.toLowerCase();
     let filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
     let grid = document.getElementById('invGrid');
-    if(filtered.length==0) { grid.innerHTML='<div class="empty">لا توجد نتائج</div>'; return; }
+    if(filtered.length===0) { grid.innerHTML='<div class="empty">لا توجد نتائج</div>'; return; }
     grid.innerHTML = filtered.map(p => {
       let stockDisplay = '';
       if (currentUser.role === 'super_admin') stockDisplay = `شمال:${p.stock.north} وسط:${p.stock.central} جنوب:${p.stock.south}`;
-      else if (currentUser.branch) stockDisplay = `المتبقي: ${p.stock[currentUser.branch]}`;
+      else if (currentUser.branchId) stockDisplay = `المتبقي: ${p.stock[currentUser.branchId]}`;
       else stockDisplay = `شمال:${p.stock.north} وسط:${p.stock.central} جنوب:${p.stock.south}`;
-      return `<div class="inv-card"><div class="inv-top"><div class="inv-emoji">${p.image?`<img src="${p.image}">`:'📦'}</div><div><b>${p.name}</b><br><small>${p.category}</small></div></div><div class="inv-bar"><div class="inv-fill" style="width:${((currentUser.branch ? p.stock[currentUser.branch] : (p.stock.north+p.stock.central+p.stock.south)/3)/20)*100}%"></div></div><div>${stockDisplay}</div>${canEdit ? `<div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-sm btn-ghost" onclick="editProduct(${p.id})">تعديل</button><button class="btn btn-sm btn-red" onclick="deleteProduct(${p.id})">حذف</button></div>` : ''}</div>`;
+      return `<div class="inv-card"><div class="inv-top"><div class="inv-emoji">${p.image?`<img src="${p.image}">`:'📦'}</div><div><b>${p.name}</b><br><small>${p.category}</small></div></div><div class="inv-bar"><div class="inv-fill" style="width:${((currentUser.branchId ? p.stock[currentUser.branchId] : (p.stock.north+p.stock.central+p.stock.south)/3)/20)*100}%"></div></div><div>${stockDisplay}</div>${canEdit ? `<div><button class="btn btn-sm btn-ghost" onclick="editProduct(${p.id})">تعديل</button> <button class="btn btn-sm btn-red" onclick="deleteProduct(${p.id})">حذف</button></div>` : ''}</div>`;
     }).join('');
   };
   searchInput.addEventListener('input', render);
   render();
 }
-// إدارة المنتجات
-function addOrEditProduct(prod=null) {
-  let name = prompt('اسم المنتج', prod?.name || '');
-  if(!name) return;
-  let category = prompt('الفئة: '+categories.join(', '), prod?.category || categories[0]);
-  if(!categories.includes(category)) { showNotification('فئة غير صالحة'); return; }
-  let price = parseFloat(prompt('السعر', prod?.price || 0));
-  let stockNorth = parseInt(prompt('مخزون فرع الشمال', prod?.stock?.north || 0));
-  let stockCentral = parseInt(prompt('مخزون فرع الوسط', prod?.stock?.central || 0));
-  let stockSouth = parseInt(prompt('مخزون فرع الجنوب', prod?.stock?.south || 0));
-  let imageUrl = prod?.image || '';
-  let upload = confirm('هل تريد رفع صورة المنتج؟');
-  if(upload) {
-    let input = document.createElement('input'); input.type='file'; input.accept='image/*';
-    input.onchange = e => { let file=e.target.files[0]; if(!file) { saveProduct(); return; } let reader=new FileReader(); reader.onload=ev=>{ imageUrl=ev.target.result; saveProduct(); }; reader.readAsDataURL(file); };
+function openProductModal(prod=null) {
+  let modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `<div class="modal-content"><h3>${prod?'تعديل منتج':'إضافة منتج'}</h3>
+    <div class="fg"><label>اسم المنتج</label><input id="pName" value="${prod?.name||''}"></div>
+    <div class="fg"><label>القسم</label><select id="pCat">${categories.map(c=>`<option ${prod?.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+    <div class="fg"><label>السعر</label><input id="pPrice" type="number" value="${prod?.price||0}"></div>
+    <div class="fg"><label>مخزون الشمال</label><input id="pStockNorth" type="number" value="${prod?.stock?.north||0}"></div>
+    <div class="fg"><label>مخزون الوسط</label><input id="pStockCentral" type="number" value="${prod?.stock?.central||0}"></div>
+    <div class="fg"><label>مخزون الجنوب</label><input id="pStockSouth" type="number" value="${prod?.stock?.south||0}"></div>
+    <div class="fg"><label>صورة المنتج (اختياري)</label><button type="button" id="uploadImageBtn" class="btn btn-ghost">رفع صورة</button><input type="hidden" id="pImage" value="${prod?.image||''}"><div id="imagePreview" style="margin-top:8px">${prod?.image?`<img src="${prod.image}" style="max-width:100px">`:''}</div></div>
+    <div class="modal-actions"><button class="btn btn-acc" id="saveProductBtn">حفظ</button><button class="btn btn-red" id="closeModalBtn">إلغاء</button></div></div>`;
+  document.body.appendChild(modal);
+  modal.classList.add('active');
+  document.getElementById('uploadImageBtn').onclick = () => {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      let file = e.target.files[0];
+      if(!file) return;
+      let reader = new FileReader();
+      reader.onload = (ev) => {
+        document.getElementById('pImage').value = ev.target.result;
+        let preview = document.getElementById('imagePreview');
+        preview.innerHTML = `<img src="${ev.target.result}" style="max-width:100px">`;
+        showNotification('تم تحميل الصورة');
+      };
+      reader.readAsDataURL(file);
+    };
     input.click();
-  } else saveProduct();
-  function saveProduct() {
-    if(prod) { prod.name=name; prod.category=category; prod.price=price; prod.stock={ north:stockNorth, central:stockCentral, south:stockSouth }; prod.image=imageUrl; }
-    else products.push({ id:Date.now(), name, category, price, stock:{ north:stockNorth, central:stockCentral, south:stockSouth }, image:imageUrl });
-    saveAll(); renderInventory(); renderStore(); renderProductsList(); renderReports(); showNotification('تم حفظ المنتج');
-  }
+  };
+  document.getElementById('saveProductBtn').onclick = () => {
+    let name = document.getElementById('pName').value;
+    let cat = document.getElementById('pCat').value;
+    let price = parseFloat(document.getElementById('pPrice').value);
+    let north = parseInt(document.getElementById('pStockNorth').value);
+    let central = parseInt(document.getElementById('pStockCentral').value);
+    let south = parseInt(document.getElementById('pStockSouth').value);
+    let image = document.getElementById('pImage').value;
+    if(!name) { showNotification('اسم المنتج مطلوب'); return; }
+    if(prod) {
+      prod.name = name; prod.category = cat; prod.price = price; prod.stock = { north, central, south }; prod.image = image;
+    } else {
+      products.push({ id:Date.now(), name, category:cat, price, stock:{ north, central, south }, image });
+    }
+    saveAll(); renderInventory(); renderStore(); renderProductsList(); renderReports();
+    modal.remove();
+    showNotification('تم حفظ المنتج');
+  };
+  document.getElementById('closeModalBtn').onclick = () => modal.remove();
 }
-function editProduct(id) { addOrEditProduct(products.find(p=>p.id==id)); }
+function editProduct(id) { openProductModal(products.find(p=>p.id==id)); }
 function deleteProduct(id) { if(confirm('حذف المنتج؟')) { products=products.filter(p=>p.id!=id); saveAll(); renderInventory(); renderStore(); renderProductsList(); renderReports(); showNotification('تم الحذف'); } }
 
-// التقارير المتقدمة حسب الفرع والقسم
-let currentReportBranch = 'all';
-let currentReportDept = 'all';
-
+// ------------------- التقارير -------------------
 function renderReports() {
   let container = document.getElementById('pReports');
   if(!container) return;
   let adminBtns = (currentUser.role === 'super_admin') ? `<button class="btn btn-acc btn-sm" onclick="uploadCompanyLogo()">🖼️ شعار الشركة</button> <button class="btn btn-acc btn-sm" onclick="uploadFavicon()">🌐 أيقونة المتصفح</button> <button class="btn btn-acc btn-sm" onclick="exportReportPDF()">📄 طباعة التقرير</button>` : '';
-  container.innerHTML = `
-    ${adminBtns}
-    <div class="sec-hdr"><div class="sec-title">📊 التقارير حسب الفرع والقسم</div><button class="btn btn-ghost btn-sm" onclick="renderReports()">تحديث</button></div>
-    <div class="filter-bar">
-      <select id="reportBranchFilter" class="filter-select" onchange="applyReportFilters()">
-        <option value="all">جميع الفروع</option>
-        ${branches.map(b => `<option value="${b.id}">${b.name}</option>`).join('')}
-      </select>
-      <select id="reportDeptFilter" class="filter-select" onchange="applyReportFilters()">
-        <option value="all">جميع الأقسام</option>
-        ${categories.map(c => `<option value="${c}">${c}</option>`).join('')}
-      </select>
-    </div>
-    <div id="reportStatsContainer"></div>
-    <div class="mini-card"><div class="mini-card-title">🧾 تفاصيل المبيعات</div><div id="salesDetailsTable"></div></div>
-  `;
-  document.getElementById('reportBranchFilter').value = currentReportBranch;
-  document.getElementById('reportDeptFilter').value = currentReportDept;
+  container.innerHTML = `${adminBtns}<div class="sec-hdr"><div class="sec-title">📊 التقارير حسب الفرع والقسم</div><button class="btn btn-ghost btn-sm" onclick="renderReports()">تحديث</button></div>
+    <div class="filter-bar"><select id="reportBranchFilter" class="filter-select"><option value="all">جميع الفروع</option>${branches.map(b=>`<option value="${b.id}">${b.name}</option>`).join('')}</select>
+    <select id="reportDeptFilter" class="filter-select"><option value="all">جميع الأقسام</option>${categories.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>
+    <div id="reportStatsContainer"></div><div class="mini-card"><div class="mini-card-title">🧾 تفاصيل المبيعات</div><div id="salesDetailsTable"></div></div>`;
   applyReportFilters();
 }
-
 function applyReportFilters() {
-  currentReportBranch = document.getElementById('reportBranchFilter').value;
-  currentReportDept = document.getElementById('reportDeptFilter').value;
-  let filteredSales = [...sales];
-  // تصفية حسب الفرع
-  if (currentReportBranch !== 'all') filteredSales = filteredSales.filter(s => s.branch === currentReportBranch);
-  // تصفية حسب القسم
-  if (currentReportDept !== 'all') filteredSales = filteredSales.filter(s => s.category === currentReportDept);
-  // إذا كان المستخدم رئيس فرع أو رئيس قسم، نطبق صلاحيته
-  if (currentUser.branch) filteredSales = filteredSales.filter(s => s.branch === currentUser.branch);
-  if (currentUser.role === 'dept_manager' && currentUser.dept) filteredSales = filteredSales.filter(s => s.category === currentUser.dept);
-  
+  let branchFilter = document.getElementById('reportBranchFilter').value;
+  let deptFilter = document.getElementById('reportDeptFilter').value;
+  let filtered = [...sales];
+  if (currentUser.branchId) filtered = filtered.filter(s=>s.branchId===currentUser.branchId);
+  if (currentUser.role === 'dept_manager' && currentUser.dept) filtered = filtered.filter(s=>s.category===currentUser.dept);
+  if (branchFilter !== 'all') filtered = filtered.filter(s=>s.branchId===branchFilter);
+  if (deptFilter !== 'all') filtered = filtered.filter(s=>s.category===deptFilter);
   let today = new Date().toISOString().slice(0,10);
-  let todaySales = filteredSales.filter(s => s.dateOnly === today);
-  let totalToday = todaySales.reduce((sum,s)=>sum+s.total,0);
-  let itemsToday = todaySales.reduce((sum,s)=>sum+s.quantity,0);
-  let totalAll = filteredSales.reduce((sum,s)=>sum+s.total,0);
-  let totalItems = filteredSales.reduce((sum,s)=>sum+s.quantity,0);
-  
-  document.getElementById('reportStatsContainer').innerHTML = `
-    <div class="stats-row">
-      <div class="stat"><div class="stat-val">${totalToday} د.ع</div><div class="stat-lbl">مبيعات اليوم</div></div>
-      <div class="stat"><div class="stat-val">${itemsToday}</div><div class="stat-lbl">قطع اليوم</div></div>
-      <div class="stat"><div class="stat-val">${totalAll} د.ع</div><div class="stat-lbl">إجمالي المبيعات</div></div>
-      <div class="stat"><div class="stat-val">${totalItems}</div><div class="stat-lbl">إجمالي القطع</div></div>
-    </div>
-  `;
+  let todaySales = filtered.filter(s=>s.dateOnly===today);
+  let totalToday = todaySales.reduce((s,sum)=>s+sum.total,0);
+  let itemsToday = todaySales.reduce((s,sum)=>s+sum.quantity,0);
+  let totalAll = filtered.reduce((s,sum)=>s+sum.total,0);
+  let totalItems = filtered.reduce((s,sum)=>s+sum.quantity,0);
+  document.getElementById('reportStatsContainer').innerHTML = `<div class="stats-row"><div class="stat"><div class="stat-val">${totalToday}</div><div class="stat-lbl">مبيعات اليوم (د.ع)</div></div><div class="stat"><div class="stat-val">${itemsToday}</div><div class="stat-lbl">قطع اليوم</div></div><div class="stat"><div class="stat-val">${totalAll}</div><div class="stat-lbl">إجمالي المبيعات</div></div><div class="stat"><div class="stat-val">${totalItems}</div><div class="stat-lbl">إجمالي القطع</div></div></div>`;
   let tableHtml = `<table class="mini-table"><thead><tr><th>التاريخ</th><th>الفرع</th><th>القسم</th><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>البائع</th></tr></thead><tbody>`;
-  if(filteredSales.length===0) tableHtml += `<tr><td colspan="8" class="empty">لا توجد مبيعات</td></tr>`;
-  else {
-    filteredSales.slice(0,100).forEach(s => {
-      tableHtml += `<tr><td>${s.date}</td><td>${s.branchName}</td><td>${s.category}</td><td>${s.productName}</td><td>${s.quantity}</td><td>${s.price}</td><td>${s.total}</td><td>${s.seller}</td></tr>`;
-    });
-  }
+  if(filtered.length===0) tableHtml += `<tr><td colspan="8" class="empty">لا توجد مبيعات</td></tr>`;
+  else filtered.slice(0,100).forEach(s=>{ tableHtml += `<tr><td>${s.date}</td><td>${s.branchName}</td><td>${s.category}</td><td>${s.productName}</td><td>${s.quantity}</td><td>${s.price}</td><td>${s.total}</td><td>${s.seller}</td></tr>`; });
   tableHtml += `</tbody></table>`;
   document.getElementById('salesDetailsTable').innerHTML = tableHtml;
 }
+function exportReportPDF() { let el = document.getElementById('reportStatsContainer').cloneNode(true); let table = document.getElementById('salesDetailsTable').cloneNode(true); let wrap = document.createElement('div'); wrap.appendChild(el); wrap.appendChild(table); html2pdf().from(wrap).set({margin:1, filename:'تقرير_المبيعات.pdf'}).save(); }
 
-function exportReportPDF() {
-  let element = document.getElementById('reportStatsContainer').cloneNode(true);
-  let table = document.getElementById('salesDetailsTable').cloneNode(true);
-  let wrapper = document.createElement('div');
-  wrapper.appendChild(element);
-  wrapper.appendChild(table);
-  html2pdf().from(wrapper).set({ margin: 1, filename: 'تقرير_المبيعات.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } }).save();
-}
-
-// إدارة المستخدمين (للمدير العام فقط)
+// ------------------- إدارة المستخدمين -------------------
 function renderEmployees() {
   let container = document.getElementById('pEmployees');
   if(!container) return;
-  if (currentUser.role !== 'super_admin') { container.innerHTML = '<div class="empty">غير مصرح لك بالوصول</div>'; return; }
+  if(currentUser.role !== 'super_admin') { container.innerHTML='<div class="empty">غير مصرح لك بالوصول</div>'; return; }
   container.innerHTML = `<div class="sec-hdr"><div class="sec-title">👥 المستخدمون</div><button class="btn btn-acc btn-sm" onclick="openUserModal()">+ مستخدم</button></div><div class="emp-grid" id="empGrid"></div>`;
   let grid = document.getElementById('empGrid');
-  grid.innerHTML = users.map(u => `<div class="emp-card"><div><b>${u.name}</b> (@${u.username}) - ${u.role} ${u.branch ? ' فرع '+u.branch : ''} ${u.dept ? ' قسم '+u.dept : ''}</div><button class="btn btn-sm btn-red" onclick="deleteUser(${u.id})">حذف</button></div>`).join('');
+  grid.innerHTML = users.map(u=>`<div class="emp-card"><div><b>${u.name}</b> (@${u.username}) - ${u.role} ${u.branchId? 'فرع '+branches.find(b=>b.id===u.branchId)?.name:''} ${u.dept? 'قسم '+u.dept:''}</div><button class="btn btn-sm btn-red" onclick="deleteUser(${u.id})">حذف</button></div>`).join('');
 }
 function openUserModal() {
-  let name = prompt('الاسم');
-  let username = prompt('اسم المستخدم');
-  let password = prompt('كلمة المرور');
-  let role = prompt('الصلاحية (super_admin / branch_manager / dept_manager / employee)');
-  let branch = null, dept = null;
-  if (role === 'branch_manager') branch = prompt('الفرع (north/central/south)');
-  if (role === 'dept_manager') dept = prompt('القسم (من الأقسام)');
-  if (role === 'employee') branch = prompt('الفرع');
-  if(name && username && password && role) {
-    users.push({ id:Date.now(), name, username, password, role, branch, dept });
-    saveAll(); renderEmployees(); showNotification('تمت الإضافة');
-  }
+  let modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `<div class="modal-content"><h3>إضافة مستخدم جديد</h3>
+    <div class="fg"><label>الاسم الكامل</label><input id="userName"></div>
+    <div class="fg"><label>اسم المستخدم</label><input id="userUsername"></div>
+    <div class="fg"><label>كلمة المرور</label><input id="userPassword" type="password"></div>
+    <div class="fg"><label>الصلاحية</label><select id="userRole"><option value="super_admin">مدير عام</option><option value="branch_manager">رئيس فرع</option><option value="dept_manager">رئيس قسم</option><option value="employee">موظف</option></select></div>
+    <div class="fg" id="branchField" style="display:none"><label>الفرع</label><select id="userBranch">${branches.map(b=>`<option value="${b.id}">${b.name}</option>`).join('')}</select></div>
+    <div class="fg" id="deptField" style="display:none"><label>القسم</label><select id="userDept">${categories.map(c=>`<option>${c}</option>`).join('')}</select></div>
+    <div class="modal-actions"><button class="btn btn-acc" id="saveUserBtn">حفظ</button><button class="btn btn-red" id="closeUserModal">إلغاء</button></div></div>`;
+  document.body.appendChild(modal);
+  modal.classList.add('active');
+  let roleSelect = document.getElementById('userRole');
+  let branchDiv = document.getElementById('branchField');
+  let deptDiv = document.getElementById('deptField');
+  roleSelect.onchange = () => {
+    let role = roleSelect.value;
+    branchDiv.style.display = (role === 'branch_manager' || role === 'employee') ? 'block' : 'none';
+    deptDiv.style.display = (role === 'dept_manager') ? 'block' : 'none';
+  };
+  roleSelect.dispatchEvent(new Event('change'));
+  document.getElementById('saveUserBtn').onclick = () => {
+    let name = document.getElementById('userName').value;
+    let username = document.getElementById('userUsername').value;
+    let password = document.getElementById('userPassword').value;
+    let role = roleSelect.value;
+    let branchId = (role === 'branch_manager' || role === 'employee') ? document.getElementById('userBranch').value : null;
+    let dept = (role === 'dept_manager') ? document.getElementById('userDept').value : null;
+    if(!name || !username || !password) { showNotification('جميع الحقول مطلوبة'); return; }
+    users.push({ id:Date.now(), name, username, password, role, branchId, dept });
+    saveAll();
+    modal.remove();
+    renderEmployees();
+    showNotification('تم إضافة المستخدم');
+  };
+  document.getElementById('closeUserModal').onclick = () => modal.remove();
 }
 function deleteUser(id) { if(confirm('حذف المستخدم؟')) { users=users.filter(u=>u.id!=id); saveAll(); renderEmployees(); showNotification('تم الحذف'); } }
 
-// التنقل بين الصفحات
+// ------------------- إعدادات الفروع والأقسام والمسؤوليات -------------------
+function renderSettings() {
+  let container = document.getElementById('pSettings');
+  if(!container) return;
+  if(currentUser.role !== 'super_admin') { container.innerHTML='<div class="empty">غير مصرح لك</div>'; return; }
+  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">⚙️ إدارة الفروع والأقسام</div></div>
+    <div class="mini-card"><div class="mini-card-title">🏢 الفروع والمسؤولين</div><div id="branchesList"></div><button class="btn btn-acc btn-sm" onclick="addBranch()">+ إضافة فرع</button></div>
+    <div class="mini-card"><div class="mini-card-title">📂 الأقسام</div><div id="categoriesList"></div><button class="btn btn-acc btn-sm" onclick="addCategory()">+ إضافة قسم</button></div>`;
+  let branchesHtml = `<table class="mini-table"><thead><tr><th>الاسم</th><th>المعرف</th><th>المسؤول (رئيس الفرع)</th><th></th></tr></thead><tbody>`;
+  branches.forEach(b => {
+    let manager = users.find(u=>u.username===b.managerUsername);
+    branchesHtml += `<tr><td><input type="text" id="branchName_${b.id}" value="${b.name}"></td><td>${b.id}</td><td><select id="branchManager_${b.id}"><option value="">لا يوجد</option>${users.filter(u=>u.role==='branch_manager').map(u=>`<option value="${u.username}" ${b.managerUsername===u.username?'selected':''}>${u.name} (${u.username})</option>`).join('')}</select></td><td><button class="btn btn-sm btn-acc" onclick="updateBranch('${b.id}')">حفظ</button> <button class="btn btn-sm btn-red" onclick="deleteBranch('${b.id}')">حذف</button></td></tr>`;
+  });
+  branchesHtml += `</tbody></table>`;
+  document.getElementById('branchesList').innerHTML = branchesHtml;
+  let catsHtml = `<div class="chips" id="catsChips">${categories.map(c=>`<span class="chip">${c} <button style="background:none;border:none;color:red" onclick="deleteCategory('${c}')">✖</button></span>`).join('')}</div>`;
+  document.getElementById('categoriesList').innerHTML = catsHtml;
+}
+function addBranch() {
+  let id = prompt('معرف الفرع (مثل north2)');
+  let name = prompt('اسم الفرع (مثل فرع الشرق)');
+  if(id && name && !branches.find(b=>b.id===id)) {
+    branches.push({ id, name, managerUsername: null });
+    saveAll(); renderSettings();
+  } else showNotification('معرف مكرر أو غير صالح');
+}
+function updateBranch(id) {
+  let newName = document.getElementById(`branchName_${id}`).value;
+  let managerUsername = document.getElementById(`branchManager_${id}`).value;
+  let branch = branches.find(b=>b.id===id);
+  if(branch) { branch.name = newName; branch.managerUsername = managerUsername || null; saveAll(); renderSettings(); showNotification('تم تحديث الفرع'); }
+}
+function deleteBranch(id) { if(confirm('حذف الفرع؟ سيؤثر على المخزون والمبيعات')) { branches=branches.filter(b=>b.id!=id); saveAll(); renderSettings(); showNotification('تم الحذف'); } }
+function addCategory() { let cat=prompt('اسم القسم الجديد'); if(cat && !categories.includes(cat)) { categories.push(cat); saveAll(); renderSettings(); showNotification('تمت الإضافة'); } }
+function deleteCategory(cat) { if(confirm('حذف القسم؟')) { categories=categories.filter(c=>c!=cat); saveAll(); renderSettings(); showNotification('تم الحذف'); } }
+
+// ------------------- التنقل -------------------
 function setActivePanel(panelId) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById(panelId).classList.add('active');
@@ -488,60 +580,50 @@ function setActivePanel(panelId) {
   else if(panelId === 'pInventory') renderInventory();
   else if(panelId === 'pReports') renderReports();
   else if(panelId === 'pEmployees') renderEmployees();
+  else if(panelId === 'pSettings') renderSettings();
 }
 document.querySelectorAll('.bn-item').forEach(btn => btn.addEventListener('click', () => setActivePanel(btn.dataset.panel)));
 
-// تسجيل الدخول
-function setTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
-  event.target.classList.add('active');
-  let passWrap = document.getElementById('lPassWrap');
-  if(tab === 'guest') passWrap.style.display = 'none';
-  else passWrap.style.display = 'block';
-}
+// ------------------- تسجيل الدخول -------------------
+function setTab(tab) { currentTab=tab; document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active')); event.target.classList.add('active'); document.getElementById('lPassWrap').style.display = (tab==='guest')?'none':'block'; }
 function login() {
   let user = document.getElementById('lUser').value.trim();
   let pass = document.getElementById('lPass').value;
   let foundUser = null;
-  if(currentTab === 'guest') {
-    currentUser = { username:'guest', role:'guest', branch:null, dept:null };
-  } else {
+  if(currentTab === 'guest') currentUser = { username:'guest', role:'guest', branchId:null, dept:null };
+  else {
     foundUser = users.find(u=>u.username===user && u.password===pass);
     if(!foundUser) { document.getElementById('lErr').style.display='block'; return; }
     currentUser = foundUser;
   }
-  if(document.getElementById('rememberMe').checked) localStorage.setItem('savedUser', JSON.stringify({username:currentUser.username, role:currentUser.role, branch:currentUser.branch, dept:currentUser.dept}));
+  if(document.getElementById('rememberMe').checked) localStorage.setItem('savedUser', JSON.stringify({username:currentUser.username, role:currentUser.role, branchId:currentUser.branchId, dept:currentUser.dept}));
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
   let empNav = document.querySelector('.bn-item[data-panel="pEmployees"]');
-  if(currentUser.role !== 'super_admin') empNav.style.display = 'none';
-  else empNav.style.display = 'flex';
+  let setNav = document.querySelector('.bn-item[data-panel="pSettings"]');
+  if(currentUser.role !== 'super_admin') { empNav.style.display = 'none'; setNav.style.display = 'none'; }
+  else { empNav.style.display = 'flex'; setNav.style.display = 'flex'; }
   setActivePanel('pStore');
-  checkLowStock();
   updateAllLogos();
   updateFavicon();
 }
 function logout() { currentUser=null; localStorage.removeItem('savedUser'); document.getElementById('loginScreen').classList.add('active'); document.getElementById('appScreen').classList.remove('active'); }
-function openWA() { window.open('https://wa.me/972599285511?text=مرحباً، أريد الاستفسار عن منتجاتكم'); }
+function openWA() { window.open('https://wa.me/972599285511?text=مرحباً'); }
 function openGPS() { window.open('https://maps.google.com/?q=31.9474,35.2272'); }
-
-// استعادة الجلسة
 let saved = localStorage.getItem('savedUser');
 if(saved) {
   try {
     let u = JSON.parse(saved);
     if(u.username) {
-      if(u.username === 'guest') currentUser = { username:'guest', role:'guest', branch:null, dept:null };
+      if(u.username === 'guest') currentUser = { username:'guest', role:'guest', branchId:null, dept:null };
       else currentUser = users.find(us=>us.username===u.username) || u;
       if(currentUser) {
         document.getElementById('loginScreen').classList.remove('active');
         document.getElementById('appScreen').classList.add('active');
-        if(currentUser.role !== 'super_admin') document.querySelector('.bn-item[data-panel="pEmployees"]').style.display = 'none';
+        if(currentUser.role !== 'super_admin') { document.querySelector('.bn-item[data-panel="pEmployees"]').style.display = 'none'; document.querySelector('.bn-item[data-panel="pSettings"]').style.display = 'none'; }
         setActivePanel('pStore');
         updateAllLogos();
         updateFavicon();
-        checkLowStock();
       }
     }
   } catch(e) {}
