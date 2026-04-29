@@ -368,7 +368,18 @@ tr:hover td{background:rgba(255,107,53,0.03)}
     <div class="fg"><label>القسم</label><select id="pC"></select></div>
     <div class="fg"><label>السعر (ل.س)</label><input id="pP" type="number" placeholder="25000"></div>
     <div class="fg"><label>الكمية في المخزون</label><input id="pS" type="number" placeholder="50"></div>
-    <div class="fg"><label>اختر أيقونة</label><div class="emoji-row" id="emojiRow"></div></div>
+    <div class="fg">
+      <label>صورة المنتج (اختياري)</label>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+        <div id="imgPreview" style="width:80px;height:80px;background:var(--bg3);border:2px dashed var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;flex-shrink:0">📷</div>
+        <div style="flex:1">
+          <input type="file" id="pImg" accept="image/*" onchange="previewImg(this)" style="display:none">
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-bottom:8px" onclick="document.getElementById('pImg').click()">📁 اختر صورة</button>
+          <button class="btn btn-red btn-sm" style="width:100%;justify-content:center" onclick="clearImg()">🗑️ حذف الصورة</button>
+        </div>
+      </div>
+    </div>
+    <div class="fg"><label>أو اختر أيقونة (إذا لم تضف صورة)</label><div class="emoji-row" id="emojiRow"></div></div>
     <div class="modal-actions">
       <button class="btn btn-acc" onclick="saveProd()">💾 حفظ</button>
       <button class="btn btn-ghost" onclick="closeM('mProd')">إلغاء</button>
@@ -658,7 +669,7 @@ function renderStore() {
   if(!items.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="ei">🔍</div><h3>لا توجد منتجات</h3><p>جرّب البحث بكلمة أخرى</p></div>';return}
   g.innerHTML=items.map(p=>`
     <div class="pc" onclick="contactProd('${p.name.replace(/'/g,"\\'")}')">
-      <div class="pc-img">${p.emoji}<span class="pc-badge">${catEmoji(p.cat)}</span></div>
+      <div class="pc-img">${p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:p.emoji}<span class="pc-badge">${catEmoji(p.cat)}</span></div>
       <div class="pc-body">
         <div class="pc-name">${p.name}</div>
         <div class="pc-cat">${catEmoji(p.cat)} ${catName(p.cat)}</div>
@@ -715,7 +726,9 @@ function renderProdTable() {
   el.innerHTML=items.map(p=>`
     <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <span style="font-size:32px">${p.emoji}</span>
+        <div style="width:56px;height:56px;border-radius:12px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">
+          ${p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:p.emoji}
+        </div>
         <div style="flex:1">
           <div style="font-size:15px;font-weight:800;margin-bottom:3px">${p.name}</div>
           <div style="font-size:12px;color:var(--text2)">${catEmoji(p.cat)} ${catName(p.cat)}</div>
@@ -740,8 +753,54 @@ function renderProdTable() {
     </div>`).join('');
 }
 
+// ════ CLOUDINARY CONFIG ════
+const CLOUD_NAME = 'daqio1vks';
+const UPLOAD_PRESET = 'Gharzaldeen_upload';
+
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', UPLOAD_PRESET);
+  formData.append('folder', 'matjari_products');
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if(data.secure_url) return data.secure_url;
+    throw new Error('Upload failed');
+  } catch(e) {
+    console.error('Cloudinary error:', e);
+    return null;
+  }
+}
+
+let currentImgData = null;
+let currentImgFile = null;
+
+function previewImg(input) {
+  if(!input.files||!input.files[0])return;
+  currentImgFile = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentImgData = e.target.result;
+    const prev = document.getElementById('imgPreview');
+    prev.innerHTML = `<img src="${currentImgData}" style="width:100%;height:100%;object-fit:cover">`;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function clearImg() {
+  currentImgData = null;
+  currentImgFile = null;
+  document.getElementById('imgPreview').innerHTML = '📷';
+  document.getElementById('pImg').value = '';
+}
+
 function openProdModal(id) {
   editProdId=id||null;
+  currentImgData=null;
   document.getElementById('mProdTitle').textContent=id?'✏️ تعديل منتج':'➕ إضافة منتج جديد';
   const cs=document.getElementById('pC');
   cs.innerHTML=CATS.map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
@@ -751,8 +810,17 @@ function openProdModal(id) {
     document.getElementById('pP').value=p.price;
     document.getElementById('pS').value=p.stock;
     cs.value=p.cat;selEmoji=p.emoji;buildEmojis(p.cat);
+    // show existing image
+    const prev=document.getElementById('imgPreview');
+    if(p.img){
+      currentImgData=p.img;
+      prev.innerHTML=`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`;
+    } else {
+      prev.innerHTML='📷';
+    }
   } else {
     ['pN','pP','pS'].forEach(f=>document.getElementById(f).value='');
+    document.getElementById('imgPreview').innerHTML='📷';
     cs.value=CATS[0].id;selEmoji=CATS[0].emoji;buildEmojis(CATS[0].id);
   }
   cs.onchange=()=>buildEmojis(cs.value);
@@ -767,20 +835,33 @@ function buildEmojis(cat) {
 
 function pickEmoji(e){selEmoji=e;buildEmojis(document.getElementById('pC').value)}
 
-function saveProd() {
+async function saveProd() {
   const n=document.getElementById('pN').value.trim();
   const c=document.getElementById('pC').value;
   const p=parseInt(document.getElementById('pP').value);
   const s=parseInt(document.getElementById('pS').value);
   if(!n||!p||isNaN(s)){toast('⚠️ يرجى ملء جميع الحقول','warn');return}
+
+  // Show loading
+  toast('⏳ جاري رفع الصورة...','info');
+  let imgUrl = null;
+
+  if(currentImgFile) {
+    imgUrl = await uploadToCloudinary(currentImgFile);
+    if(!imgUrl) { toast('❌ فشل رفع الصورة، حاول مجدداً','warn'); return; }
+  }
+
   if(editProdId){
     const prod=products.find(x=>x.id===editProdId);
     prod.name=n;prod.cat=c;prod.price=p;prod.stock=s;prod.emoji=selEmoji;
+    if(imgUrl) prod.img=imgUrl;
+    else if(document.getElementById('imgPreview').innerHTML==='📷') prod.img=null;
     toast('✅ تم تعديل المنتج بنجاح');
   } else {
-    products.push({id:nxtP++,name:n,cat:c,price:p,stock:s,emoji:selEmoji,active:true});
+    products.push({id:nxtP++,name:n,cat:c,price:p,stock:s,emoji:selEmoji,img:imgUrl||null,active:true});
     toast('✅ تم إضافة المنتج بنجاح');
   }
+  currentImgFile=null;
   saveAll();closeM('mProd');renderProdTable();
 }
 
@@ -910,7 +991,7 @@ function toast(msg,type='ok') {
   clearTimeout(toastTimer);
   const t=document.getElementById('toast');
   t.textContent=msg;
-  t.style.background=type==='warn'?'var(--red)':type==='ok'?'var(--green)':'var(--card2)';
+  t.style.background=type==='warn'?'var(--red)':type==='info'?'var(--blue)':type==='ok'?'var(--green)':'var(--card2)';
   t.classList.add('show');
   toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
 }
