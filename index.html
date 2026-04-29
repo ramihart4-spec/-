@@ -694,13 +694,13 @@ function renderProdTable() {
       <td>${catEmoji(p.cat)} ${catName(p.cat)}</td>
       <td>
         <span style="font-weight:900;color:var(--accent)">${p.price.toLocaleString('ar-SY')}</span>
-        <button class="btn btn-gold btn-sm" style="margin-right:6px;color:#1a1a1a" onclick="openPriceModal(${p.id})">✏️</button>
+        <button class="btn btn-gold btn-sm" style="margin-right:6px;color:#1a1a1a" onclick="openPriceModal(${p.id})">💰</button>
       </td>
       <td><span class="badge ${p.stock<5?'badge-red':p.stock<10?'badge-gold':'badge-green'}">${p.stock}</span></td>
       <td><span class="badge ${p.active?'badge-green':'badge-red'}">${p.active?'نشط':'متوقف'}</span></td>
       <td>
         <div class="t-actions">
-          <button class="btn btn-acc btn-sm" onclick="openProdModal(${p.id})">✏️</button>
+          <button class="btn btn-acc btn-sm" onclick="openProdModal(${p.id})">✏️ تعديل</button>
           <button class="btn btn-red btn-sm" onclick="delProd(${p.id})">🗑️</button>
         </div>
       </td>
