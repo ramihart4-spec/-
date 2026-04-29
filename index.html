@@ -6,7 +6,6 @@
 <title>مجموعة غرزالدين التجارية</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* نفس الأنماط السابقة مع إضافة زر رفع الشعار */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#0d0f14; --bg2:#13161e; --bg3:#1a1e2a; --card:#1e2330; --card2:#242838;
@@ -23,7 +22,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .logo-wrap{text-align:center;margin-bottom:20px}
 .logo-icon{width:80px;height:80px;margin:0 auto 10px;border-radius:20px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center}
 .logo-icon img{width:100%;height:100%;object-fit:cover}
-.logo-icon span{font-size:40px}
 .logo-name{font-size:26px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .logo-sub{font-size:12px;color:var(--text2)}
 .tabs{display:flex;background:var(--bg3);border-radius:14px;padding:4px;margin-bottom:20px}
@@ -33,12 +31,13 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .btn-enter{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#e05520);border:none;border-radius:14px;color:#fff;font-weight:800;cursor:pointer}
 .err{color:#ff6b6b;font-size:13px;text-align:center;display:none;margin-top:8px}
 .hint{font-size:12px;color:var(--text2);text-align:center;margin-top:16px}
-.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 16px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
 .tb-brand{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:900}
 .tb-brand img{height:36px;width:36px;object-fit:cover;border-radius:8px}
-.tb-actions{display:flex;gap:8px}
-.tb-btn{padding:6px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer}
-.tb-btn.wa{background:#25d366;border-color:#25d366;color:#fff}
+.tb-actions{display:flex;gap:8px;align-items:center}
+.tb-icon-btn{background:var(--bg3);border:1px solid var(--border);border-radius:30px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;transition:all 0.2s}
+.tb-icon-btn.wa{background:#25d366;border-color:#25d366}
+.tb-icon-btn.exit{background:rgba(239,68,68,0.15);border-color:var(--red);color:var(--red)}
 .bottom-nav{background:var(--card);border-top:1px solid var(--border);display:flex;position:sticky;bottom:0}
 .bn-item{flex:1;padding:8px;background:transparent;border:none;color:var(--text2);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-size:11px;font-weight:700}
 .bn-item.active{color:var(--accent)}
@@ -47,17 +46,22 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .panel.active{display:block}
 .sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .sec-title{font-size:20px;font-weight:800}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
+.chip{padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .search-box{margin-bottom:16px}
-.search-box input{width:100%;padding:10px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;color:var(--text)}
+.search-box input{width:100%;padding:10px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;color:var(--text);outline:none}
 .pg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 @media(min-width:600px){.pg{grid-template-columns:repeat(3,1fr)}}
-.pc{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden}
-.pc-img{height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg3)}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:transform 0.2s}
+.pc:active{transform:scale(0.97)}
+.pc-img{height:110px;display:flex;align-items:center;justify-content:center;background:var(--bg3)}
 .pc-img img{width:100%;height:100%;object-fit:cover}
-.pc-body{padding:10px}
-.pc-name{font-weight:800}
-.pc-price{color:var(--accent);font-weight:900}
-.btn-contact{width:100%;padding:8px;background:#25d366;border:none;border-radius:10px;color:#fff;font-weight:800;cursor:pointer;margin-top:8px}
+.pc-body{padding:12px}
+.pc-name{font-weight:800;font-size:14px}
+.pc-cat{font-size:11px;color:var(--text2)}
+.pc-price{color:var(--accent);font-weight:900;margin:6px 0}
+.btn-contact{width:100%;padding:8px;background:#25d366;border:none;border-radius:10px;color:#fff;font-weight:800;cursor:pointer}
 .inv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .inv-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px}
 .inv-top{display:flex;gap:10px;align-items:center}
@@ -65,25 +69,31 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .inv-bar{background:var(--bg3);border-radius:6px;height:6px;margin:8px 0}
 .inv-fill{height:100%;border-radius:6px}
 .emp-grid{display:grid;gap:12px}
-.emp-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+.emp-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center}
 .btn{padding:6px 12px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
 .btn-acc{background:var(--accent);color:#fff}
 .btn-red{background:var(--red);color:#fff}
 .btn-sm{padding:4px 10px;font-size:12px}
+.btn-ghost{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card2);padding:10px 20px;border-radius:12px;z-index:999;display:none}
 .toast.show{display:block}
 .empty{text-align:center;padding:40px;color:var(--text2)}
-.upload-logo-btn{margin-top:10px;padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--accent);cursor:pointer;font-size:12px;text-align:center}
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center}
+.stat-val{font-size:24px;font-weight:900}
+.mini-card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:12px}
+.mini-row{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border)}
 </style>
 </head>
 <body>
 
+<!-- شاشة الدخول -->
 <div id="loginScreen" class="screen active">
 <div class="login-wrap">
 <div class="login-card">
   <div class="logo-wrap">
     <div class="logo-icon" id="loginLogoIcon"><span>🏢</span></div>
-    <div class="logo-name" id="loginLogoName">مجموعة غرزالدين</div>
+    <div class="logo-name">مجموعة غرزالدين</div>
     <div class="logo-sub">شعارك الخاص - متجر شامل</div>
   </div>
   <div class="tabs">
@@ -97,22 +107,22 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   <button class="btn-enter" onclick="login()">دخول ←</button>
   <div class="err" id="lErr"></div>
   <div class="hint">مدير: admin / admin123<br>موظف: emp1 / emp123</div>
-  <!-- زر رفع الشعار (يظهر فقط عند تسجيل الدخول كمدير) -->
 </div>
 </div>
 </div>
 
+<!-- شاشة التطبيق -->
 <div id="appScreen" class="screen">
   <div class="topbar">
     <div class="tb-brand" id="appLogoArea"><span>🏢</span><span>غرزالدين</span></div>
     <div class="tb-actions">
-      <button class="tb-btn wa" onclick="openWA()">واتساب</button>
-      <button class="tb-btn" onclick="openGPS()">📍</button>
-      <button class="tb-btn exit" onclick="logout()">خروج</button>
+      <button class="tb-icon-btn wa" onclick="openWA()">📱</button>
+      <button class="tb-icon-btn" onclick="openGPS()">📍</button>
+      <button class="tb-icon-btn exit" onclick="logout()">🚪</button>
     </div>
   </div>
   <div class="content">
-    <div class="panel active" id="pStore">... (المحتوى سيملأه JS) ...</div>
+    <div class="panel active" id="pStore"></div>
     <div class="panel" id="pInventory"></div>
     <div class="panel" id="pReports"></div>
     <div class="panel" id="pEmployees"></div>
@@ -129,48 +139,44 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 // ------------------- البيانات -------------------
 let products = JSON.parse(localStorage.getItem('products')) || [
   { id:1, name:'هاتف ذكي', category:'الكترونيات', price:250, stock:12, image:'' },
-  { id:2, name:'سماعات', category:'الكترونيات', price:45, stock:3, image:'' },
-  { id:3, name:'ساعة يد', category:'موضة', price:80, stock:7, image:'' }
+  { id:2, name:'سماعات بلوتوث', category:'الكترونيات', price:45, stock:3, image:'' },
+  { id:3, name:'ساعة يدوية', category:'موضة', price:80, stock:7, image:'' },
+  { id:4, name:'شنطة جلد', category:'موضة', price:120, stock:2, image:'' },
+  { id:5, name:'مصباح مكتبي', category:'منزل', price:30, stock:8, image:'' }
 ];
 let employees = JSON.parse(localStorage.getItem('employees')) || [
   { id:1, name:'أحمد محمد', username:'emp1', password:'emp123', role:'موظف' }
 ];
-let sales = JSON.parse(localStorage.getItem('sales')) || [];
+let sales = JSON.parse(localStorage.getItem('sales')) || []; // كل عملية بيع
 let currentUser = null;
 let currentTab = 'admin';
+let logoBase64 = localStorage.getItem('companyLogo') || '';
 
-// ------------------- الشعار (Logo) -------------------
-let logoBase64 = localStorage.getItem('companyLogo') || ''; // تخزين الصورة كـ base64
-
+// ------------------- تحديث الشعار -------------------
 function updateAllLogos() {
-  // دالة تحديث جميع أماكن الشعار في الواجهة
   const loginIconDiv = document.getElementById('loginLogoIcon');
   const appBrandDiv = document.getElementById('appLogoArea');
-  if (logoBase64 && logoBase64 !== '') {
-    // إظهار الصورة في شاشة الدخول
-    loginIconDiv.innerHTML = `<img src="${logoBase64}" style="width:100%;height:100%;object-fit:cover">`;
-    // إظهار الصورة في الشريط العلوي
-    appBrandDiv.innerHTML = `<img src="${logoBase64}" style="height:36px;width:36px;border-radius:8px"><span>غرزالدين</span>`;
+  if (logoBase64) {
+    loginIconDiv.innerHTML = `<img src="${logoBase64}">`;
+    appBrandDiv.innerHTML = `<img src="${logoBase64}"><span>غرزالدين</span>`;
   } else {
     loginIconDiv.innerHTML = '<span>🏢</span>';
     appBrandDiv.innerHTML = '<span>🏢</span><span>غرزالدين</span>';
   }
 }
-
-// وظيفة رفع شعار من جهاز المستخدم (تُستدعى للمدير فقط)
 function uploadCompanyLogo() {
-  const input = document.createElement('input');
+  let input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
   input.onchange = (e) => {
-    const file = e.target.files[0];
+    let file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = (ev) => {
       logoBase64 = ev.target.result;
       localStorage.setItem('companyLogo', logoBase64);
       updateAllLogos();
-      showNotification('✅ تم تغيير شعار الشركة بنجاح');
+      showNotification('تم تغيير شعار الشركة');
     };
     reader.readAsDataURL(file);
   };
@@ -191,164 +197,263 @@ function showNotification(msg) {
   setTimeout(() => toast.remove(), 2500);
 }
 function checkLowStock() {
-  products.forEach(p => { if (p.stock < 5 && p.stock > 0) showNotification(`⚠️ المخزون منخفض: ${p.name} (${p.stock})`); });
+  products.forEach(p => { if (p.stock < 5 && p.stock > 0) showNotification(`⚠️ مخزون منخفض: ${p.name} (${p.stock})`); });
 }
 function recordSale(productId, qty=1) {
   let prod = products.find(p=>p.id==productId);
   if(!prod || prod.stock<qty) { showNotification('المخزون غير كاف'); return false; }
   prod.stock -= qty;
-  sales.unshift({ id:Date.now(), productName:prod.name, quantity:qty, total:prod.price*qty, date:new Date().toLocaleString() });
+  let sale = {
+    id: Date.now(),
+    productName: prod.name,
+    quantity: qty,
+    total: prod.price * qty,
+    date: new Date().toLocaleString(),
+    dateOnly: new Date().toISOString().slice(0,10)
+  };
+  sales.unshift(sale);
   saveAll();
-  showNotification(`✅ تم شراء ${qty} × ${prod.name}`);
+  showNotification(`✅ تم شراء ${qty} × ${prod.name} بمبلغ ${prod.price*qty} دينار`);
   checkLowStock();
-  renderInventory(); renderStore(); renderReports();
+  renderInventory();
+  renderStore();
+  renderReports();
   return true;
 }
+// دالة لإضافة منتج مع رفع صورة (تعمل مباشرة)
+function addOrEditProduct(prod=null) {
+  let name = prompt('اسم المنتج', prod?.name || '');
+  if(!name) return;
+  let category = prompt('الفئة (الكترونيات, موضة, منزل, الخ)', prod?.category || 'الكترونيات');
+  let price = parseFloat(prompt('السعر', prod?.price || 0));
+  let stock = parseInt(prompt('الكمية', prod?.stock || 0));
+  let imageUrl = prod?.image || '';
+  let confirmUpload = confirm('هل تريد رفع صورة المنتج من جهازك؟');
+  if(confirmUpload) {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      let file = e.target.files[0];
+      if(!file) { saveProduct(); return; }
+      let reader = new FileReader();
+      reader.onload = (ev) => {
+        imageUrl = ev.target.result;
+        saveProduct();
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  } else {
+    saveProduct();
+  }
+  function saveProduct() {
+    if(prod) {
+      prod.name = name; prod.category = category; prod.price = price; prod.stock = stock; prod.image = imageUrl;
+    } else {
+      products.push({ id: Date.now(), name, category, price, stock, image: imageUrl });
+    }
+    saveAll();
+    renderInventory();
+    renderStore();
+    renderReports();
+    showNotification('تم حفظ المنتج');
+  }
+}
+function editProduct(id) { addOrEditProduct(products.find(p=>p.id==id)); }
+function deleteProduct(id) { if(confirm('حذف المنتج نهائياً؟')) { products = products.filter(p=>p.id!=id); saveAll(); renderInventory(); renderStore(); renderReports(); showNotification('تم الحذف'); } }
+
+// ------------------- عرض صفحة الرئيسية (أقسام + جميع المنتجات) -------------------
 function renderStore() {
-  let grid = document.getElementById('pStore');
-  if(!grid) return;
-  let html = `<div class="store-hero" style="background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px"><h3>مرحباً بك في متجرنا</h3><button class="btn-wa" onclick="openWA()">تواصل عبر واتساب</button></div><div class="search-box"><input id="storeSearch" placeholder="🔍 بحث"></div><div class="pg" id="storeGrid"></div>`;
-  grid.innerHTML = html;
+  let container = document.getElementById('pStore');
+  if(!container) return;
+  // النص المطلوب
+  let heroHtml = `
+    <div style="background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px;text-align:center">
+      <h2 style="font-size:20px">أهلاً وسهلاً بك في <span style="color:var(--accent)">مجموعة غرزالدين التجارية</span></h2>
+      <p style="color:var(--text2);margin:8px 0">كل شيء تحتاجه هنا 🛍️</p>
+      <button class="btn btn-acc" onclick="openWA()" style="margin-top:8px">📞 تواصل عبر واتساب</button>
+    </div>
+  `;
+  container.innerHTML = heroHtml + `<div class="chips" id="categoryChips"></div><div class="search-box"><input id="storeSearch" placeholder="🔍 بحث في المنتجات"></div><div class="pg" id="storeGrid"></div>`;
+  // استخراج الفئات
+  let categories = ['الكل', ...new Set(products.map(p=>p.category))];
+  let activeCat = localStorage.getItem('storeCat') || 'الكل';
+  let chipsDiv = document.getElementById('categoryChips');
+  chipsDiv.innerHTML = categories.map(cat => `<button class="chip ${activeCat===cat?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
+  chipsDiv.querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      localStorage.setItem('storeCat', btn.dataset.cat);
+      renderStore(); // إعادة تحميل الصفحة لتفعيل التصنيف
+    });
+  });
   let searchInput = document.getElementById('storeSearch');
   const renderProducts = () => {
     let search = (searchInput?.value || '').toLowerCase();
-    let filtered = products.filter(p=>p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
-    let gridContainer = document.getElementById('storeGrid');
-    if(filtered.length===0) { gridContainer.innerHTML='<div class="empty">لا توجد منتجات</div>'; return; }
-    gridContainer.innerHTML = filtered.map(p=>`
-      <div class="pc"><div class="pc-img">${p.image?`<img src="${p.image}">`:'<span>📦</span>'}</div>
-      <div class="pc-body"><div class="pc-name">${p.name}</div><div class="pc-price">${p.price} دينار</div>
-      <button class="btn-contact" onclick="recordSale(${p.id},1)">شراء</button></div></div>
+    let filtered = products.filter(p => (activeCat==='الكل' || p.category===activeCat) && (p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search)));
+    let grid = document.getElementById('storeGrid');
+    if(filtered.length===0) { grid.innerHTML='<div class="empty">لا توجد منتجات</div>'; return; }
+    grid.innerHTML = filtered.map(p => `
+      <div class="pc">
+        <div class="pc-img">${p.image ? `<img src="${p.image}">` : '<span>📦</span>'}</div>
+        <div class="pc-body">
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-cat">${p.category}</div>
+          <div class="pc-price">${p.price} دينار</div>
+          <button class="btn-contact" onclick="recordSale(${p.id},1)">🛒 شراء</button>
+        </div>
+      </div>
     `).join('');
   };
   searchInput.addEventListener('input', renderProducts);
   renderProducts();
 }
+
+// ------------------- المخزون والجرد مع بحث -------------------
 function renderInventory() {
   let container = document.getElementById('pInventory');
   if(!container) return;
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📦 المخزون والجرد</div><button class="btn btn-acc btn-sm" onclick="openProductModal()">+ منتج</button></div><div class="search-box"><input id="invSearch" placeholder="🔍 بحث لتسهيل الجرد"></div><div class="inv-grid" id="invGrid"></div>`;
+  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📦 المخزون والجرد</div><button class="btn btn-acc btn-sm" onclick="addOrEditProduct()">+ منتج</button></div>
+  <div class="search-box"><input id="invSearch" placeholder="🔍 بحث لتسهيل الجرد (بالاسم أو الفئة)"></div>
+  <div class="inv-grid" id="invGrid"></div>`;
   let searchInput = document.getElementById('invSearch');
   const render = () => {
     let search = (searchInput?.value || '').toLowerCase();
-    let filtered = products.filter(p=>p.name.toLowerCase().includes(search)||p.category.toLowerCase().includes(search));
+    let filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
     let grid = document.getElementById('invGrid');
     if(filtered.length===0) { grid.innerHTML='<div class="empty">لا توجد نتائج</div>'; return; }
-    grid.innerHTML = filtered.map(p=>`
-      <div class="inv-card"><div class="inv-top"><div class="inv-emoji">${p.image?`<img src="${p.image}">`:'📦'}</div><div><b>${p.name}</b><br><small>${p.category}</small></div></div>
-      <div class="inv-bar"><div class="inv-fill" style="width:${(p.stock/20)*100}%; background:${p.stock<5?'red':'#22c55e'}"></div></div>
-      <div>المتبقي: ${p.stock}</div>
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-sm btn-ghost" onclick="editProduct(${p.id})">تعديل</button><button class="btn btn-sm btn-red" onclick="deleteProduct(${p.id})">حذف</button></div></div>
+    grid.innerHTML = filtered.map(p => `
+      <div class="inv-card">
+        <div class="inv-top"><div class="inv-emoji">${p.image?`<img src="${p.image}">`:'📦'}</div><div><b>${p.name}</b><br><small>${p.category}</small></div></div>
+        <div class="inv-bar"><div class="inv-fill" style="width:${(p.stock/20)*100}%; background:${p.stock<5?'var(--red)':'var(--green)'}"></div></div>
+        <div>المتبقي: <strong>${p.stock}</strong></div>
+        <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-sm btn-ghost" onclick="editProduct(${p.id})">تعديل</button><button class="btn btn-sm btn-red" onclick="deleteProduct(${p.id})">حذف</button></div>
+      </div>
     `).join('');
   };
   searchInput.addEventListener('input', render);
   render();
 }
+
+// ------------------- التقارير والمبيعات اليومية -------------------
 function renderReports() {
-  let total = sales.reduce((s,sl)=>s+sl.total,0);
-  let items = sales.reduce((s,sl)=>s+sl.quantity,0);
-  let low = products.filter(p=>p.stock<5).length;
-  document.getElementById('pReports').innerHTML = `
-    <div class="sec-hdr"><div class="sec-title">📊 التقارير</div><button class="btn btn-ghost btn-sm" onclick="renderReports()">تحديث</button></div>
-    <div class="stats-row" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px"><div class="stat">${total} د.ع</div><div class="stat">${items} قطعة</div><div class="stat">منتجات منخفضة: ${low}</div><div class="stat">عمليات: ${sales.length}</div></div>
-    <div class="mini-card"><div>آخر المبيعات</div>${sales.slice(0,5).map(s=>`<div>${s.productName} - ${s.total} دينار (${s.date})</div>`).join('')||'<div>لا توجد مبيعات</div>'}</div>
+  let container = document.getElementById('pReports');
+  if(!container) return;
+  // حساب مبيعات اليوم
+  let today = new Date().toISOString().slice(0,10);
+  let todaySales = sales.filter(s => s.dateOnly === today);
+  let totalToday = todaySales.reduce((sum,s)=>sum+s.total,0);
+  let itemsToday = todaySales.reduce((sum,s)=>sum+s.quantity,0);
+  let totalAll = sales.reduce((sum,s)=>sum+s.total,0);
+  let lowStockCount = products.filter(p=>p.stock<5).length;
+  let uploadBtn = (currentUser?.role === 'admin') ? `<button class="btn btn-acc btn-sm" onclick="uploadCompanyLogo()" style="margin-bottom:10px">🖼️ تغيير شعار الشركة</button>` : '';
+  container.innerHTML = `
+    ${uploadBtn}
+    <div class="sec-hdr"><div class="sec-title">📊 التقارير والإشعارات</div><button class="btn btn-ghost btn-sm" onclick="renderReports()">تحديث</button></div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val">${totalToday} د.ع</div><div class="stat-lbl">مبيعات اليوم</div></div>
+      <div class="stat"><div class="stat-val">${itemsToday}</div><div class="stat-lbl">قطع بيعت اليوم</div></div>
+      <div class="stat"><div class="stat-val">${totalAll} د.ع</div><div class="stat-lbl">إجمالي المبيعات</div></div>
+      <div class="stat"><div class="stat-val">${lowStockCount}</div><div class="stat-lbl">منتجات منخفضة</div></div>
+    </div>
+    <div class="mini-card"><div class="mini-card-title">🛒 آخر المبيعات (كلها)</div>
+    ${sales.length===0 ? '<div class="empty">لا توجد مبيعات بعد</div>' : sales.slice(0,15).map(s=>`<div class="mini-row"><span>${s.productName}</span><span>${s.quantity} قطعة - ${s.total} دينار</span><span style="font-size:11px">${s.date}</span></div>`).join('')}
+    </div>
   `;
 }
+
+// ------------------- الموظفون -------------------
 function renderEmployees() {
-  let empDiv = document.getElementById('pEmployees');
-  if(!empDiv) return;
-  empDiv.innerHTML = `<div class="sec-hdr"><div class="sec-title">👥 الموظفون</div><button class="btn btn-acc btn-sm" onclick="openEmployeeModal()">+ إضافة</button></div><div class="emp-grid" id="empGrid"></div>`;
+  let container = document.getElementById('pEmployees');
+  if(!container) return;
+  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">👥 الموظفون</div><button class="btn btn-acc btn-sm" onclick="openEmployeeModal()">+ إضافة</button></div><div class="emp-grid" id="empGrid"></div>`;
   let grid = document.getElementById('empGrid');
   if(employees.length===0) grid.innerHTML='<div class="empty">لا يوجد موظفون</div>';
   else grid.innerHTML = employees.map(e=>`<div class="emp-card"><div><b>${e.name}</b> (@${e.username})</div><button class="btn btn-sm btn-red" onclick="deleteEmployee(${e.id})">حذف</button></div>`).join('');
 }
-function openProductModal(prod=null) {
-  let name=prompt('اسم المنتج', prod?.name||'');
-  if(!name) return;
-  let cat=prompt('الفئة', prod?.category||'الكترونيات');
-  let price=parseFloat(prompt('السعر', prod?.price||0));
-  let stock=parseInt(prompt('الكمية', prod?.stock||0));
-  let imageUrl = prod?.image||'';
-  let upload = confirm('هل تريد رفع صورة المنتج من جهازك؟');
-  if(upload){
-    let input = document.createElement('input'); input.type='file'; input.accept='image/*';
-    input.onchange = e=>{
-      let file = e.target.files[0]; let reader = new FileReader();
-      reader.onload = ev=>{ imageUrl = ev.target.result; saveProduct(); };
-      reader.readAsDataURL(file);
-    };
-    input.click();
-  } else saveProduct();
-  function saveProduct(){
-    if(prod){
-      prod.name=name; prod.category=cat; prod.price=price; prod.stock=stock; prod.image=imageUrl;
-    } else {
-      products.push({ id:Date.now(), name, category:cat, price, stock, image:imageUrl });
-    }
-    saveAll(); renderInventory(); renderStore(); renderReports(); showNotification('تم حفظ المنتج');
+function openEmployeeModal() {
+  let name = prompt('الاسم الكامل');
+  let user = prompt('اسم المستخدم');
+  let pass = prompt('كلمة المرور');
+  if(name && user && pass) {
+    employees.push({ id:Date.now(), name, username:user, password:pass, role:'موظف' });
+    saveAll(); renderEmployees(); showNotification('تمت إضافة الموظف');
   }
 }
-function editProduct(id){ openProductModal(products.find(p=>p.id==id)); }
-function deleteProduct(id){ if(confirm('حذف؟')){ products=products.filter(p=>p.id!=id); saveAll(); renderInventory(); renderStore(); renderReports(); showNotification('تم الحذف'); } }
-function openEmployeeModal(){ let name=prompt('الاسم'), user=prompt('اسم المستخدم'), pass=prompt('كلمة المرور'); if(name&&user&&pass){ employees.push({ id:Date.now(), name, username:user, password:pass, role:'موظف' }); saveAll(); renderEmployees(); showNotification('تمت الإضافة'); } }
-function deleteEmployee(id){ if(confirm('حذف الموظف؟')){ employees=employees.filter(e=>e.id!=id); saveAll(); renderEmployees(); } }
-function setActivePanel(panelId){
+function deleteEmployee(id) {
+  if(confirm('حذف الموظف؟')) { employees = employees.filter(e=>e.id!=id); saveAll(); renderEmployees(); showNotification('تم الحذف'); }
+}
+
+// ------------------- التنقل بين الصفحات -------------------
+function setActivePanel(panelId) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById(panelId).classList.add('active');
   document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
   document.querySelector(`.bn-item[data-panel="${panelId}"]`).classList.add('active');
-  if(panelId=='pStore') renderStore();
-  else if(panelId=='pInventory') renderInventory();
-  else if(panelId=='pReports') renderReports();
-  else if(panelId=='pEmployees') renderEmployees();
+  if(panelId === 'pStore') renderStore();
+  else if(panelId === 'pInventory') renderInventory();
+  else if(panelId === 'pReports') renderReports();
+  else if(panelId === 'pEmployees') renderEmployees();
 }
-document.querySelectorAll('.bn-item').forEach(btn=>btn.addEventListener('click',()=>setActivePanel(btn.dataset.panel)));
-function setTab(tab){
-  currentTab=tab;
+document.querySelectorAll('.bn-item').forEach(btn => btn.addEventListener('click', () => setActivePanel(btn.dataset.panel)));
+
+// ------------------- تسجيل الدخول -------------------
+function setTab(tab) {
+  currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
   event.target.classList.add('active');
-  let passWrap=document.getElementById('lPassWrap');
-  if(tab=='guest') passWrap.style.display='none'; else passWrap.style.display='block';
+  let passWrap = document.getElementById('lPassWrap');
+  if(tab === 'guest') passWrap.style.display = 'none';
+  else passWrap.style.display = 'block';
 }
-function login(){
+function login() {
   let user = document.getElementById('lUser').value.trim();
   let pass = document.getElementById('lPass').value;
-  let role=null;
-  if(currentTab=='guest') role='guest';
-  else if(currentTab=='admin' && user=='admin' && pass=='admin123') role='admin';
-  else if(currentTab=='emp'){ let emp = employees.find(e=>e.username==user && e.password==pass); if(emp) role='employee'; }
-  if(!role){ document.getElementById('lErr').style.display='block'; return; }
-  currentUser = { username:user, role:role };
-  if(document.getElementById('rememberMe').checked) localStorage.setItem('savedUser',JSON.stringify(currentUser));
+  let role = null;
+  if(currentTab === 'guest') role = 'guest';
+  else if(currentTab === 'admin' && user === 'admin' && pass === 'admin123') role = 'admin';
+  else if(currentTab === 'emp') {
+    let emp = employees.find(e=>e.username===user && e.password===pass);
+    if(emp) role = 'employee';
+  }
+  if(!role) { document.getElementById('lErr').style.display='block'; return; }
+  currentUser = { username: user, role: role };
+  if(document.getElementById('rememberMe').checked) localStorage.setItem('savedUser', JSON.stringify(currentUser));
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
-  // إذا كان المدير، أضف زر رفع الشعار في صفحة الإعدادات (أو في أي مكان)
-  if(role=='admin'){
-    // إضافة زر رفع الشعار في شريط الإجراءات أو في صفحة التقارير مثلاً
-    let reportsPanel = document.getElementById('pReports');
-    let uploadBtn = document.createElement('button');
-    uploadBtn.innerText = '🖼️ تغيير شعار الشركة';
-    uploadBtn.className = 'btn btn-acc btn-sm';
-    uploadBtn.style.margin = '10px 0';
-    uploadBtn.onclick = uploadCompanyLogo;
-    // نضيفه أعلى لوحة التقارير إذا لم يكن موجوداً
-    if(!document.getElementById('customLogoBtn')) {
-      uploadBtn.id = 'customLogoBtn';
-      reportsPanel.insertBefore(uploadBtn, reportsPanel.firstChild);
-    }
-  }
+  // إظهار أو إخفاء صفحة الموظفين حسب الصلاحية
+  let empNav = document.querySelector('.bn-item[data-panel="pEmployees"]');
+  if(role !== 'admin') empNav.style.display = 'none';
+  else empNav.style.display = 'flex';
   setActivePanel('pStore');
   checkLowStock();
   updateAllLogos();
 }
-function logout(){ currentUser=null; localStorage.removeItem('savedUser'); document.getElementById('loginScreen').classList.add('active'); document.getElementById('appScreen').classList.remove('active'); }
-function openWA(){ window.open('https://wa.me/972599285511?text=مرحباً'); }
-function openGPS(){ window.open('https://maps.google.com/?q=31.9474,35.2272'); }
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('savedUser');
+  document.getElementById('loginScreen').classList.add('active');
+  document.getElementById('appScreen').classList.remove('active');
+}
+function openWA() { window.open('https://wa.me/972599285511?text=مرحباً، أريد الاستفسار عن منتجاتكم'); }
+function openGPS() { window.open('https://maps.google.com/?q=31.9474,35.2272'); }
 
 // استعادة الجلسة المحفوظة
 let saved = localStorage.getItem('savedUser');
-if(saved){ try{ let u=JSON.parse(saved); if(u.username){ currentUser=u; document.getElementById('loginScreen').classList.remove('active'); document.getElementById('appScreen').classList.add('active'); setActivePanel('pStore'); updateAllLogos(); } }catch(e){} }
-updateAllLogos();
+if(saved) {
+  try {
+    let u = JSON.parse(saved);
+    if(u.username) {
+      currentUser = u;
+      document.getElementById('loginScreen').classList.remove('active');
+      document.getElementById('appScreen').classList.add('active');
+      if(currentUser.role !== 'admin') document.querySelector('.bn-item[data-panel="pEmployees"]').style.display = 'none';
+      setActivePanel('pStore');
+      updateAllLogos();
+      checkLowStock();
+    }
+  } catch(e) {}
+}
 </script>
 </body>
 </html>
