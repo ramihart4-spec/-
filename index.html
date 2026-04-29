@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>مجموعة غرزالدين - النسخة المستقرة</title>
+<title>مجموعة غرزالدين - النظام المتكامل</title>
 <link rel="icon" id="dynamicFavicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛍️%3C/text%3E%3C/svg%3E">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -12,7 +12,7 @@
     --accent:#ff6b35; --gold:#f5c518; --green:#22c55e; --red:#ef4444; --blue:#3b82f6;
     --text:#f0f2ff; --text2:#8b92a8; --border:#2a2f3e;
   }
-  body{font-family:'Segoe UI', 'Tahoma', system-ui;background:var(--bg);color:var(--text);min-height:100vh}
+  body{font-family:'Segoe UI', system-ui, 'Tahoma', sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
   .screen{display:none;min-height:100vh}
   .screen.active{display:block}
   #loginScreen.active{display:flex;align-items:center;justify-content:center;background:var(--bg)}
@@ -23,19 +23,20 @@
   .logo-icon{width:80px;height:80px;margin:0 auto 10px;border-radius:20px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center}
   .logo-icon img{width:100%;height:100%;object-fit:cover}
   .logo-name{font-size:26px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:20px}
-  .tab-btn{flex:1;padding:8px;border:none;background:var(--bg3);color:var(--text2);border-radius:12px;cursor:pointer}
+  .tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px}
+  .tab-btn{flex:1;padding:8px;border:none;background:var(--bg3);color:var(--text2);border-radius:12px;cursor:pointer;font-weight:700}
   .tab-btn.active{background:var(--accent);color:#fff}
   .inp-wrap input{width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);margin-bottom:12px}
   .btn-enter{width:100%;padding:14px;background:var(--accent);border:none;border-radius:14px;color:#fff;font-weight:800;cursor:pointer}
-  .err{color:var(--red);display:none;margin-top:8px}
+  .err{color:var(--red);display:none;margin-top:8px;text-align:center}
   .hint{font-size:12px;color:var(--text2);margin-top:16px}
   .topbar{background:var(--card);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-  .tb-brand{display:flex;align-items:center;gap:8px;font-weight:900}
+  .tb-brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:18px}
   .tb-brand img{height:36px;width:36px;border-radius:8px}
-  .tb-actions{display:flex;gap:8px}
-  .tb-icon-btn{background:var(--bg3);border:1px solid var(--border);border-radius:30px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .tb-actions{display:flex;gap:10px}
+  .tb-icon-btn{background:var(--bg3);border:1px solid var(--border);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer}
   .tb-icon-btn.wa{background:#25d366;border-color:#25d366}
+  .tb-icon-btn svg{width:20px;height:20px}
   .bottom-nav{background:var(--card);border-top:1px solid var(--border);display:flex;position:sticky;bottom:0}
   .bn-item{flex:1;padding:10px 4px;background:transparent;border:none;color:var(--text2);display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:13px;font-weight:800}
   .bn-item.active{color:var(--accent)}
@@ -47,43 +48,47 @@
   .branch-buttons,.dept-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
   .branch-btn,.dept-btn{padding:8px 16px;border-radius:30px;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;font-weight:700}
   .branch-btn.active,.dept-btn.active{background:var(--accent);color:#fff}
+  .branch-address{background:var(--bg3);border-radius:12px;padding:8px;margin-bottom:12px;font-size:12px;color:var(--gold)}
   .search-box input{width:100%;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;color:var(--text);margin-bottom:16px}
   .pg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   @media(min-width:600px){.pg{grid-template-columns:repeat(3,1fr)}}
   .pc{background:var(--card);border-radius:18px;overflow:hidden}
-  .pc-img{height:160px;display:flex;align-items:center;justify-content:center;background:var(--bg3)}
+  .pc-img{height:150px;display:flex;align-items:center;justify-content:center;background:var(--bg3)}
   .pc-img img{width:100%;height:100%;object-fit:cover}
+  .pc-img span{font-size:48px}
   .pc-body{padding:12px}
-  .pc-name{font-weight:800}
-  .pc-price{color:var(--accent);font-weight:900;margin:6px 0}
-  .pc-details{font-size:11px;color:var(--text2);margin:4px 0}
+  .pc-name{font-weight:800;font-size:15px}
+  .pc-price{color:var(--accent);font-weight:900;margin:6px 0;font-size:16px}
+  .pc-details{font-size:10px;color:var(--text2);margin:4px 0}
   .btn-add-to-cart{width:100%;padding:8px;background:var(--blue);border:none;border-radius:10px;color:#fff;font-weight:800;cursor:pointer;margin-top:6px}
-  .cart-item{display:flex;gap:8px;align-items:center;background:var(--bg3);margin-bottom:8px;padding:8px;border-radius:12px}
-  .cart-item input{width:60px;background:var(--bg);padding:4px;border-radius:8px}
-  .cart-item .remove{background:var(--red);border:none;border-radius:8px;color:#fff;padding:4px 8px;cursor:pointer}
   .inv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .inv-card{background:var(--card);border-radius:16px;padding:12px}
+  .inv-card{background:var(--card);border-radius:16px;padding:12px;margin-bottom:8px}
   .inv-bar{background:var(--bg3);border-radius:6px;height:6px;margin:8px 0}
   .inv-fill{height:100%;border-radius:6px}
-  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px}
+  .cart-item{display:flex;gap:8px;align-items:center;background:var(--bg3);margin-bottom:8px;padding:8px;border-radius:12px;flex-wrap:wrap}
+  .cart-item input{width:60px;background:var(--bg);color:#fff;border-radius:8px;padding:4px}
+  .cart-item .remove{background:var(--red);border:none;border-radius:8px;color:#fff;padding:4px 10px;cursor:pointer}
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px}
   .stat{background:var(--card);border-radius:16px;padding:12px;text-align:center}
   .stat-val{font-size:24px;font-weight:800}
+  .wallet-table{width:100%;border-collapse:collapse}
+  .wallet-table th,.wallet-table td{padding:8px;text-align:right;border-bottom:1px solid var(--border)}
   .btn{padding:6px 12px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
   .btn-acc{background:var(--accent);color:#fff}
   .btn-ghost{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
   .btn-sm{padding:4px 10px;font-size:12px}
+  .btn-red{background:var(--red);color:#fff}
   .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card2);padding:10px 20px;border-radius:12px;z-index:999;display:none}
   .toast.show{display:block}
   .empty{text-align:center;padding:40px;color:var(--text2)}
-  .branch-address{font-size:12px;color:var(--gold);background:var(--bg3);padding:8px;border-radius:12px;margin-bottom:12px}
   .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1000;visibility:hidden;opacity:0;transition:0.3s}
   .modal.active{visibility:visible;opacity:1}
   .modal-content{background:var(--card2);border-radius:24px;padding:24px;width:90%;max-width:500px;max-height:90vh;overflow-y:auto}
   .fg{margin-bottom:12px}
   .fg label{display:block;font-size:13px;margin-bottom:4px}
   .fg input,.fg select{width:100%;padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text)}
-  .wallet-table{width:100%;border-collapse:collapse}
-  .wallet-table th,.wallet-table td{padding:8px;border-bottom:1px solid var(--border);text-align:right}
+  .modal-actions{display:flex;gap:10px;margin-top:16px}
+  .emp-card{background:var(--card);border-radius:16px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between}
 </style>
 </head>
 <body>
@@ -97,7 +102,7 @@
     <div class="logo-name">مجموعة غرزالدين</div>
   </div>
   <div class="tabs">
-    <button class="tab-btn active" onclick="setTab('admin')">مدير</button>
+    <button class="tab-btn active" onclick="setTab('admin')">مدير عام</button>
     <button class="tab-btn" onclick="setTab('branchMgr')">رئيس فرع</button>
     <button class="tab-btn" onclick="setTab('deptMgr')">رئيس قسم</button>
     <button class="tab-btn" onclick="setTab('emp')">موظف</button>
@@ -107,12 +112,12 @@
   <div class="inp-wrap" id="lPassWrap"><input id="lPass" type="password" placeholder="كلمة المرور"></div>
   <div><input type="checkbox" id="rememberMe"> <label>تذكّرني</label></div>
   <button class="btn-enter" onclick="login()">دخول</button>
-  <div class="err" id="lErr"></div>
+  <div class="err" id="lErr">بيانات خاطئة</div>
   <div class="hint">
     مدير: admin / admin123<br>
-    رئيس فرع أول البلد: oldtown / 123<br>
-    رئيس فرع القلعة: castle / 123<br>
-    رئيس فرع السوق: souk / 123<br>
+    رئيس أول البلد: oldtown / 123<br>
+    رئيس القلعة: castle / 123<br>
+    رئيس السوق: souk / 123<br>
     رئيس قسم ملابس: clothes / 123<br>
     موظف: emp1 / emp123
   </div>
@@ -120,13 +125,13 @@
 </div>
 </div>
 
-<!-- التطبيق -->
+<!-- شاشة التطبيق -->
 <div id="appScreen" class="screen">
   <div class="topbar">
     <div class="tb-brand" id="appLogoArea"><span>🏢</span><span>غرزالدين</span></div>
     <div class="tb-actions">
       <button class="tb-icon-btn wa" onclick="openWA()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.533 5.845L.057 23.492c-.083.334.239.632.568.527l5.845-1.867A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.533 5.845L.057 23.492c-.083.334.239.632.568.527l5.845-1.867A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
       </button>
       <button class="tb-icon-btn" onclick="openGPS()">🌐</button>
       <button class="tb-icon-btn exit" onclick="logout()">🚪</button>
@@ -155,52 +160,51 @@
 </div>
 
 <script>
-// ------------------- بيانات الفروع والأقسام -------------------
+// ------------------- البيانات الأساسية -------------------
 const branchesData = {
-  oldtown: { name: 'أول البلد', address: 'مفرق نص البلد - بيت السيد رجا غرزالدين', categories: ['مواد غذائية', 'بهارات', 'مكسرات', 'ألعاب', 'ألبان'] },
-  castle: { name: 'حارة القلعة', address: 'بيت السيد رافع هلال - غرزالدين', categories: ['مواد غذائية', 'بهارات', 'مكسرات', 'ألعاب', 'ألبان'] },
-  souk: { name: 'السوق', address: 'دخلة الفرن الخاص - الطابق الأرضي', categories: ['مواد غذائية', 'ملابس', 'أحذية', 'ميك أب', 'عطور', 'ألعاب', 'أدوات منزلية', 'بهارات', 'مكسرات', 'ألبان', 'هدايا'] }
+  oldtown: { name: 'أول البلد', address: 'مفرق نص البلد - بيت السيد رجا غرزالدين', categories: ['مواد غذائية','بهارات','مكسرات','ألعاب','ألبان'] },
+  castle: { name: 'حارة القلعة', address: 'بيت السيد رافع هلال - غرزالدين', categories: ['مواد غذائية','بهارات','مكسرات','ألعاب','ألبان'] },
+  souk: { name: 'السوق', address: 'دخلة الفرن الخاص - الطابق الأرضي', categories: ['مواد غذائية','ملابس','أحذية','ميك أب','عطور','ألعاب','أدوات منزلية','بهارات','مكسرات','ألبان','هدايا'] }
 };
 let branches = Object.keys(branchesData).map(id => ({ id, name: branchesData[id].name, address: branchesData[id].address }));
 let allCategories = [...new Set(Object.values(branchesData).flatMap(b=>b.categories))];
 
-// ------------------- بيانات المنتجات (مضمونة الظهور) -------------------
+// منتجات أولية (لضمان ظهورها)
 let products = JSON.parse(localStorage.getItem('products')) || (()=>{
-  let initial = [];
+  let list = [];
   let id=1;
-  // منتجات لكل قسم
-  const samples = {
-    'مواد غذائية': ['أرز بسمتي', 'زيت زيتون', 'سكر أبيض', 'دقيق'],
-    'بهارات': ['فلفل أسود', 'كمون', 'كركم', 'زعتر'],
-    'مكسرات': ['كاجو', 'لوز', 'جوز', 'فستق'],
-    'ألعاب': ['سيارة تحكم', 'دمية ناطقة', 'ليغو'],
-    'ألبان': ['حليب طازج', 'زبادي', 'جبنة بيضاء'],
-    'ملابس': ['قميص قطني', 'بنطال جينز', 'جاكيت'],
-    'أحذية': ['حذاء رياضي', 'صندل', 'حذاء رسمي'],
-    'ميك أب': ['أحمر شفاه', 'كحل سائل', 'فاونديشن'],
-    'عطور': ['عطر فرنسي', 'عود', 'ماء عطر'],
-    'أدوات منزلية': ['طنجرة', 'مكنسة', 'أكواب'],
-    'هدايا': ['صندوق هدايا', 'باقة ورد', 'قلادة']
+  let sample = {
+    'مواد غذائية': ['أرز بسمتي','زيت زيتون','سكر','دقيق'],
+    'بهارات': ['فلفل أسود','كمون','كركم'],
+    'مكسرات': ['كاجو','لوز','جوز'],
+    'ألعاب': ['سيارة تحكم','دمية','ليغو'],
+    'ألبان': ['حليب','زبادي','جبنة'],
+    'ملابس': ['قميص','بنطال','جاكيت'],
+    'أحذية': ['حذاء رياضي','صندل'],
+    'ميك أب': ['أحمر شفاه','كحل'],
+    'عطور': ['عطر فرنسي','عود'],
+    'أدوات منزلية': ['طنجرة','مكنسة'],
+    'هدايا': ['صندوق هدايا','باقة ورد']
   };
   for(let cat of allCategories){
-    let items = samples[cat] || ['منتج '+cat];
+    let items = sample[cat] || ['منتج '+cat];
     for(let item of items){
-      let price = Math.floor(Math.random()*80)+20;
-      let stock = { oldtown: Math.floor(Math.random()*20)+5, castle: Math.floor(Math.random()*20)+5, souk: Math.floor(Math.random()*30)+10 };
-      initial.push({ id: id++, name: item, category: cat, price: price, stock: stock, image: '', description: `منتج ممتاز من ${cat}` });
+      let price = Math.floor(Math.random()*70)+20;
+      let stock = { oldtown: Math.floor(Math.random()*15)+5, castle: Math.floor(Math.random()*15)+5, souk: Math.floor(Math.random()*25)+10 };
+      list.push({ id: id++, name: item, category: cat, price: price, stock: stock, image: '', description: `منتج ${cat}` });
     }
   }
-  return initial;
+  return list;
 })();
 
-// ------------------- المستخدمون -------------------
+// المستخدمون
 let users = JSON.parse(localStorage.getItem('users')) || [
   { id:1, name:'مدير عام', username:'admin', password:'admin123', role:'super_admin', branchId:null, dept:null, manager:null },
   { id:2, name:'رئيس أول البلد', username:'oldtown', password:'123', role:'branch_manager', branchId:'oldtown', dept:null, manager:'admin' },
   { id:3, name:'رئيس القلعة', username:'castle', password:'123', role:'branch_manager', branchId:'castle', dept:null, manager:'admin' },
   { id:4, name:'رئيس السوق', username:'souk', password:'123', role:'branch_manager', branchId:'souk', dept:null, manager:'admin' },
   { id:5, name:'رئيس قسم ملابس', username:'clothes', password:'123', role:'dept_manager', branchId:null, dept:'ملابس', manager:'admin' },
-  { id:6, name:'موظف', username:'emp1', password:'emp123', role:'employee', branchId:'oldtown', dept:null, manager:'oldtown' }
+  { id:6, name:'موظف أول البلد', username:'emp1', password:'emp123', role:'employee', branchId:'oldtown', dept:null, manager:'oldtown' }
 ];
 let sales = JSON.parse(localStorage.getItem('sales')) || [];
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -209,245 +213,179 @@ let currentTab = 'admin';
 let logoBase64 = localStorage.getItem('companyLogo') || '';
 let faviconBase64 = localStorage.getItem('companyFavicon') || '';
 
-// ------------------- دوال مساعدة -------------------
-function saveAll() {
-  localStorage.setItem('products', JSON.stringify(products));
-  localStorage.setItem('users', JSON.stringify(users));
-  localStorage.setItem('sales', JSON.stringify(sales));
+// دوال مساعدة
+function saveAll(){ localStorage.setItem('products',JSON.stringify(products)); localStorage.setItem('users',JSON.stringify(users)); localStorage.setItem('sales',JSON.stringify(sales)); }
+function showNotification(msg){ let t=document.createElement('div'); t.className='toast show'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
+function updateAllLogos(){
+  let loginIcon=document.getElementById('loginLogoIcon'), appLogo=document.getElementById('appLogoArea');
+  if(logoBase64){ loginIcon.innerHTML=`<img src="${logoBase64}">`; appLogo.innerHTML=`<img src="${logoBase64}"><span>غرزالدين</span>`; }
+  else { loginIcon.innerHTML='<span>🏢</span>'; appLogo.innerHTML='<span>🏢</span><span>غرزالدين</span>'; }
 }
-function showNotification(msg) {
-  let toast = document.createElement('div');
-  toast.className = 'toast show';
-  toast.innerText = msg;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2000);
-}
-function updateAllLogos() {
-  const loginLogo = document.getElementById('loginLogoIcon');
-  const appLogo = document.getElementById('appLogoArea');
-  if(logoBase64) {
-    loginLogo.innerHTML = `<img src="${logoBase64}">`;
-    appLogo.innerHTML = `<img src="${logoBase64}"><span>غرزالدين</span>`;
-  } else {
-    loginLogo.innerHTML = '<span>🏢</span>';
-    appLogo.innerHTML = '<span>🏢</span><span>غرزالدين</span>';
-  }
-}
-function updateFavicon() {
-  let link = document.getElementById('dynamicFavicon');
-  link.href = faviconBase64 || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛍️%3C/text%3E%3C/svg%3E";
-}
-function uploadCompanyLogo() {
-  let input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = e => {
-    let file = e.target.files[0];
-    if(!file) return;
-    let reader = new FileReader();
-    reader.onload = ev => {
-      logoBase64 = ev.target.result;
-      localStorage.setItem('companyLogo', logoBase64);
-      updateAllLogos();
-      showNotification('تم تغيير شعار الشركة');
-    };
-    reader.readAsDataURL(file);
-  };
-  input.click();
-}
-function uploadFavicon() {
-  let input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = e => {
-    let file = e.target.files[0];
-    if(!file) return;
-    let reader = new FileReader();
-    reader.onload = ev => {
-      faviconBase64 = ev.target.result;
-      localStorage.setItem('companyFavicon', faviconBase64);
-      updateFavicon();
-      showNotification('تم تغيير أيقونة المتصفح');
-    };
-    reader.readAsDataURL(file);
-  };
-  input.click();
+function updateFavicon(){ let link=document.getElementById('dynamicFavicon'); link.href=faviconBase64 || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛍️%3C/text%3E%3C/svg%3E"; }
+function uploadCompanyLogo(){ uploadImage('logo'); }
+function uploadFavicon(){ uploadImage('favicon'); }
+function uploadImage(type){
+  let inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+  inp.onchange=e=>{ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=ev=>{ if(type==='logo'){ logoBase64=ev.target.result; localStorage.setItem('companyLogo',logoBase64); updateAllLogos(); } else { faviconBase64=ev.target.result; localStorage.setItem('companyFavicon',faviconBase64); updateFavicon(); } showNotification('تم التغيير'); }; reader.readAsDataURL(file); };
+  inp.click();
 }
 
-// ------------------- صلاحيات المستخدم -------------------
-function canSell() { return currentUser && currentUser.role !== 'guest'; }
-function getUserBranch() { return currentUser?.branchId || null; }
-function getUserDept() { return currentUser?.dept || null; }
-function filterProductsByUser(list) {
+// صلاحيات
+function canSell(){ return currentUser && currentUser.role !== 'guest'; }
+function getUserBranch(){ return currentUser?.branchId || null; }
+function getUserDept(){ return currentUser?.dept || null; }
+function filterProducts(list){
   if(!currentUser) return [];
   if(currentUser.role === 'super_admin') return list;
-  if(currentUser.branchId) {
-    let branchCats = branchesData[currentUser.branchId]?.categories || [];
-    return list.filter(p => branchCats.includes(p.category));
-  }
-  if(currentUser.dept) return list.filter(p => p.category === currentUser.dept);
+  if(currentUser.branchId) { let cats=branchesData[currentUser.branchId]?.categories||[]; return list.filter(p=>cats.includes(p.category)); }
+  if(currentUser.dept) return list.filter(p=>p.category===currentUser.dept);
   return [];
 }
 
-// ------------------- السلة -------------------
-function addToCart(prodId, branchId, qty=1) {
-  if(!canSell()) { showNotification('غير مسموح بالبيع'); return; }
-  let prod = products.find(p=>p.id==prodId);
+// السلة
+function addToCart(prodId,branchId,qty=1){
+  if(!canSell()){ showNotification('غير مسموح بالبيع'); return; }
+  let prod=products.find(p=>p.id==prodId);
   if(!prod) return;
-  if(currentUser.branchId) branchId = currentUser.branchId;
-  if(!branchesData[branchId]?.categories.includes(prod.category)) { showNotification('هذا القسم غير متوفر في هذا الفرع'); return; }
-  let stock = prod.stock[branchId];
-  if(stock < qty) { showNotification(`الكمية المتاحة: ${stock}`); return; }
-  let existing = cart.find(i=>i.productId==prodId && i.branchId==branchId);
-  if(existing) {
-    if(existing.quantity + qty > stock) { showNotification(`لا يمكن إضافة أكثر من ${stock}`); return; }
-    existing.quantity += qty;
-  } else {
-    cart.push({ productId:prodId, branchId, productName:prod.name, price:prod.price, quantity:qty, category:prod.category });
-  }
-  localStorage.setItem('cart', JSON.stringify(cart));
-  showNotification(`تم إضافة ${prod.name} إلى السلة`);
+  if(currentUser.branchId) branchId=currentUser.branchId;
+  if(!branchesData[branchId]?.categories.includes(prod.category)){ showNotification('هذا القسم غير متوفر في هذا الفرع'); return; }
+  let stock=prod.stock[branchId];
+  if(stock<qty){ showNotification(`الكمية المتاحة: ${stock}`); return; }
+  let existing=cart.find(i=>i.productId==prodId && i.branchId==branchId);
+  if(existing){ if(existing.quantity+qty>stock){ showNotification(`لا يمكن إضافة أكثر من ${stock}`); return; } existing.quantity+=qty; }
+  else { cart.push({ productId:prodId, branchId, productName:prod.name, price:prod.price, quantity:qty, category:prod.category }); }
+  localStorage.setItem('cart',JSON.stringify(cart));
+  showNotification(`تم إضافة ${prod.name}`);
   renderCart();
 }
-function removeFromCart(idx) { cart.splice(idx,1); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); }
-function updateCartQty(idx, newQty) {
-  if(newQty<1) { removeFromCart(idx); return; }
-  let item = cart[idx];
-  let prod = products.find(p=>p.id==item.productId);
-  if(prod && prod.stock[item.branchId] >= newQty) {
-    item.quantity = newQty;
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
-  } else showNotification('كمية غير متوفرة');
+function removeFromCart(idx){ cart.splice(idx,1); localStorage.setItem('cart',JSON.stringify(cart)); renderCart(); }
+function updateCartQty(idx,newQty){
+  if(newQty<1){ removeFromCart(idx); return; }
+  let item=cart[idx];
+  let prod=products.find(p=>p.id==item.productId);
+  if(prod && prod.stock[item.branchId]>=newQty){ item.quantity=newQty; localStorage.setItem('cart',JSON.stringify(cart)); renderCart(); }
+  else showNotification('كمية غير متوفرة');
 }
-function checkoutCart(paymentMethod) {
-  if(cart.length===0) { showNotification('السلة فارغة'); return; }
-  for(let item of cart) {
-    let prod = products.find(p=>p.id==item.productId);
-    if(!prod || prod.stock[item.branchId] < item.quantity) { showNotification(`المنتج ${item.productName} غير متوفر`); return; }
+function checkoutCart(paymentMethod){
+  if(cart.length===0){ showNotification('السلة فارغة'); return; }
+  for(let item of cart){
+    let prod=products.find(p=>p.id==item.productId);
+    if(!prod || prod.stock[item.branchId]<item.quantity){ showNotification(`المنتج ${item.productName} غير متوفر`); return; }
   }
-  for(let item of cart) {
-    let prod = products.find(p=>p.id==item.productId);
-    prod.stock[item.branchId] -= item.quantity;
-    let sale = {
-      id: Date.now(), branchId: item.branchId, branchName: branches.find(b=>b.id==item.branchId).name,
-      productId: item.productId, productName: item.productName, category: item.category,
-      quantity: item.quantity, price: item.price, total: item.price * item.quantity,
-      date: new Date().toLocaleString(), dateOnly: new Date().toISOString().slice(0,10),
-      seller: currentUser.username, paymentMethod: paymentMethod
-    };
+  for(let item of cart){
+    let prod=products.find(p=>p.id==item.productId);
+    prod.stock[item.branchId]-=item.quantity;
+    let sale={ id:Date.now(), branchId:item.branchId, branchName:branches.find(b=>b.id==item.branchId).name, productId:item.productId, productName:item.productName, category:item.category, quantity:item.quantity, price:item.price, total:item.price*item.quantity, date:new Date().toLocaleString(), dateOnly:new Date().toISOString().slice(0,10), seller:currentUser.username, paymentMethod };
     sales.unshift(sale);
   }
   saveAll();
-  cart = []; localStorage.setItem('cart', JSON.stringify(cart));
+  cart=[]; localStorage.setItem('cart',JSON.stringify(cart));
   showNotification(`تم البيع (${paymentMethod==='cash'?'كاش':'دين'})`);
   renderCart(); renderStore(); renderProductsList(); renderInventory(); renderReports(); renderWallet();
 }
-function renderCart() {
-  let container = document.getElementById('pCart');
-  if(!container) return;
-  if(cart.length===0) { container.innerHTML='<div class="empty">السلة فارغة</div>'; return; }
-  let total = 0;
-  let html = '';
+function renderCart(){
+  let cont=document.getElementById('pCart');
+  if(!cont) return;
+  if(cart.length===0){ cont.innerHTML='<div class="empty">السلة فارغة</div>'; return; }
+  let total=0, html='';
   cart.forEach((item,idx)=>{
-    let itemTotal = item.price * item.quantity;
-    total += itemTotal;
-    html += `<div class="cart-item"><div style="flex:2"><b>${item.productName}</b><br><small>${branches.find(b=>b.id===item.branchId)?.name}</small></div><input type="number" min="1" value="${item.quantity}" onchange="updateCartQty(${idx}, this.value)"><div>${item.price} ل.س</div><div>${itemTotal} ل.س</div><button class="remove" onclick="removeFromCart(${idx})">✖</button></div>`;
+    let it=item.price*item.quantity;
+    total+=it;
+    html+=`<div class="cart-item"><div style="flex:2"><b>${item.productName}</b><br><small>${branches.find(b=>b.id===item.branchId)?.name}</small></div><input type="number" min="1" value="${item.quantity}" onchange="updateCartQty(${idx},this.value)"><div>${item.price} ل.س</div><div>${it} ل.س</div><button class="remove" onclick="removeFromCart(${idx})">✖</button></div>`;
   });
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">🛒 السلة</div></div>${html}<div style="margin:16px 0;background:var(--accent);padding:12px;border-radius:12px;text-align:center"><b>الإجمالي: ${total} ل.س</b></div><div style="display:flex;gap:8px"><button class="btn btn-acc" onclick="checkoutCart('cash')">دفع كاش</button><button class="btn btn-ghost" onclick="checkoutCart('credit')">دين (آجل)</button></div>`;
+  cont.innerHTML=`<div class="sec-hdr"><div class="sec-title">🛒 السلة</div></div>${html}<div style="margin:16px 0;background:var(--accent);padding:12px;border-radius:12px;text-align:center"><b>الإجمالي: ${total} ل.س</b></div><div style="display:flex;gap:8px"><button class="btn btn-acc" onclick="checkoutCart('cash')">💰 كاش</button><button class="btn btn-ghost" onclick="checkoutCart('credit')">📝 دين</button></div>`;
 }
 
-// ------------------- عرض المنتجات -------------------
-function renderProductCard(p, branchId) {
-  let stock = p.stock[branchId] || 0;
-  let btn = canSell() ? `<button class="btn-add-to-cart" onclick="addToCart(${p.id},'${branchId}',1)">➕ أضف للسلة</button>` : '';
+// عرض المنتجات
+function renderProductCard(p,branchId){
+  let stock=p.stock[branchId]||0;
+  let btn=canSell()?`<button class="btn-add-to-cart" onclick="addToCart(${p.id},'${branchId}',1)">➕ أضف للسلة</button>`:'';
   return `<div class="pc"><div class="pc-img">${p.image?`<img src="${p.image}">`:'<span>📦</span>'}</div><div class="pc-body"><div class="pc-name">${p.name}</div><div class="pc-price">${p.price} ل.س</div><div class="pc-details">${p.category} | المتبقي: ${stock}</div>${btn}</div></div>`;
 }
-function renderStore() {
-  let container = document.getElementById('pStore');
-  if(!container) return;
-  let availableBranches = getUserBranch() ? branches.filter(b=>b.id===getUserBranch()) : branches;
-  let selectedBranch = localStorage.getItem('storeBranch') || (availableBranches[0]?.id || 'oldtown');
-  let branchCats = branchesData[selectedBranch]?.categories || [];
-  let selectedDept = localStorage.getItem('storeDept') || 'الكل';
-  container.innerHTML = `<div style="background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px;text-align:center"><h2>أهلاً وسهلاً</h2><p>اختر الفرع والقسم</p><div class="branch-buttons" id="branchButtons"></div><div class="branch-address" id="branchAddress"></div><div class="dept-buttons" id="deptButtons"></div><div class="search-box"><input id="storeSearch" placeholder="🔍 بحث"></div><div class="pg" id="storeGrid"></div></div>`;
-  // أزرار الفروع
-  let branchDiv = document.getElementById('branchButtons');
-  branchDiv.innerHTML = availableBranches.map(b=>`<button class="branch-btn ${selectedBranch===b.id?'active':''}" data-branch="${b.id}">${b.name}</button>`).join('');
-  branchDiv.querySelectorAll('.branch-btn').forEach(btn=>btn.addEventListener('click',()=>{ localStorage.setItem('storeBranch', btn.dataset.branch); renderStore(); }));
-  // عرض العنوان
-  let addrDiv = document.getElementById('branchAddress');
-  let branchInfo = branches.find(b=>b.id===selectedBranch);
-  addrDiv.innerHTML = branchInfo ? `📍 ${branchInfo.address}` : '';
-  // أزرار الأقسام
-  let deptDiv = document.getElementById('deptButtons');
-  deptDiv.innerHTML = `<button class="dept-btn ${selectedDept==='الكل'?'active':''}" data-dept="الكل">الكل</button>` + branchCats.map(c=>`<button class="dept-btn ${selectedDept===c?'active':''}" data-dept="${c}">${c}</button>`).join('');
-  deptDiv.querySelectorAll('.dept-btn').forEach(btn=>btn.addEventListener('click',()=>{ localStorage.setItem('storeDept', btn.dataset.dept); renderStore(); }));
-  // فلترة البحث
-  let searchInput = document.getElementById('storeSearch');
-  const renderGrid = () => {
-    let search = searchInput.value.toLowerCase();
-    let filtered = products.filter(p => (selectedDept==='الكل' || p.category===selectedDept) && (p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search)) && branchCats.includes(p.category));
-    filtered = filterProductsByUser(filtered);
-    let grid = document.getElementById('storeGrid');
+function renderStore(){
+  let cont=document.getElementById('pStore');
+  if(!cont) return;
+  let availableBranches=getUserBranch()?branches.filter(b=>b.id===getUserBranch()):branches;
+  let selectedBranch=localStorage.getItem('storeBranch')||(availableBranches[0]?.id||'oldtown');
+  let branchCats=branchesData[selectedBranch]?.categories||[];
+  let selectedDept=localStorage.getItem('storeDept')||'الكل';
+  cont.innerHTML=`<div style="background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px"><h2>أهلاً وسهلاً</h2><p>اختر الفرع والقسم</p><div class="branch-buttons" id="branchButtons"></div><div class="branch-address" id="branchAddress"></div><div class="dept-buttons" id="deptButtons"></div><div class="search-box"><input id="storeSearch" placeholder="بحث"></div><div class="pg" id="storeGrid"></div></div>`;
+  // فروع
+  let branchDiv=document.getElementById('branchButtons');
+  branchDiv.innerHTML=availableBranches.map(b=>`<button class="branch-btn ${selectedBranch===b.id?'active':''}" data-branch="${b.id}">${b.name}</button>`).join('');
+  branchDiv.querySelectorAll('.branch-btn').forEach(btn=>btn.addEventListener('click',()=>{ localStorage.setItem('storeBranch',btn.dataset.branch); renderStore(); }));
+  // عنوان
+  let addr=document.getElementById('branchAddress');
+  let branchInfo=branches.find(b=>b.id===selectedBranch);
+  addr.innerHTML=branchInfo?`📍 ${branchInfo.address}`:'';
+  // أقسام
+  let deptDiv=document.getElementById('deptButtons');
+  deptDiv.innerHTML=`<button class="dept-btn ${selectedDept==='الكل'?'active':''}" data-dept="الكل">الكل</button>`+branchCats.map(c=>`<button class="dept-btn ${selectedDept===c?'active':''}" data-dept="${c}">${c}</button>`).join('');
+  deptDiv.querySelectorAll('.dept-btn').forEach(btn=>btn.addEventListener('click',()=>{ localStorage.setItem('storeDept',btn.dataset.dept); renderStore(); }));
+  // بحث
+  let search=document.getElementById('storeSearch');
+  const renderGrid=()=>{
+    let query=search.value.toLowerCase();
+    let filtered=products.filter(p=>(selectedDept==='الكل'||p.category===selectedDept) && (p.name.toLowerCase().includes(query)||p.category.toLowerCase().includes(query)) && branchCats.includes(p.category));
+    filtered=filterProducts(filtered);
+    let grid=document.getElementById('storeGrid');
     if(filtered.length===0) grid.innerHTML='<div class="empty">لا توجد منتجات</div>';
-    else grid.innerHTML = filtered.map(p=>renderProductCard(p, selectedBranch)).join('');
+    else grid.innerHTML=filtered.map(p=>renderProductCard(p,selectedBranch)).join('');
   };
-  searchInput.addEventListener('input', renderGrid);
+  search.addEventListener('input',renderGrid);
   renderGrid();
 }
-function renderProductsList() {
-  let container = document.getElementById('pProducts');
-  if(!container) return;
-  let selectedDept = localStorage.getItem('prodDept') || 'الكل';
-  let userDept = getUserDept();
-  let deptList = userDept ? [userDept] : allCategories;
-  let branchId = getUserBranch() || 'oldtown';
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📋 جميع المنتجات</div></div><div class="dept-buttons" id="prodDeptButtons"></div><div class="search-box"><input id="prodSearch" placeholder="🔍 بحث"></div><div class="pg" id="prodGrid"></div>`;
-  let deptDiv = document.getElementById('prodDeptButtons');
-  deptDiv.innerHTML = `<button class="dept-btn ${selectedDept==='الكل'?'active':''}" data-dept="الكل">الكل</button>` + deptList.map(d=>`<button class="dept-btn ${selectedDept===d?'active':''}" data-dept="${d}">${d}</button>`).join('');
-  deptDiv.querySelectorAll('.dept-btn').forEach(btn=>btn.addEventListener('click',()=>{ localStorage.setItem('prodDept', btn.dataset.dept); renderProductsList(); }));
-  let searchInput = document.getElementById('prodSearch');
-  const render = () => {
-    let search = searchInput.value.toLowerCase();
-    let filtered = products.filter(p => (selectedDept==='الكل' || p.category===selectedDept) && (p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search)));
-    filtered = filterProductsByUser(filtered);
-    let grid = document.getElementById('prodGrid');
+function renderProductsList(){
+  let cont=document.getElementById('pProducts');
+  if(!cont) return;
+  let userDept=getUserDept();
+  let depts=userDept?[userDept]:allCategories;
+  let selectedDept=localStorage.getItem('prodDept')||'الكل';
+  let branchId=getUserBranch()||'oldtown';
+  cont.innerHTML=`<div class="sec-hdr"><div class="sec-title">📋 جميع المنتجات</div></div><div class="dept-buttons" id="prodDeptButtons"></div><div class="search-box"><input id="prodSearch" placeholder="بحث"></div><div class="pg" id="prodGrid"></div>`;
+  let deptDiv=document.getElementById('prodDeptButtons');
+  deptDiv.innerHTML=`<button class="dept-btn ${selectedDept==='الكل'?'active':''}" data-dept="الكل">الكل</button>`+depts.map(d=>`<button class="dept-btn ${selectedDept===d?'active':''}" data-dept="${d}">${d}</button>`).join('');
+  deptDiv.querySelectorAll('.dept-btn').forEach(btn=>btn.addEventListener('click',()=>{ localStorage.setItem('prodDept',btn.dataset.dept); renderProductsList(); }));
+  let search=document.getElementById('prodSearch');
+  const render=()=>{
+    let query=search.value.toLowerCase();
+    let filtered=products.filter(p=>(selectedDept==='الكل'||p.category===selectedDept) && (p.name.toLowerCase().includes(query)||p.category.toLowerCase().includes(query)));
+    filtered=filterProducts(filtered);
+    let grid=document.getElementById('prodGrid');
     if(filtered.length===0) grid.innerHTML='<div class="empty">لا توجد منتجات</div>';
-    else grid.innerHTML = filtered.map(p=>renderProductCard(p, branchId)).join('');
+    else grid.innerHTML=filtered.map(p=>renderProductCard(p,branchId)).join('');
   };
-  searchInput.addEventListener('input', render);
+  search.addEventListener('input',render);
   render();
 }
-function renderInventory() {
-  let container = document.getElementById('pInventory');
-  if(!container) return;
-  if(!canSell()) { container.innerHTML='<div class="empty">غير مصرح</div>'; return; }
-  let canEdit = (currentUser.role === 'super_admin' || currentUser.role === 'branch_manager');
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">📦 المخزون</div>${canEdit ? '<button class="btn btn-acc btn-sm" onclick="openProductModal()">+ منتج</button>' : ''}</div><div class="search-box"><input id="invSearch" placeholder="🔍 بحث"></div><div class="inv-grid" id="invGrid"></div>`;
-  let searchInput = document.getElementById('invSearch');
-  const render = () => {
-    let search = searchInput.value.toLowerCase();
-    let filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
-    filtered = filterProductsByUser(filtered);
-    let grid = document.getElementById('invGrid');
-    if(filtered.length===0) { grid.innerHTML='<div class="empty">لا توجد نتائج</div>'; return; }
-    grid.innerHTML = filtered.map(p => {
-      let stockDisplay = '';
-      if(currentUser.role === 'super_admin') stockDisplay = `أول البلد:${p.stock.oldtown} القلعة:${p.stock.castle} السوق:${p.stock.souk}`;
-      else if(currentUser.branchId) stockDisplay = `المتبقي: ${p.stock[currentUser.branchId]}`;
-      else stockDisplay = `أول البلد:${p.stock.oldtown} القلعة:${p.stock.castle} السوق:${p.stock.souk}`;
-      let fill = currentUser.branchId ? (p.stock[currentUser.branchId]/30)*100 : ((p.stock.oldtown+p.stock.castle+p.stock.souk)/90)*100;
-      return `<div class="inv-card"><div><b>${p.name}</b><br><small>${p.category}</small></div><div class="inv-bar"><div class="inv-fill" style="width:${fill}%; background:${fill<20?'red':'#22c55e'}"></div></div><div>${stockDisplay}</div>${canEdit ? `<div><button class="btn btn-sm btn-ghost" onclick="editProduct(${p.id})">تعديل</button> <button class="btn btn-sm btn-red" onclick="deleteProduct(${p.id})">حذف</button></div>` : ''}</div>`;
+function renderInventory(){
+  let cont=document.getElementById('pInventory');
+  if(!cont) return;
+  if(!canSell()){ cont.innerHTML='<div class="empty">غير مصرح</div>'; return; }
+  let canEdit=(currentUser.role==='super_admin'||currentUser.role==='branch_manager');
+  cont.innerHTML=`<div class="sec-hdr"><div class="sec-title">📦 المخزون</div>${canEdit?'<button class="btn btn-acc btn-sm" onclick="openProductModal()">+ منتج</button>':''}</div><div class="search-box"><input id="invSearch" placeholder="بحث"></div><div class="inv-grid" id="invGrid"></div>`;
+  let search=document.getElementById('invSearch');
+  const render=()=>{
+    let query=search.value.toLowerCase();
+    let filtered=products.filter(p=>p.name.toLowerCase().includes(query)||p.category.toLowerCase().includes(query));
+    filtered=filterProducts(filtered);
+    let grid=document.getElementById('invGrid');
+    if(filtered.length===0) grid.innerHTML='<div class="empty">لا توجد نتائج</div>';
+    else grid.innerHTML=filtered.map(p=>{
+      let stockDisplay='';
+      if(currentUser.role==='super_admin') stockDisplay=`أول البلد:${p.stock.oldtown} القلعة:${p.stock.castle} السوق:${p.stock.souk}`;
+      else if(currentUser.branchId) stockDisplay=`المتبقي: ${p.stock[currentUser.branchId]}`;
+      else stockDisplay=`أول البلد:${p.stock.oldtown} القلعة:${p.stock.castle} السوق:${p.stock.souk}`;
+      let fill=currentUser.branchId?(p.stock[currentUser.branchId]/30)*100:((p.stock.oldtown+p.stock.castle+p.stock.souk)/90)*100;
+      return `<div class="inv-card"><div><b>${p.name}</b><br><small>${p.category}</small></div><div class="inv-bar"><div class="inv-fill" style="width:${fill}%; background:${fill<20?'red':'#22c55e'}"></div></div><div>${stockDisplay}</div>${canEdit?`<div><button class="btn btn-sm btn-ghost" onclick="editProduct(${p.id})">تعديل</button> <button class="btn btn-sm btn-red" onclick="deleteProduct(${p.id})">حذف</button></div>`:''}</div>`;
     }).join('');
   };
-  searchInput.addEventListener('input', render);
+  search.addEventListener('input',render);
   render();
 }
-function openProductModal(prod=null) {
-  let modal = document.createElement('div');
-  modal.className = 'modal';
-  modal.innerHTML = `<div class="modal-content"><h3>${prod?'تعديل':'إضافة'} منتج</h3>
+function openProductModal(prod=null){
+  let modal=document.createElement('div'); modal.className='modal';
+  modal.innerHTML=`<div class="modal-content"><h3>${prod?'تعديل':'إضافة'} منتج</h3>
     <div class="fg"><label>الاسم</label><input id="pName" value="${prod?.name||''}"></div>
     <div class="fg"><label>القسم</label><select id="pCat">${allCategories.map(c=>`<option ${prod?.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
     <div class="fg"><label>السعر (ل.س)</label><input id="pPrice" type="number" value="${prod?.price||0}"></div>
@@ -457,228 +395,184 @@ function openProductModal(prod=null) {
     <div class="fg"><label>مخزون السوق</label><input id="pStockSouk" type="number" value="${prod?.stock?.souk||0}"></div>
     <div class="fg"><label>صورة</label><button type="button" id="uploadBtn" class="btn btn-ghost">رفع صورة</button><input type="hidden" id="pImage" value="${prod?.image||''}"><div id="imgPreview">${prod?.image?`<img src="${prod.image}" style="max-width:100px">`:''}</div></div>
     <div class="modal-actions"><button class="btn btn-acc" id="saveBtn">حفظ</button><button class="btn btn-red" id="closeBtn">إلغاء</button></div></div>`;
-  document.body.appendChild(modal);
-  modal.classList.add('active');
-  document.getElementById('uploadBtn').onclick = () => {
-    let input = document.createElement('input'); input.type='file'; input.accept='image/*';
-    input.onchange = e => {
-      let file = e.target.files[0];
-      if(!file) return;
-      let reader = new FileReader();
-      reader.onload = ev => {
-        document.getElementById('pImage').value = ev.target.result;
-        document.getElementById('imgPreview').innerHTML = `<img src="${ev.target.result}" style="max-width:100px">`;
-        showNotification('تم تحميل الصورة');
-      };
-      reader.readAsDataURL(file);
-    };
-    input.click();
+  document.body.appendChild(modal); modal.classList.add('active');
+  document.getElementById('uploadBtn').onclick=()=>{
+    let inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+    inp.onchange=e=>{ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=ev=>{ document.getElementById('pImage').value=ev.target.result; document.getElementById('imgPreview').innerHTML=`<img src="${ev.target.result}" style="max-width:100px">`; showNotification('تم رفع الصورة'); }; reader.readAsDataURL(file); };
+    inp.click();
   };
-  document.getElementById('saveBtn').onclick = () => {
-    let name = document.getElementById('pName').value;
-    let cat = document.getElementById('pCat').value;
-    let price = parseFloat(document.getElementById('pPrice').value);
-    let desc = document.getElementById('pDesc').value;
-    let old = parseInt(document.getElementById('pStockOld').value);
-    let castle = parseInt(document.getElementById('pStockCastle').value);
-    let souk = parseInt(document.getElementById('pStockSouk').value);
-    let image = document.getElementById('pImage').value;
-    if(!name) { showNotification('اسم المنتج مطلوب'); return; }
-    if(prod) {
-      prod.name=name; prod.category=cat; prod.price=price; prod.description=desc; prod.stock={oldtown:old, castle:castle, souk:souk}; prod.image=image;
-    } else {
-      products.push({ id:Date.now(), name, category:cat, price, stock:{oldtown:old, castle:castle, souk:souk}, image, description:desc });
-    }
-    saveAll(); renderInventory(); renderStore(); renderProductsList(); renderReports();
-    modal.remove();
-    showNotification('تم حفظ المنتج');
+  document.getElementById('saveBtn').onclick=()=>{
+    let name=document.getElementById('pName').value, cat=document.getElementById('pCat').value, price=parseFloat(document.getElementById('pPrice').value), desc=document.getElementById('pDesc').value, old=parseInt(document.getElementById('pStockOld').value), castle=parseInt(document.getElementById('pStockCastle').value), souk=parseInt(document.getElementById('pStockSouk').value), image=document.getElementById('pImage').value;
+    if(!name){ showNotification('اسم المنتج مطلوب'); return; }
+    if(prod){ prod.name=name; prod.category=cat; prod.price=price; prod.description=desc; prod.stock={oldtown:old, castle:castle, souk:souk}; prod.image=image; }
+    else { products.push({ id:Date.now(), name, category:cat, price, stock:{oldtown:old, castle:castle, souk:souk}, image, description:desc }); }
+    saveAll(); renderInventory(); renderStore(); renderProductsList(); renderReports(); modal.remove(); showNotification('تم الحفظ');
   };
-  document.getElementById('closeBtn').onclick = () => modal.remove();
+  document.getElementById('closeBtn').onclick=()=>modal.remove();
 }
-function editProduct(id) { openProductModal(products.find(p=>p.id==id)); }
-function deleteProduct(id) { if(confirm('حذف المنتج؟')) { products=products.filter(p=>p.id!=id); saveAll(); renderInventory(); renderStore(); renderProductsList(); renderReports(); showNotification('تم الحذف'); } }
-function renderWallet() {
-  let container = document.getElementById('pWallet');
-  if(!container) return;
-  let branchTotals = {}, deptTotals = {};
-  branches.forEach(b=>{ branchTotals[b.id]={cash:0,credit:0}; });
-  allCategories.forEach(c=>{ deptTotals[c]={cash:0,credit:0}; });
-  sales.forEach(s=>{
-    if(branchTotals[s.branchId]) branchTotals[s.branchId][s.paymentMethod] += s.total;
-    if(deptTotals[s.category]) deptTotals[s.category][s.paymentMethod] += s.total;
-  });
-  let html = `<div class="sec-hdr"><div class="sec-title">💰 المحفظة</div></div><div class="mini-card"><table class="wallet-table"><thead><th>الفرع</th><th>كاش</th><th>دين</th><th>الإجمالي</th></thead><tbody>`;
-  branches.forEach(b=>{ let c=branchTotals[b.id].cash, d=branchTotals[b.id].credit; html+=`<tr><td>${b.name}</td><td>${c}</td><td>${d}</td><td>${c+d}</td></tr>`; });
+function editProduct(id){ openProductModal(products.find(p=>p.id==id)); }
+function deleteProduct(id){ if(confirm('حذف المنتج؟')){ products=products.filter(p=>p.id!=id); saveAll(); renderInventory(); renderStore(); renderProductsList(); renderReports(); showNotification('تم الحذف'); } }
+function renderWallet(){
+  let cont=document.getElementById('pWallet');
+  if(!cont) return;
+  let branchTot={}, deptTot={};
+  branches.forEach(b=>{ branchTot[b.id]={cash:0,credit:0}; });
+  allCategories.forEach(c=>{ deptTot[c]={cash:0,credit:0}; });
+  sales.forEach(s=>{ if(branchTot[s.branchId]) branchTot[s.branchId][s.paymentMethod]+=s.total; if(deptTot[s.category]) deptTot[s.category][s.paymentMethod]+=s.total; });
+  let html=`<div class="sec-hdr"><div class="sec-title">💰 المحفظة</div></div><div class="mini-card"><table class="wallet-table"><thead><th>الفرع</th><th>كاش</th><th>دين</th><th>الإجمالي</th></thead><tbody>`;
+  branches.forEach(b=>{ let c=branchTot[b.id].cash, d=branchTot[b.id].credit; html+=`<tr><td>${b.name}</td><td>${c}</td><td>${d}</td><td>${c+d}</td></tr>`; });
   html+=`</tbody></table></div><div class="mini-card"><table class="wallet-table"><thead><th>القسم</th><th>كاش</th><th>دين</th><th>الإجمالي</th></thead><tbody>`;
-  allCategories.forEach(c=>{ let csh=deptTotals[c].cash, cr=deptTotals[c].credit; html+=`<tr><td>${c}</td><td>${csh}</td><td>${cr}</td><td>${csh+cr}</td></tr>`; });
+  allCategories.forEach(c=>{ let csh=deptTot[c].cash, cr=deptTot[c].credit; html+=`<tr><td>${c}</td><td>${csh}</td><td>${cr}</td><td>${csh+cr}</td></tr>`; });
   html+=`</tbody></table></div>`;
-  container.innerHTML = html;
+  cont.innerHTML=html;
 }
-function renderReports() {
-  let container = document.getElementById('pReports');
-  if(!container) return;
-  let adminBtns = (currentUser.role==='super_admin') ? `<button class="btn btn-acc btn-sm" onclick="uploadCompanyLogo()">تغيير شعار الشركة</button> <button class="btn btn-acc btn-sm" onclick="uploadFavicon()">أيقونة المتصفح</button>` : '';
-  container.innerHTML = `${adminBtns}<div class="sec-hdr"><div class="sec-title">📊 التقارير</div><button class="btn btn-ghost btn-sm" onclick="renderReports()">تحديث</button></div><div class="filter-bar"><select id="reportBranch"><option value="all">جميع الفروع</option>${branches.map(b=>`<option value="${b.id}">${b.name}</option>`).join('')}</select><select id="reportDept"><option value="all">جميع الأقسام</option>${allCategories.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div><div id="reportStats"></div><div id="reportTable"></div>`;
+function renderReports(){
+  let cont=document.getElementById('pReports');
+  if(!cont) return;
+  let adminBtns=(currentUser.role==='super_admin')?`<button class="btn btn-acc btn-sm" onclick="uploadCompanyLogo()">🖼️ شعار</button> <button class="btn btn-acc btn-sm" onclick="uploadFavicon()">🌐 أيقونة</button>`:'';
+  cont.innerHTML=`${adminBtns}<div class="sec-hdr"><div class="sec-title">📊 التقارير</div><button class="btn btn-ghost btn-sm" onclick="renderReports()">تحديث</button></div><div class="filter-bar"><select id="repBranch"><option value="all">جميع الفروع</option>${branches.map(b=>`<option value="${b.id}">${b.name}</option>`).join('')}</select> <select id="repDept"><option value="all">جميع الأقسام</option>${allCategories.map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div><div id="repStats"></div><div id="repTable"></div>`;
   applyReports();
 }
-function applyReports() {
-  let branch = document.getElementById('reportBranch')?.value || 'all';
-  let dept = document.getElementById('reportDept')?.value || 'all';
-  let filtered = [...sales];
-  if(currentUser.branchId) filtered = filtered.filter(s=>s.branchId===currentUser.branchId);
-  if(currentUser.dept) filtered = filtered.filter(s=>s.category===currentUser.dept);
-  if(branch!=='all') filtered = filtered.filter(s=>s.branchId===branch);
-  if(dept!=='all') filtered = filtered.filter(s=>s.category===dept);
-  let today = new Date().toISOString().slice(0,10);
-  let todaySales = filtered.filter(s=>s.dateOnly===today);
-  let totalToday = todaySales.reduce((a,b)=>a+b.total,0);
-  let totalAll = filtered.reduce((a,b)=>a+b.total,0);
-  document.getElementById('reportStats').innerHTML = `<div class="stats-row"><div class="stat"><div class="stat-val">${totalToday}</div><div>مبيعات اليوم</div></div><div class="stat"><div class="stat-val">${totalAll}</div><div>إجمالي المبيعات</div></div></div>`;
-  let html = `<table class="wallet-table"><thead><th>التاريخ</th><th>الفرع</th><th>القسم</th><th>المنتج</th><th>الكمية</th><th>الإجمالي</th><th>الدفع</th><th>البائع</th></thead><tbody>`;
+function applyReports(){
+  let branch=document.getElementById('repBranch')?.value||'all', dept=document.getElementById('repDept')?.value||'all';
+  let filtered=[...sales];
+  if(currentUser.branchId) filtered=filtered.filter(s=>s.branchId===currentUser.branchId);
+  if(currentUser.dept) filtered=filtered.filter(s=>s.category===currentUser.dept);
+  if(branch!=='all') filtered=filtered.filter(s=>s.branchId===branch);
+  if(dept!=='all') filtered=filtered.filter(s=>s.category===dept);
+  let today=new Date().toISOString().slice(0,10);
+  let todaySales=filtered.filter(s=>s.dateOnly===today);
+  let totalToday=todaySales.reduce((a,b)=>a+b.total,0);
+  let totalAll=filtered.reduce((a,b)=>a+b.total,0);
+  document.getElementById('repStats').innerHTML=`<div class="stats-row"><div class="stat"><div class="stat-val">${totalToday}</div><div>مبيعات اليوم</div></div><div class="stat"><div class="stat-val">${totalAll}</div><div>إجمالي المبيعات</div></div></div>`;
+  let html=`<table class="wallet-table"><thead><th>التاريخ</th><th>الفرع</th><th>القسم</th><th>المنتج</th><th>الكمية</th><th>الإجمالي</th><th>الدفع</th><th>البائع</th></thead><tbody>`;
   if(filtered.length===0) html+=`<tr><td colspan="8">لا توجد مبيعات</td></tr>`;
   else filtered.slice(0,50).forEach(s=>{ html+=`<tr><td>${s.date}</td><td>${s.branchName}</td><td>${s.category}</td><td>${s.productName}</td><td>${s.quantity}</td><td>${s.total}</td><td>${s.paymentMethod==='cash'?'كاش':'دين'}</td><td>${s.seller}</td></tr>`; });
   html+=`</tbody></table>`;
-  document.getElementById('reportTable').innerHTML = html;
+  document.getElementById('repTable').innerHTML=html;
 }
-function renderEmployees() {
-  let container = document.getElementById('pEmployees');
-  if(!container) return;
-  if(currentUser.role !== 'super_admin') { container.innerHTML='<div class="empty">غير مصرح</div>'; return; }
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">👥 المستخدمون</div><button class="btn btn-acc btn-sm" onclick="openUserModal()">+ مستخدم</button></div><div id="usersList"></div>`;
-  let html = `<div class="emp-grid">${users.map(u=>`<div class="emp-card"><div><b>${u.name}</b> (@${u.username}) - ${u.role} ${u.branchId?`فرع ${branches.find(b=>b.id===u.branchId)?.name}`:''} ${u.dept?`قسم ${u.dept}`:''}</div><button class="btn btn-sm btn-red" onclick="deleteUser(${u.id})">حذف</button></div>`).join('')}</div>`;
-  document.getElementById('usersList').innerHTML = html;
+function renderEmployees(){
+  let cont=document.getElementById('pEmployees');
+  if(!cont) return;
+  if(currentUser.role!=='super_admin'){ cont.innerHTML='<div class="empty">غير مصرح</div>'; return; }
+  cont.innerHTML=`<div class="sec-hdr"><div class="sec-title">👥 المستخدمون</div><button class="btn btn-acc btn-sm" onclick="openUserModal()">+ مستخدم</button></div><div id="usersList"></div>`;
+  let html=`<div class="emp-grid">${users.map(u=>`<div class="emp-card"><div><b>${u.name}</b> (@${u.username}) - ${u.role} ${u.branchId?`فرع ${branches.find(b=>b.id===u.branchId)?.name}`:''} ${u.dept?`قسم ${u.dept}`:''}</div><button class="btn btn-sm btn-red" onclick="deleteUser(${u.id})">حذف</button></div>`).join('')}</div>`;
+  document.getElementById('usersList').innerHTML=html;
 }
-function openUserModal() {
-  let modal = document.createElement('div');
-  modal.className = 'modal';
-  modal.innerHTML = `<div class="modal-content"><h3>إضافة مستخدم</h3>
-    <div class="fg"><label>الاسم</label><input id="uname"></div>
-    <div class="fg"><label>اسم المستخدم</label><input id="uuser"></div>
-    <div class="fg"><label>كلمة المرور</label><input id="upass" type="password"></div>
-    <div class="fg"><label>الصلاحية</label><select id="urole"><option>super_admin</option><option>branch_manager</option><option>dept_manager</option><option>employee</option></select></div>
-    <div id="ubranchDiv" style="display:none"><div class="fg"><label>الفرع</label><select id="ubranch">${branches.map(b=>`<option value="${b.id}">${b.name}</option>`).join('')}</select></div></div>
-    <div id="udeptDiv" style="display:none"><div class="fg"><label>القسم</label><select id="udept">${allCategories.map(c=>`<option>${c}</option>`).join('')}</select></div></div>
+function openUserModal(){
+  let modal=document.createElement('div'); modal.className='modal';
+  modal.innerHTML=`<div class="modal-content"><h3>إضافة مستخدم</h3>
+    <div class="fg"><label>الاسم</label><input id="fullName"></div>
+    <div class="fg"><label>اسم المستخدم</label><input id="userName"></div>
+    <div class="fg"><label>كلمة المرور</label><input id="userPass" type="password"></div>
+    <div class="fg"><label>الصلاحية</label><select id="userRole"><option>super_admin</option><option>branch_manager</option><option>dept_manager</option><option>employee</option></select></div>
+    <div id="branchField" style="display:none"><div class="fg"><label>الفرع</label><select id="userBranch">${branches.map(b=>`<option value="${b.id}">${b.name}</option>`).join('')}</select></div></div>
+    <div id="deptField" style="display:none"><div class="fg"><label>القسم</label><select id="userDept">${allCategories.map(c=>`<option>${c}</option>`).join('')}</select></div></div>
     <div class="modal-actions"><button class="btn btn-acc" id="saveUserBtn">حفظ</button><button class="btn btn-red" id="closeUserModal">إلغاء</button></div></div>`;
-  document.body.appendChild(modal);
-  modal.classList.add('active');
-  let roleSel = document.getElementById('urole');
-  roleSel.onchange = () => {
-    let val = roleSel.value;
-    document.getElementById('ubranchDiv').style.display = (val==='branch_manager'||val==='employee')?'block':'none';
-    document.getElementById('udeptDiv').style.display = (val==='dept_manager')?'block':'none';
+  document.body.appendChild(modal); modal.classList.add('active');
+  let roleSel=document.getElementById('userRole');
+  roleSel.onchange=()=>{
+    let val=roleSel.value;
+    document.getElementById('branchField').style.display=(val==='branch_manager'||val==='employee')?'block':'none';
+    document.getElementById('deptField').style.display=(val==='dept_manager')?'block':'none';
   };
   roleSel.dispatchEvent(new Event('change'));
-  document.getElementById('saveUserBtn').onclick = () => {
-    let name = document.getElementById('uname').value;
-    let username = document.getElementById('uuser').value;
-    let password = document.getElementById('upass').value;
-    let role = roleSel.value;
-    let branchId = (role==='branch_manager'||role==='employee')?document.getElementById('ubranch').value:null;
-    let dept = (role==='dept_manager')?document.getElementById('udept').value:null;
-    if(!name||!username||!password) { showNotification('املأ الحقول'); return; }
+  document.getElementById('saveUserBtn').onclick=()=>{
+    let name=document.getElementById('fullName').value, username=document.getElementById('userName').value, password=document.getElementById('userPass').value, role=roleSel.value;
+    let branchId=(role==='branch_manager'||role==='employee')?document.getElementById('userBranch').value:null;
+    let dept=(role==='dept_manager')?document.getElementById('userDept').value:null;
+    if(!name||!username||!password){ showNotification('املأ الحقول'); return; }
     users.push({ id:Date.now(), name, username, password, role, branchId, dept, manager:null });
     saveAll(); modal.remove(); renderEmployees(); showNotification('تمت الإضافة');
   };
-  document.getElementById('closeUserModal').onclick = () => modal.remove();
+  document.getElementById('closeUserModal').onclick=()=>modal.remove();
 }
-function deleteUser(id) { if(confirm('حذف المستخدم؟')){ users=users.filter(u=>u.id!=id); saveAll(); renderEmployees(); showNotification('تم الحذف'); } }
-function renderSettings() {
-  let container = document.getElementById('pSettings');
-  if(!container) return;
-  if(currentUser.role !== 'super_admin') { container.innerHTML='<div class="empty">غير مصرح</div>'; return; }
-  container.innerHTML = `<div class="sec-hdr"><div class="sec-title">⚙️ إعدادات الفروع</div></div><div id="branchesSettings"></div>`;
-  let html = `<div class="mini-card"><table class="wallet-table"><thead><th>الاسم</th><th>العنوان</th><th></th></thead><tbody>`;
-  branches.forEach(b=>{
-    html += `<tr><td><input id="bname_${b.id}" value="${b.name}"></td><td><input id="baddr_${b.id}" value="${b.address}"></td><td><button onclick="updateBranchSettings('${b.id}')">حفظ</button><button onclick="deleteBranchSettings('${b.id}')">حذف</button></td></tr>`;
-  });
-  html += `</tbody></table><button class="btn btn-acc btn-sm" onclick="addBranchSettings()">+ فرع</button></div>`;
-  container.innerHTML = html;
+function deleteUser(id){ if(confirm('حذف المستخدم؟')){ users=users.filter(u=>u.id!=id); saveAll(); renderEmployees(); showNotification('تم الحذف'); } }
+function renderSettings(){
+  let cont=document.getElementById('pSettings');
+  if(!cont) return;
+  if(currentUser.role!=='super_admin'){ cont.innerHTML='<div class="empty">غير مصرح</div>'; return; }
+  cont.innerHTML=`<div class="sec-hdr"><div class="sec-title">⚙️ إعدادات الفروع</div></div><div id="branchesSettings"></div>`;
+  let html=`<div class="mini-card"><table class="wallet-table"><thead><th>الاسم</th><th>العنوان</th><th></th></thead><tbody>`;
+  branches.forEach(b=>{ html+=`<tr><td><input id="bname_${b.id}" value="${b.name}"></td><td><input id="baddr_${b.id}" value="${b.address}"></td><td><button class="btn btn-sm btn-acc" onclick="updateBranch('${b.id}')">حفظ</button> <button class="btn btn-sm btn-red" onclick="deleteBranch('${b.id}')">حذف</button></td></tr>`; });
+  html+=`</tbody></table><button class="btn btn-acc btn-sm" onclick="addBranch()">+ فرع</button></div>`;
+  cont.innerHTML=html;
 }
-function updateBranchSettings(id) {
-  let newName = document.getElementById(`bname_${id}`).value;
-  let newAddr = document.getElementById(`baddr_${id}`).value;
-  let branch = branches.find(b=>b.id===id);
-  if(branch) { branch.name = newName; branch.address = newAddr; branchesData[id].name = newName; branchesData[id].address = newAddr; saveAll(); renderSettings(); showNotification('تم التحديث'); }
+function updateBranch(id){
+  let newName=document.getElementById(`bname_${id}`).value, newAddr=document.getElementById(`baddr_${id}`).value;
+  let b=branches.find(b=>b.id===id);
+  if(b){ b.name=newName; b.address=newAddr; branchesData[id].name=newName; branchesData[id].address=newAddr; saveAll(); renderSettings(); showNotification('تم التحديث'); }
 }
-function addBranchSettings() {
-  let id = prompt('معرف الفرع (مثل newbranch)');
-  let name = prompt('اسم الفرع');
-  let addr = prompt('العنوان');
-  if(id && name && !branches.find(b=>b.id===id)) {
-    branches.push({ id, name, address: addr });
-    branchesData[id] = { name, address: addr, categories: ['مواد غذائية'] };
+function addBranch(){
+  let id=prompt('معرف الفرع'), name=prompt('الاسم'), addr=prompt('العنوان'), cats=prompt('الأقسام (مفصولة بفواصل)','مواد غذائية');
+  if(id && name && !branches.find(b=>b.id===id)){
+    branches.push({ id, name, address:addr });
+    branchesData[id]={ name, address:addr, categories:cats.split(',') };
     saveAll(); renderSettings(); showNotification('تمت الإضافة');
   }
 }
-function deleteBranchSettings(id) { if(confirm('حذف الفرع؟')){ branches=branches.filter(b=>b.id!=id); delete branchesData[id]; saveAll(); renderSettings(); } }
-
-// ------------------- التنقل -------------------
-function setActivePanel(panelId) {
+function deleteBranch(id){ if(confirm('حذف الفرع؟')){ branches=branches.filter(b=>b.id!=id); delete branchesData[id]; saveAll(); renderSettings(); } }
+function setActivePanel(pid){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById(panelId).classList.add('active');
+  document.getElementById(pid).classList.add('active');
   document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
-  let btn = document.querySelector(`.bn-item[data-panel="${panelId}"]`);
+  let btn=document.querySelector(`.bn-item[data-panel="${pid}"]`);
   if(btn) btn.classList.add('active');
-  if(panelId === 'pStore') renderStore();
-  else if(panelId === 'pCart') renderCart();
-  else if(panelId === 'pProducts') renderProductsList();
-  else if(panelId === 'pInventory') renderInventory();
-  else if(panelId === 'pReports') { renderReports(); applyReports(); }
-  else if(panelId === 'pWallet') renderWallet();
-  else if(panelId === 'pEmployees') renderEmployees();
-  else if(panelId === 'pSettings') renderSettings();
+  if(pid==='pStore') renderStore();
+  else if(pid==='pCart') renderCart();
+  else if(pid==='pProducts') renderProductsList();
+  else if(pid==='pInventory') renderInventory();
+  else if(pid==='pReports') { renderReports(); applyReports(); }
+  else if(pid==='pWallet') renderWallet();
+  else if(pid==='pEmployees') renderEmployees();
+  else if(pid==='pSettings') renderSettings();
 }
-document.querySelectorAll('.bn-item').forEach(btn => btn.addEventListener('click', () => setActivePanel(btn.dataset.panel)));
+document.querySelectorAll('.bn-item').forEach(btn=>btn.addEventListener('click',()=>setActivePanel(btn.dataset.panel)));
 
-// ------------------- تسجيل الدخول -------------------
-function setTab(tab) {
-  currentTab = tab;
+// تسجيل الدخول
+function setTab(tab){
+  currentTab=tab;
   document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
   event.target.classList.add('active');
-  document.getElementById('lPassWrap').style.display = (tab==='guest')?'none':'block';
+  document.getElementById('lPassWrap').style.display=(tab==='guest')?'none':'block';
 }
-function login() {
-  let user = document.getElementById('lUser').value.trim();
-  let pass = document.getElementById('lPass').value;
-  let found = null;
-  if(currentTab === 'guest') {
-    currentUser = { username:'guest', role:'guest', branchId:null, dept:null };
-  } else {
-    found = users.find(u=>u.username===user && u.password===pass);
-    if(!found) { document.getElementById('lErr').style.display='block'; return; }
-    currentUser = found;
+function login(){
+  let user=document.getElementById('lUser').value.trim(), pass=document.getElementById('lPass').value;
+  if(currentTab==='guest'){ currentUser={ username:'guest', role:'guest', branchId:null, dept:null }; }
+  else {
+    let found=users.find(u=>u.username===user && u.password===pass);
+    if(!found){ document.getElementById('lErr').style.display='block'; return; }
+    currentUser=found;
   }
-  if(document.getElementById('rememberMe').checked) localStorage.setItem('savedUser', JSON.stringify({username:currentUser.username, role:currentUser.role, branchId:currentUser.branchId, dept:currentUser.dept}));
+  if(document.getElementById('rememberMe').checked) localStorage.setItem('savedUser',JSON.stringify({username:currentUser.username, role:currentUser.role, branchId:currentUser.branchId, dept:currentUser.dept}));
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
-  let empNav = document.querySelector('.bn-item[data-panel="pEmployees"]');
-  let setNav = document.querySelector('.bn-item[data-panel="pSettings"]');
-  if(currentUser.role !== 'super_admin') { empNav.style.display = 'none'; setNav.style.display = 'none'; }
-  else { empNav.style.display = 'flex'; setNav.style.display = 'flex'; }
+  let empNav=document.querySelector('.bn-item[data-panel="pEmployees"]');
+  let setNav=document.querySelector('.bn-item[data-panel="pSettings"]');
+  if(currentUser.role!=='super_admin'){ empNav.style.display='none'; setNav.style.display='none'; }
+  else { empNav.style.display='flex'; setNav.style.display='flex'; }
   setActivePanel('pStore');
-  updateAllLogos();
-  updateFavicon();
+  updateAllLogos(); updateFavicon();
 }
-function logout() { currentUser=null; localStorage.removeItem('savedUser'); document.getElementById('loginScreen').classList.add('active'); document.getElementById('appScreen').classList.remove('active'); }
-function openWA() { window.open('https://wa.me/972599285511?text=مرحباً'); }
-function openGPS() { window.open('https://maps.google.com/?q=31.9474,35.2272'); }
-let saved = localStorage.getItem('savedUser');
-if(saved) {
-  try {
-    let u = JSON.parse(saved);
-    if(u.username) {
-      if(u.username === 'guest') currentUser = { username:'guest', role:'guest', branchId:null, dept:null };
-      else currentUser = users.find(us=>us.username===u.username) || u;
-      if(currentUser) {
+function logout(){ currentUser=null; localStorage.removeItem('savedUser'); document.getElementById('loginScreen').classList.add('active'); document.getElementById('appScreen').classList.remove('active'); }
+function openWA(){ window.open('https://wa.me/972599285511?text=مرحباً'); }
+function openGPS(){ window.open('https://maps.google.com/?q=31.9474,35.2272'); }
+let saved=localStorage.getItem('savedUser');
+if(saved){
+  try{
+    let u=JSON.parse(saved);
+    if(u.username){
+      if(u.username==='guest') currentUser={ username:'guest', role:'guest', branchId:null, dept:null };
+      else currentUser=users.find(us=>us.username===u.username) || u;
+      if(currentUser){
         document.getElementById('loginScreen').classList.remove('active');
         document.getElementById('appScreen').classList.add('active');
-        if(currentUser.role !== 'super_admin') { document.querySelector('.bn-item[data-panel="pEmployees"]').style.display = 'none'; document.querySelector('.bn-item[data-panel="pSettings"]').style.display = 'none'; }
+        if(currentUser.role!=='super_admin'){ document.querySelector('.bn-item[data-panel="pEmployees"]').style.display='none'; document.querySelector('.bn-item[data-panel="pSettings"]').style.display='none'; }
         setActivePanel('pStore');
-        updateAllLogos();
-        updateFavicon();
+        updateAllLogos(); updateFavicon();
       }
     }
-  } catch(e) {}
+  }catch(e){}
 }
 </script>
 </body>
