@@ -257,8 +257,12 @@ tr:hover td{background:rgba(255,107,53,0.03)}
     <button class="tab-btn" onclick="setTab('emp')">🧑‍💼 موظف</button>
     <button class="tab-btn" onclick="setTab('guest')">🛒 تسوّق</button>
   </div>
-  <div class="inp-wrap"><input id="lUser" placeholder="اسم المستخدم" autocomplete="off"></div>
-  <div class="inp-wrap" id="lPassWrap"><input id="lPass" type="password" placeholder="كلمة المرور" onkeypress="if(event.key==='Enter')login()"></div>
+  <div class="inp-wrap"><input id="lUser" placeholder="اسم المستخدم" autocomplete="username"></div>
+  <div class="inp-wrap" id="lPassWrap"><input id="lPass" type="password" placeholder="كلمة المرور" autocomplete="current-password" onkeypress="if(event.key==='Enter')login()"></div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;margin-top:-4px">
+    <input type="checkbox" id="rememberMe" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer">
+    <label for="rememberMe" style="font-size:13px;color:var(--text2);cursor:pointer;font-weight:600">تذكّرني — لا تطلب كلمة المرور مجدداً</label>
+  </div>
   <button class="btn-enter" onclick="login()">دخول ←</button>
   <div class="err" id="lErr">❌ بيانات خاطئة، حاول مرة أخرى</div>
   <div class="hint">مدير: admin / admin123 &nbsp;•&nbsp; موظف: emp1 / emp123</div>
@@ -329,12 +333,7 @@ tr:hover td{background:rgba(255,107,53,0.03)}
         <input id="prodSearch" placeholder="🔍 بحث..." oninput="renderProdTable()" style="flex:1;min-width:140px;padding:10px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none">
         <select id="prodCatF" onchange="renderProdTable()" style="padding:10px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;outline:none"></select>
       </div>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>المخزون</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-          <tbody id="prodTbody"></tbody>
-        </table>
-      </div>
+      <div id="prodCards"></div>
     </div>
 
     <!-- ── INVENTORY ── -->
@@ -546,6 +545,22 @@ function resetAll() {
 // تحميل البيانات عند فتح الصفحة
 loadAll();
 
+// ════ تسجيل دخول تلقائي ════
+function checkAutoLogin() {
+  try {
+    const saved = localStorage.getItem('mstore_session');
+    if(saved) {
+      const s = JSON.parse(saved);
+      if(s.user && ACCOUNTS[s.user] && ACCOUNTS[s.user].pass === s.pass) {
+        me = {...ACCOUNTS[s.user], user: s.user};
+        go();
+        return true;
+      }
+    }
+  } catch(e) {}
+  return false;
+}
+
 // ════ AUTH ════
 function setTab(t) {
   loginType = t;
@@ -560,10 +575,13 @@ function login() {
   const u=document.getElementById('lUser').value.trim();
   const p=document.getElementById('lPass').value;
   const err=document.getElementById('lErr');
+  const remember=document.getElementById('rememberMe')?.checked;
   if(loginType==='guest'){me={role:'guest',name:u||'زائر'};go();return}
   if(ACCOUNTS[u]&&ACCOUNTS[u].pass===p){
     if(loginType==='admin'&&ACCOUNTS[u].role!=='admin'){err.textContent='❌ هذا الحساب ليس مديراً';err.style.display='block';return}
-    me={...ACCOUNTS[u],user:u};go();
+    me={...ACCOUNTS[u],user:u};
+    if(remember){try{localStorage.setItem('mstore_session',JSON.stringify({user:u,pass:p}));}catch(e){}}
+    go();
   } else {err.textContent='❌ بيانات خاطئة';err.style.display='block'}
 }
 
@@ -577,11 +595,14 @@ function go() {
 }
 
 function logout() {
+  if(!confirm('هل تريد تسجيل الخروج؟'))return;
+  try{localStorage.removeItem('mstore_session');}catch(e){}
   me=null;
   document.getElementById('loginScreen').classList.add('active');
   document.getElementById('appScreen').classList.remove('active');
   document.getElementById('lUser').value='';
   document.getElementById('lPass').value='';
+  if(document.getElementById('rememberMe'))document.getElementById('rememberMe').checked=false;
 }
 
 // ════ NAV ════
@@ -688,23 +709,35 @@ function renderProdTable() {
   let items=[...products];
   if(cat)items=items.filter(p=>p.cat===cat);
   if(q)items=items.filter(p=>p.name.toLowerCase().includes(q));
-  document.getElementById('prodTbody').innerHTML=items.map(p=>`
-    <tr>
-      <td><span style="font-size:20px">${p.emoji}</span> <strong>${p.name}</strong></td>
-      <td>${catEmoji(p.cat)} ${catName(p.cat)}</td>
-      <td>
-        <span style="font-weight:900;color:var(--accent)">${p.price.toLocaleString('ar-SY')}</span>
-        <button class="btn btn-gold btn-sm" style="margin-right:6px;color:#1a1a1a" onclick="openPriceModal(${p.id})">💰</button>
-      </td>
-      <td><span class="badge ${p.stock<5?'badge-red':p.stock<10?'badge-gold':'badge-green'}">${p.stock}</span></td>
-      <td><span class="badge ${p.active?'badge-green':'badge-red'}">${p.active?'نشط':'متوقف'}</span></td>
-      <td>
-        <div class="t-actions">
-          <button class="btn btn-acc btn-sm" onclick="openProdModal(${p.id})">✏️ تعديل</button>
-          <button class="btn btn-red btn-sm" onclick="delProd(${p.id})">🗑️</button>
+  const el=document.getElementById('prodCards');
+  if(!el)return;
+  if(!items.length){el.innerHTML='<div class="empty"><div class="ei">🔍</div><h3>لا توجد منتجات</h3></div>';return}
+  el.innerHTML=items.map(p=>`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:32px">${p.emoji}</span>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:800;margin-bottom:3px">${p.name}</div>
+          <div style="font-size:12px;color:var(--text2)">${catEmoji(p.cat)} ${catName(p.cat)}</div>
         </div>
-      </td>
-    </tr>`).join('');
+        <span class="badge ${p.active?'badge-green':'badge-red'}">${p.active?'نشط':'متوقف'}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:2px">السعر</div>
+          <div style="font-size:16px;font-weight:900;color:var(--accent)">${p.price.toLocaleString('ar-SY')} ل.س</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:2px">المخزون</div>
+          <span class="badge ${p.stock<5?'badge-red':p.stock<10?'badge-gold':'badge-green'}">${p.stock} قطعة</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-acc" style="flex:1;justify-content:center;padding:11px" onclick="openProdModal(${p.id})">✏️ تعديل كامل</button>
+        <button class="btn btn-gold" style="padding:11px 14px;color:#1a1a1a" onclick="openPriceModal(${p.id})">💰</button>
+        <button class="btn btn-red" style="padding:11px 14px" onclick="delProd(${p.id})">🗑️</button>
+      </div>
+    </div>`).join('');
 }
 
 function openProdModal(id) {
@@ -889,6 +922,8 @@ document.querySelectorAll('.overlay').forEach(o=>{
 
 // Init
 setTab('admin');
+// تسجيل دخول تلقائي إذا كان محفوظاً
+checkAutoLogin();
 </script>
 </body>
 </html>
