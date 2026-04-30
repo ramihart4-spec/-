@@ -232,14 +232,16 @@ td{padding:8px;border-bottom:1px solid var(--border);vertical-align:middle}
       <div class="tb-name">غرزالدين</div>
     </div>
     <div class="tb-right">
-      <div class="tb-rate">💵 <span id="rateSpan">15000</span></div>
-      <button class="tb-btn wa" onclick="openWA()" title="واتساب">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.533 5.845L.057 23.492c-.083.334.239.632.568.527l5.845-1.867A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+      <button class="tb-btn wa" onclick="openWA()" title="واتساب" style="width:30px;height:30px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.533 5.845L.057 23.492c-.083.334.239.632.568.527l5.845-1.867A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
       </button>
-      <button class="tb-btn" onclick="openGPS()">📍</button>
-      <button class="tb-btn" onclick="openMsgModal()" id="msgBtn">💬<span class="badge" id="msgBadge">0</span></button>
-      <button class="tb-btn" id="dollarBtn" onclick="editRate()">💵</button>
-      <button class="tb-btn" onclick="doLogout()" style="background:rgba(239,68,68,.2);color:var(--red)">🚪</button>
+      <button class="tb-btn" onclick="openFBMenu()" title="فيسبوك" style="width:30px;height:30px;background:#1877f2;color:#fff">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </button>
+      <button class="tb-btn" onclick="openGPS()" style="width:30px;height:30px">📍</button>
+      <button class="tb-btn" onclick="openMsgModal()" id="msgBtn" style="width:30px;height:30px">💬<span class="badge" id="msgBadge">0</span></button>
+      <button class="tb-btn" id="dollarBtn" onclick="editRate()" style="width:30px;height:30px;background:rgba(245,197,24,.15);color:var(--gold)">💵</button>
+      <button class="tb-btn" onclick="doLogout()" style="width:30px;height:30px;background:rgba(239,68,68,.2);color:var(--red)">🚪</button>
     </div>
   </div>
 
@@ -250,6 +252,7 @@ td{padding:8px;border-bottom:1px solid var(--border);vertical-align:middle}
     <div class="panel" id="pInventory"></div>
     <div class="panel" id="pReports"></div>
     <div class="panel" id="pWallet"></div>
+    <div class="panel" id="pDebt"></div>
     <div class="panel" id="pEmployees"></div>
     <div class="panel" id="pSettings"></div>
   </div>
@@ -261,6 +264,7 @@ td{padding:8px;border-bottom:1px solid var(--border);vertical-align:middle}
     <button class="bn" data-p="pInventory"><span class="icon">📦</span>المخزون</button>
     <button class="bn" data-p="pReports"><span class="icon">📊</span>التقارير</button>
     <button class="bn" data-p="pWallet"><span class="icon">💰</span>المحفظة</button>
+    <button class="bn" data-p="pDebt"><span class="icon">📒</span>الديون</button>
     <button class="bn hidden" data-p="pEmployees" id="navEmp"><span class="icon">👥</span>الموظفون</button>
     <button class="bn hidden" data-p="pSettings" id="navSet"><span class="icon">⚙️</span>الإعدادات</button>
   </div>
@@ -345,6 +349,39 @@ td{padding:8px;border-bottom:1px solid var(--border);vertical-align:middle}
 </div>
 </div>
 
+<!-- Facebook Modal -->
+<div class="overlay" id="mFB">
+<div class="modal-box">
+  <div class="modal-drag"></div>
+  <div class="modal-hdr">
+    <div class="modal-title" style="color:#1877f2">📘 صفحات الفيسبوك</div>
+    <button class="modal-close" onclick="closeOverlay('mFB')">✕</button>
+  </div>
+  <div id="fbPagesList"></div>
+  <div style="margin-top:12px" id="fbAdminAdd"></div>
+</div>
+</div>
+
+<!-- Debt Modal -->
+<div class="overlay" id="mDebt">
+<div class="modal-box">
+  <div class="modal-drag"></div>
+  <div class="modal-hdr">
+    <div class="modal-title">📒 إضافة دين</div>
+    <button class="modal-close" onclick="closeOverlay('mDebt')">✕</button>
+  </div>
+  <div class="fg"><label>اسم الزبون</label><input id="dName" placeholder="اسم الزبون"></div>
+  <div class="fg"><label>رقم الهاتف (اختياري)</label><input id="dPhone" placeholder="09xxxxxxxx" type="tel"></div>
+  <div class="fg"><label>المبلغ (ل.س)</label><input id="dAmount" type="number" placeholder="0"></div>
+  <div class="fg"><label>التفاصيل</label><input id="dDetails" placeholder="تفاصيل المشتريات"></div>
+  <div class="fg"><label>الفرع</label><select id="dBranch"></select></div>
+  <div class="modal-btns">
+    <button class="btn btn-acc" onclick="saveDebt()">💾 حفظ الدين</button>
+    <button class="btn btn-ghost" onclick="closeOverlay('mDebt')">إلغاء</button>
+  </div>
+</div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -387,8 +424,15 @@ let users = JSON.parse(localStorage.getItem('ghz_users')) || [
 let sales = JSON.parse(localStorage.getItem('ghz_sales')) || [];
 let messages = JSON.parse(localStorage.getItem('ghz_msgs')) || [];
 let cart = JSON.parse(localStorage.getItem('ghz_cart')) || [];
+let debts = JSON.parse(localStorage.getItem('ghz_debts')) || [];
+let fbPages = JSON.parse(localStorage.getItem('ghz_fb')) || [
+  {id:1, name:'مجموعة غرزالدين - السوق', url:'https://facebook.com'},
+  {id:2, name:'مجموعة غرزالدين - أول البلد', url:'https://facebook.com'},
+];
 let exchangeRate = parseFloat(localStorage.getItem('ghz_rate')) || 15000;
 let companyLogo = localStorage.getItem('ghz_logo') || '';
+let buyRate = parseFloat(localStorage.getItem('ghz_buyrate')) || 14800;
+let sellRate = parseFloat(localStorage.getItem('ghz_sellrate')) || 15200;
 
 let me = null, loginTab = 'admin';
 let editProdId = null, currentBranch = 'oldtown', currentDept = 'الكل';
@@ -401,7 +445,11 @@ function save() {
   localStorage.setItem('ghz_users', JSON.stringify(users));
   localStorage.setItem('ghz_sales', JSON.stringify(sales));
   localStorage.setItem('ghz_msgs', JSON.stringify(messages));
+  localStorage.setItem('ghz_debts', JSON.stringify(debts));
+  localStorage.setItem('ghz_fb', JSON.stringify(fbPages));
   localStorage.setItem('ghz_rate', exchangeRate);
+  localStorage.setItem('ghz_buyrate', buyRate);
+  localStorage.setItem('ghz_sellrate', sellRate);
 }
 
 // ═══════════════ AUTH ═══════════════
@@ -477,6 +525,7 @@ function showPanel(id) {
   else if(id==='pInventory') renderInventory();
   else if(id==='pReports') renderReports();
   else if(id==='pWallet') renderWallet();
+  else if(id==='pDebt') renderDebt();
   else if(id==='pEmployees') renderEmployees();
   else if(id==='pSettings') renderSettings();
 }
@@ -494,8 +543,30 @@ function renderStore() {
       <h2>🏢 مجموعة غرزالدين التجارية</h2>
       <p>نلبي كل احتياجاتك بأفضل الأسعار</p>
       <div class="hero-btns">
-        <button class="hero-btn wa" onclick="openWA()">💬 تواصل واتساب</button>
+        <button class="hero-btn wa" onclick="openWA()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.533 5.845L.057 23.492c-.083.334.239.632.568.527l5.845-1.867A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+          للتواصل واتساب
+        </button>
         <button class="hero-btn map" onclick="openGPS()">📍 موقعنا</button>
+        <button class="hero-btn" onclick="openFBMenu()" style="background:#1877f2;color:#fff;border:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          فيسبوك
+        </button>
+      </div>
+      <div style="background:var(--bg3);border-radius:12px;padding:10px;margin-top:12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:6px;text-align:center;font-weight:700">💵 سعر صرف الدولار</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:8px;text-align:center">
+            <div style="font-size:9px;color:var(--green);font-weight:700;margin-bottom:2px">🛒 شراء</div>
+            <div style="font-size:15px;font-weight:900;color:var(--green)">${buyRate.toLocaleString('ar-SY')}</div>
+            <div style="font-size:9px;color:var(--text2)">ل.س / دولار</div>
+          </div>
+          <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:8px;text-align:center">
+            <div style="font-size:9px;color:var(--red);font-weight:700;margin-bottom:2px">💸 مبيع</div>
+            <div style="font-size:15px;font-weight:900;color:var(--red)">${sellRate.toLocaleString('ar-SY')}</div>
+            <div style="font-size:9px;color:var(--text2)">ل.س / دولار</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="branch-tabs" id="branchTabs"></div>
@@ -638,18 +709,30 @@ function checkout(method) {
     const prod=products.find(p=>p.id==item.prodId);
     if(!prod||prod.stock[item.branchId]<item.qty){toast(`❌ ${item.name} غير متوفر بالكمية المطلوبة`,'err');return;}
   }
+  if(method==='credit') {
+    // Open debt modal with cart total pre-filled
+    const total=cart.reduce((s,i)=>s+Math.round(i.price*exchangeRate)*i.qty,0);
+    const details=cart.map(i=>i.name).join('، ');
+    const branchId=cart[0]?.branchId||me.branchId||'oldtown';
+    openDebtModalFromCart(total,details,branchId);
+    return;
+  }
+  processCheckout(method,'');
+}
+
+function processCheckout(method,debtorName) {
   for(const item of cart){
     const prod=products.find(p=>p.id==item.prodId);
     prod.stock[item.branchId]-=item.qty;
     const totalLira=Math.round(item.price*exchangeRate)*item.qty;
-    sales.unshift({id:Date.now(),branchId:item.branchId,branchName:branchesConfig[item.branchId]?.name||item.branchId,prodId:item.prodId,prodName:item.name,cat:item.cat,qty:item.qty,priceDollar:item.price,priceLira:Math.round(item.price*exchangeRate),totalLira,date:new Date().toLocaleString(),dateOnly:new Date().toISOString().slice(0,10),seller:me.username,method});
+    sales.unshift({id:Date.now(),branchId:item.branchId,branchName:branchesConfig[item.branchId]?.name||item.branchId,prodId:item.prodId,prodName:item.name,cat:item.cat,qty:item.qty,priceDollar:item.price,priceLira:Math.round(item.price*exchangeRate),totalLira,date:new Date().toLocaleString(),dateOnly:new Date().toISOString().slice(0,10),seller:me.username,method,debtorName});
     if(prod.stock[item.branchId]<5) messages.push({from:me.username,to:'admin',text:`🔔 تنبيه: ${prod.name} في ${branchesConfig[item.branchId]?.name} أصبح ${prod.stock[item.branchId]} قطعة فقط`,time:new Date().toLocaleString(),read:false});
   }
   save();
   cart=[];
   localStorage.setItem('ghz_cart',JSON.stringify(cart));
   updateCartBadge();
-  toast(`✅ تم البيع (${method==='cash'?'كاش':'دين'})`);
+  toast(`✅ تم البيع (${method==='cash'?'كاش':'دين'})${debtorName?' - '+debtorName:''}`);
   renderCart();
 }
 
@@ -922,8 +1005,17 @@ function renderSettings() {
     </div>
     <div class="card">
       <div class="card-title">💵 سعر الصرف</div>
-      <div style="font-size:24px;font-weight:900;color:var(--gold);margin-bottom:10px">1$ = ${exchangeRate.toLocaleString('ar-SY')} ل.س</div>
-      <button class="btn btn-gold" style="color:#1a1a1a" onclick="editRate()">تعديل السعر</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:var(--green);font-weight:700">🛒 شراء</div>
+          <div style="font-size:18px;font-weight:900;color:var(--green)">${buyRate.toLocaleString('ar-SY')}</div>
+        </div>
+        <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:var(--red);font-weight:700">💸 مبيع</div>
+          <div style="font-size:18px;font-weight:900;color:var(--red)">${sellRate.toLocaleString('ar-SY')}</div>
+        </div>
+      </div>
+      <button class="btn btn-gold" style="color:#1a1a1a;width:100%;justify-content:center" onclick="editRate()">✏️ تعديل الأسعار</button>
     </div>
     <div class="card">
       <div class="card-title">🏢 الفروع</div>
@@ -955,13 +1047,24 @@ function updateLogos() {
   if(companyLogo){
     if(loginLogo)loginLogo.innerHTML=`<img src="${companyLogo}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">`;
     if(tbLogo)tbLogo.innerHTML=`<img src="${companyLogo}">`;
+    // Update favicon
+    let link=document.querySelector("link[rel~='icon']");
+    if(!link){link=document.createElement('link');link.rel='icon';document.head.appendChild(link);}
+    link.href=companyLogo;
   }
 }
 
 function editRate() {
   if(me.role!=='مدير عام'){toast('❌ غير مصرح','err');return;}
-  const newRate=parseFloat(prompt(`سعر الصرف الحالي: 1$ = ${exchangeRate} ل.س\nأدخل السعر الجديد:`,exchangeRate));
-  if(!isNaN(newRate)&&newRate>0){exchangeRate=newRate;save();document.getElementById('rateSpan').textContent=exchangeRate;toast('✅ تم تحديث سعر الصرف');if(document.getElementById('pStore').classList.contains('active'))renderStore();}
+  const newBuy=parseFloat(prompt(`سعر الشراء الحالي: ${buyRate} ل.س\nأدخل سعر الشراء الجديد:`,buyRate));
+  if(isNaN(newBuy)||newBuy<=0){toast('❌ قيمة غير صالحة','err');return;}
+  const newSell=parseFloat(prompt(`سعر المبيع الحالي: ${sellRate} ل.س\nأدخل سعر المبيع الجديد:`,sellRate));
+  if(isNaN(newSell)||newSell<=0){toast('❌ قيمة غير صالحة','err');return;}
+  buyRate=newBuy; sellRate=newSell; exchangeRate=Math.round((newBuy+newSell)/2);
+  save();
+  toast('✅ تم تحديث أسعار الصرف');
+  if(document.getElementById('pStore').classList.contains('active')) renderStore();
+  if(document.getElementById('pSettings').classList.contains('active')) renderSettings();
 }
 
 // ═══════════════ MESSAGES ═══════════════
@@ -997,6 +1100,170 @@ function updateMsgBadge() {
   const unread=messages.filter(m=>m.to===me?.username&&!m.read).length;
   const b=document.getElementById('msgBadge');
   if(b){b.textContent=unread;b.style.display=unread>0?'flex':'none';}
+}
+
+// ═══════════════ DEBT SYSTEM ═══════════════
+function openDebtModalFromCart(amount,details,branchId) {
+  const branchSel=document.getElementById('dBranch');
+  branchSel.innerHTML=Object.entries(branchesConfig).map(([id,v])=>`<option value="${id}" ${id===branchId?'selected':''}>${v.name}</option>`).join('');
+  document.getElementById('dName').value='';
+  document.getElementById('dPhone').value='';
+  document.getElementById('dAmount').value=amount;
+  document.getElementById('dDetails').value=details;
+  document.getElementById('mDebt').classList.add('active');
+}
+
+function openDebtModal() {
+  const branchSel=document.getElementById('dBranch');
+  branchSel.innerHTML=Object.entries(branchesConfig).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('');
+  ['dName','dPhone','dDetails'].forEach(f=>document.getElementById(f).value='');
+  document.getElementById('dAmount').value='';
+  document.getElementById('mDebt').classList.add('active');
+}
+
+function saveDebt() {
+  const name=document.getElementById('dName').value.trim();
+  const phone=document.getElementById('dPhone').value.trim();
+  const amount=parseFloat(document.getElementById('dAmount').value);
+  const details=document.getElementById('dDetails').value.trim();
+  const branchId=document.getElementById('dBranch').value;
+  if(!name||!amount){toast('⚠️ الاسم والمبلغ مطلوبان','err');return;}
+  const debt={id:Date.now(),name,phone,amount,details,branchId,branchName:branchesConfig[branchId]?.name||branchId,date:new Date().toLocaleString(),dateOnly:new Date().toISOString().slice(0,10),paid:false,seller:me.username};
+  debts.unshift(debt);
+  // If came from cart checkout
+  if(cart.length>0) processCheckout('credit',name);
+  else { save(); toast('✅ تم حفظ الدين'); }
+  closeOverlay('mDebt');
+  if(document.getElementById('pDebt').classList.contains('active')) renderDebt();
+}
+
+function renderDebt() {
+  const el=document.getElementById('pDebt');
+  const canAdd=me.role!=='زبون';
+  el.innerHTML=`
+    <div class="sec-hdr">
+      <div class="sec-title">📒 دفتر الديون</div>
+      ${canAdd?'<button class="btn btn-acc btn-sm" onclick="openDebtModal()">➕ دين جديد</button>':''}
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <input id="debtSearch" placeholder="🔍 بحث باسم أو مبلغ..." oninput="filterDebts()" style="flex:1;padding:9px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:12px;outline:none">
+      <select id="debtFilter" onchange="filterDebts()" style="padding:9px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:12px;outline:none">
+        <option value="all">الكل</option>
+        <option value="unpaid">غير مسدد</option>
+        <option value="paid">مسدد</option>
+      </select>
+    </div>
+    <div id="debtStats" style="margin-bottom:10px"></div>
+    <div id="debtList"></div>
+  `;
+  filterDebts();
+}
+
+function filterDebts() {
+  const q=(document.getElementById('debtSearch')?.value||'').toLowerCase();
+  const filter=document.getElementById('debtFilter')?.value||'all';
+  let items=[...debts];
+  if(me.branchId) items=items.filter(d=>d.branchId===me.branchId);
+  if(filter==='unpaid') items=items.filter(d=>!d.paid);
+  if(filter==='paid') items=items.filter(d=>d.paid);
+  if(q) items=items.filter(d=>d.name.toLowerCase().includes(q)||d.amount.toString().includes(q)||(d.details||'').toLowerCase().includes(q)||(d.phone||'').includes(q));
+
+  const totalDebt=items.filter(d=>!d.paid).reduce((s,d)=>s+d.amount,0);
+  const totalPaid=items.filter(d=>d.paid).reduce((s,d)=>s+d.amount,0);
+  document.getElementById('debtStats').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:10px;text-align:center">
+        <div style="font-size:10px;color:var(--red);font-weight:700">💸 إجمالي الديون</div>
+        <div style="font-size:16px;font-weight:900;color:var(--red)">${totalDebt.toLocaleString('ar-SY')}</div>
+        <div style="font-size:9px;color:var(--text2)">ل.س</div>
+      </div>
+      <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:10px;text-align:center">
+        <div style="font-size:10px;color:var(--green);font-weight:700">✅ إجمالي المسدد</div>
+        <div style="font-size:16px;font-weight:900;color:var(--green)">${totalPaid.toLocaleString('ar-SY')}</div>
+        <div style="font-size:9px;color:var(--text2)">ل.س</div>
+      </div>
+    </div>
+  `;
+
+  const list=document.getElementById('debtList');
+  if(!items.length){list.innerHTML='<div class="empty"><div class="empty-icon">📒</div><h3>لا توجد ديون</h3></div>';return;}
+  list.innerHTML=items.map(d=>`
+    <div class="card" style="border-right:4px solid ${d.paid?'var(--green)':'var(--red)'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          <div style="font-size:14px;font-weight:900">${d.name}</div>
+          ${d.phone?`<a href="tel:${d.phone}" style="font-size:11px;color:var(--blue);text-decoration:none">📞 ${d.phone}</a>`:''}
+        </div>
+        <div style="text-align:left">
+          <div style="font-size:16px;font-weight:900;color:${d.paid?'var(--green)':'var(--red)'}">${d.amount.toLocaleString('ar-SY')}</div>
+          <div style="font-size:9px;color:var(--text2)">ل.س</div>
+        </div>
+      </div>
+      ${d.details?`<div style="font-size:11px;color:var(--text2);margin-bottom:6px">📦 ${d.details}</div>`:''}
+      <div style="font-size:10px;color:var(--text2);margin-bottom:8px">🏢 ${d.branchName} | 📅 ${d.date}</div>
+      <div style="display:flex;gap:6px">
+        ${!d.paid?`<button class="btn btn-green btn-sm" onclick="markPaid(${d.id})">✅ سدّد</button>`:'<span class="bdg bdg-green">✅ مسدد</span>'}
+        ${d.phone?`<button class="btn btn-sm" style="background:#25d366;color:#fff" onclick="whatsappDebt('${d.phone}','${d.name}',${d.amount})">💬</button>`:''}
+        <button class="btn btn-red btn-sm" onclick="deleteDebt(${d.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function markPaid(id){
+  const d=debts.find(x=>x.id===id);
+  if(d){d.paid=true;save();filterDebts();toast('✅ تم تسديد الدين');}
+}
+function deleteDebt(id){
+  if(confirm('حذف هذا الدين؟')){debts=debts.filter(d=>d.id!==id);save();filterDebts();toast('🗑️ تم الحذف');}
+}
+function whatsappDebt(phone,name,amount){
+  const msg=encodeURIComponent(`السلام عليكم ${name}، يرجى تسديد مبلغ ${amount.toLocaleString('ar-SY')} ل.س. شكراً - مجموعة غرزالدين`);
+  window.open(`https://wa.me/+${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');
+}
+
+// ═══════════════ FACEBOOK ═══════════════
+function openFBMenu() {
+  const isAdmin=me.role==='مدير عام';
+  const list=document.getElementById('fbPagesList');
+  list.innerHTML=fbPages.map(p=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:12px;margin-bottom:8px">
+      <div style="width:36px;height:36px;background:#1877f2;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </div>
+      <div style="flex:1;cursor:pointer" onclick="window.open('${p.url}','_blank')">
+        <div style="font-size:13px;font-weight:800">${p.name}</div>
+        <div style="font-size:10px;color:#1877f2">اضغط للفتح ↗</div>
+      </div>
+      ${isAdmin?`<button class="btn btn-red btn-sm" onclick="deleteFBPage(${p.id})">🗑️</button>`:''}
+    </div>
+  `).join('') || '<div class="empty"><h3>لا توجد صفحات</h3></div>';
+
+  const adminAdd=document.getElementById('fbAdminAdd');
+  if(isAdmin) {
+    adminAdd.innerHTML=`
+      <div style="background:var(--bg3);border-radius:12px;padding:12px">
+        <div style="font-size:12px;font-weight:800;margin-bottom:8px">➕ إضافة صفحة</div>
+        <input id="fbName" placeholder="اسم الصفحة" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Tajawal',sans-serif;margin-bottom:6px">
+        <input id="fbUrl" placeholder="رابط الصفحة https://..." style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Tajawal',sans-serif;margin-bottom:8px;direction:ltr">
+        <button class="btn btn-acc" style="width:100%;justify-content:center" onclick="addFBPage()">إضافة</button>
+      </div>
+    `;
+  } else adminAdd.innerHTML='';
+  document.getElementById('mFB').classList.add('active');
+}
+
+function addFBPage(){
+  const name=document.getElementById('fbName')?.value.trim();
+  const url=document.getElementById('fbUrl')?.value.trim();
+  if(!name||!url){toast('⚠️ الاسم والرابط مطلوبان','err');return;}
+  fbPages.push({id:Date.now(),name,url});
+  save();openFBMenu();toast('✅ تمت الإضافة');
+}
+
+function deleteFBPage(id){
+  fbPages=fbPages.filter(p=>p.id!==id);
+  save();openFBMenu();toast('🗑️ تم الحذف');
 }
 
 // ═══════════════ UTILS ═══════════════
