@@ -476,10 +476,8 @@ function launchApp() {
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
   updateLogos();
-  document.getElementById('rateSpan').textContent = exchangeRate;
   // Show/hide nav items
   const isAdmin = me.role==='مدير عام';
-  const canManage = isAdmin || me.role==='رئيس فرع';
   document.getElementById('navEmp').style.display = isAdmin?'flex':'none';
   document.getElementById('navSet').style.display = isAdmin?'flex':'none';
   // Set default branch
@@ -493,6 +491,7 @@ function launchApp() {
     };
   });
   updateMsgBadge();
+  updateCartBadge();
   showPanel('pStore');
 }
 
@@ -503,18 +502,6 @@ function doLogout() {
   document.getElementById('loginScreen').classList.add('active');
   document.getElementById('appScreen').classList.remove('active');
 }
-
-// Auto login
-(function() {
-  try {
-    const s = localStorage.getItem('ghz_session');
-    if(s) {
-      const {username,password} = JSON.parse(s);
-      const found = users.find(x=>x.username===username && x.password===password);
-      if(found) { me=found; launchApp(); }
-    }
-  } catch(e){}
-})();
 
 // ═══════════════ PANELS ═══════════════
 function showPanel(id) {
@@ -1284,6 +1271,16 @@ function toast(msg,type='ok') {
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('active')}));
 
 updateCartBadge();
+
+// Auto login
+try {
+  const s = localStorage.getItem('ghz_session');
+  if(s) {
+    const {username,password} = JSON.parse(s);
+    const found = users.find(x=>x.username===username && x.password===password);
+    if(found) { me=found; launchApp(); }
+  }
+} catch(e){ console.warn('Auto login failed:', e); }
 </script>
 </body>
 </html>
