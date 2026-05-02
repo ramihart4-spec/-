@@ -1153,512 +1153,6 @@ function renderUsers(){
   if(!box) return;
   box.innerHTML = "";
   users.forEach(u=>{
-    </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="bottom-nav">
-      <button class="bottom-btn active" data-panel="pBranches">
-        <span class="icon">🏠</span>الأفرع
-      </button>
-      <button class="bottom-btn" data-panel="pProducts">
-        <span class="icon">📦</span>المنتجات
-      </button>
-      <button class="bottom-btn" data-panel="pReports">
-        <span class="icon">💰</span>الأرباح
-      </button>
-      <button class="bottom-btn" data-panel="pPayroll">
-        <span class="icon">🧾</span>الأجور
-      </button>
-      <button class="bottom-btn" data-panel="pPersonal">
-        <span class="icon">🧍</span>مصاريفي
-      </button>
-      <button class="bottom-btn" data-panel="pUsers">
-        <span class="icon">👥</span>المستخدمون
-      </button>
-      <button class="bottom-btn" data-panel="pChat">
-        <span class="icon">💬</span>الرسائل
-      </button>
-    </div>
-  </div>
-
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// ===== USERS & ROLES =====
-let users = [
-  {username:"admin",   password:"admin123", role:"admin",   active:true},
-  {username:"psouk",   password:"123",      role:"partner_souk",   active:true},
-  {username:"pcastle", password:"123",      role:"partner_castle", active:true},
-  {username:"emp1",    password:"emp123",   role:"employee", active:true}
-];
-
-let currentUser = null;
-
-// ===== DATA MODEL =====
-let products = [
-  {id:1,name:"رز شراكة",cat:"souk_partner_food",price:20000,cost:15000,stock:100},
-  {id:2,name:"بهارات مشكلة",cat:"souk_partner_food",price:12000,cost:8000,stock:80},
-  {id:3,name:"حذاء رجالي",cat:"souk_other",price:45000,cost:30000,stock:40},
-  {id:4,name:"عطر نسائي",cat:"company",price:60000,cost:35000,stock:30},
-  {id:5,name:"بطانية شراكة القلعة",cat:"castle_partner",price:80000,cost:60000,stock:20}
-];
-let nextId = 6;
-
-// مبيعات
-let sales = [
-  {id:1, productId:1, qty:5, price:20000, date:"2026-05-03", branch:"souk_partner_food"},
-  {id:2, productId:3, qty:2, price:45000, date:"2026-05-03", branch:"souk_other"}
-];
-
-// مصاريف
-let expenses = [
-  {id:1, type:"salary",  title:"رواتب شهر 5", amount:550000},
-  {id:2, type:"rent",    title:"إيجار محل السوق", amount:400000},
-  {id:3, type:"personal",title:"رز للاستخدام الشخصي", amount:15000}
-];
-
-const branches = [
-  {id:"souk_partner_food", name:"سوق الشراكة - مواد غذائية", type:"مواد غذائية / مكسرات / بهارات / بقوليات / ألبان", owner:"partner_souk"},
-  {id:"souk_other",        name:"سوق المنتجات الأخرى",        type:"ملابس / أحذية / عطور / مكياج / ألعاب / أدوات منزلية / هدايا", owner:"company"},
-  {id:"castle_partner",    name:"قلعة الشراكة",               type:"منتجات القلعة الشراكة", owner:"partner_castle"},
-  {id:"company",           name:"باقي الفروع",                type:"ملكية الشركة الكاملة", owner:"company"}
-];
-
-let employees = [
-  {name:"أحمد", salary:300000, paid:300000},
-  {name:"خالد", salary:250000, paid:0}
-];
-
-let shops = [
-  {name:"محل السوق",  rent:400000, paid:400000},
-  {name:"محل القلعة", rent:350000, paid:0}
-];
-
-let myExpenses = [
-  {item:"رز للاستخدام المنزلي", from:"سوق الشراكة", cost:15000},
-  {item:"عطر شخصي", from:"الشركة", cost:35000}
-];
-
-let chatMessages = [
-  {from:"other",text:"أهلاً، تم تحديث أسعار سوق الشراكة."},
-  {from:"me",text:"تمام، تأكد من إدخال رأس المال الصحيح."}
-];
-
-// ===== HELPERS =====
-function showToast(msg){
-  const t = document t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),1800);
-}
-
-function playNotify(){
-  try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "triangle";
-    osc.frequency.value = 880;
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.15);
-  }catch(e){}
-}
-
-function catLabel(cat){
-  switch(cat){
-    case "souk_partner_food": return "سوق الشراكة - مواد غذائية";
-    case "souk_other":        return "سوق المنتجات الأخرى";
-    case "castle_partner":    return "قلعة الشراكة";
-    case "company":           return "ملكية الشركة";
-    default: return cat;
-  }
-}
-
-function ownerTag(cat){
-  if(cat==="souk_partner_food") return {cls:"tag-partner",txt:"شريك سوق"};
-  if(cat==="castle_partner")    return {cls:"tag-castle",txt:"شريك قلعة"};
-  return {cls:"tag-company",txt:"الشركة"};
-}
-
-// ===== ACCOUNTING =====
-function computeAccounting(){
-  let companyCapital=0, companyProfit=0;
-  let soukCap=0, soukProfit=0;
-  let castleCap=0, castleProfit=0;
-
-  products.forEach(p=>{
-    const soldQty = sales
-      .filter(s=>s.productId===p.id)
-      .reduce((q,s)=>q+s.qty,0);
-
-    const profitFromProduct = (p.price - p.cost) * soldQty;
-
-    if(p.cat==="souk_partner_food"){
-      soukCap += p.cost * p.stock;
-      soukProfit += profitFromProduct;
-    }else if(p.cat==="castle_partner"){
-      castleCap += p.cost * p.stock;
-      castleProfit += profitFromProduct;
-    }else{
-      companyCapital += p.cost * p.stock;
-      companyProfit += profitFromProduct;
-    }
-  });
-
-  let salExp = 0, rentExp = 0, personalExp = 0, otherExp = 0;
-  expenses.forEach(e=>{
-    if(e.type==="salary")   salExp      += e.amount;
-    else if(e.type==="rent")     rentExp     += e.amount;
-    else if(e.type==="personal") personalExp += e.amount;
-    else                         otherExp    += e.amount;
-  });
-
-  const totalExpenses = salExp + rentExp + personalExp + otherExp;
-
-  const partnerSoukProfit   = soukProfit;
-  const partnerCastleProfit = castleProfit;
-
-  const yourProfitFromCompany = companyProfit;
-  const yourProfitFromSouk    = 0;
-  const yourProfitFromCastle  = 0;
-
-  const yourGrossProfit = yourProfitFromCompany + yourProfitFromSouk + yourProfitFromCastle;
-  const yourNetProfit   = yourGrossProfit - totalExpenses;
-
-  return {
-    companyCapital, companyProfit,
-    soukCap, soukProfit,
-    castleCap, castleProfit,
-    salExp, rentExp, personalExp, otherExp, totalExpenses,
-    yourGrossProfit, yourIC =====
-let selectedRole = "admin";
-
-document.querySelectorAll(".login-tab").forEach(t=>{
-  t.addEventListener("click",()=>{
-    document.querySelectorAll(".login-tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    selectedRole = t.getAttribute("data-role");
-  });
-});
-
-function applyRoleVisibility(){
-  if(!currentUser) return;
-  const r = currentUser.role;
-  const body = document.body;
-  const prodFormWrap = document.getElementById("prodFormWrap");
-  const repCompany = document.getElementById("repCompany");
-  const repSouk = document.getElementById("repSoukPartner");
-  const repCastle = document.getElementById("repCastlePartner");
-  const empListBox = document.getElementById("empList").parentElement;
-  const shopListBox = document.getElementById("shopList").parentElement;
-  const myExpPanel = document.getElementById("pPersonal");
-  const usersPanel = document.getElementById("pUsers");
-
-  body.classList.remove("partner-mode");
-
-  if(r === "admin"){
-    prodFormWrap.style.display = "block";
-    repCompany.style.display = "block";
-    repSouk.style.display = "block";
-    repCastle.style.display = "block";
-    empListBox.style.display = "block";
-    shopListBox.style.display = "block";
-    myExpPanel.style.display = "block";
-    usersPanel.style.display = "block";
-  }else{
-    prodFormWrap.style.display = "none";
-    empListBox.style.display = "none";
-    shopListBox.style.display = "none";
-    myExpPanel.style.display = "none";
-    usersPanel.style.display = "none";
-
-    if(r === "partner_souk" || r === "partner_castle"){
-      document.body.classList.add("partner-mode");
-      repCompany.style.display = "none";
-      if(r === "partner_souk"){
-        repSouk.style.display = "block";
-        repCastle.style.display = "none";
-      }else{
-        repSouk.style.display = "none";
-        repCastle.style.display = "block";
-      }
-    }else{
-      repCompany.style.display = "block";
-      repSouk.style.display = "block";
-      repCastle.style.display = "block";
-    }
-  }
-
-  const label = document.getElementById("userRoleLabel");
-  if(r==="admin") label.textContent = "مدير عام – يرى كل شيء";
-  else if(r==="partner_souk") label.textContent = "شريك سوق – يرى رأس ماله ومبيعاته فقط";
-  else if(r==="partner_castle") label.textContent = "شريك قلعة – يرى رأس ماله ومبيعاته فقط";
-  else label.textContent = "موظف / رئيس قسم";
-}
-
-function login(username, password, remember){
-  const u = usersRole);
-  const err = document.getElementById("loginErr");
-  if(!u || !u.active){
-    err.style.display = "block";
-    return;
-  }
-  err.style.display = "none";
-  currentUser = {username:u.username, role:u.role};
-  if(remember){
-    localStorage.setItem("user_session", JSON.stringify(currentUser));
-  }
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("appScreen").style.display = "flex";
-  applyRoleVisibility();
-  renderAll();
-  showToast("تم تسجيل الدخول");
-}
-
-document.getElementById("btnLogin").addEventListener("click",()=>{
-  const u = document.getElementById("loginUser").value.trim();
-  const p = document.getElementById("loginPass").value.trim();
-  const r = document.getElementById("rememberMe").checked;
-  login(u,p,r);
-});
-
-document.getElementById("btnLogout").addEventListener("click",()=>{
-  currentUser = null;
-  localStorage.removeItem("user_session");
-  document.getElementById("appScreen").style.display = "none";
-  document.getElementById("loginScreen").style.display = "flex";
-  showToast("تم تسجيل الخروج");
-});
-
-// استعادة جلسة محفوظة
-(function(){
-  const saved = localStorage.getItem("user_session");
-  if(saved){
-    const u = JSON.parse(saved);
-    const found = users.find(x=>x.username===u.username && x.role===u.role);
-    if(found && found.active){
-      currentUser = u;
-      document.getElementById("loginScreen").style.display = "none";
-      document.getElementById("appScreen").style.display = "flex";
-      applyRoleVisibility();
-      renderAll();
-      showToast("تم تسجيل الدخول تلقائيًا");
-    }else{
-      localStorage.removeItem("user_session");
-    }
-  }
-})();
-
-// ===== RENDER BRANCHES =====
-function renderBranches(){
-  const wrap = document.getElementById("branchGrid");
-  wrap.innerHTML = "";
-  branches.forEach(b=>{
-    const branchProducts = products.filter(p=>p.cat===b.id);
-    const capital = branchProducts.reduce((s,p)=>s+p.cost*p.stock,0);
-    const branchSales = sales.filter(s=>branchProducts.some(p=>p.id===s.productId));
-    const profit = branchSales.reduce((s,sl)=>{
-      const prod = products.find(p=>p.id===sl.productId);
-      if(!prod) return s;
-      return s + (sl.price - prod.cost)*sl.qty;
-    },0);
-    const ownerText =
-      b.owner==="partner_souk" ? "شريك سوق" :
-      b.owner==="partner_castle" ? "شريك قلعة" :
-      "الشركة";
-    const card = document.createElement("div");
-    card.className = "branch-card";
-    card.innerHTML = `
-      <div class="branch-name">.toLocaleString()} ل.س</span></div>
-      <div class="branch-profit">الربح من المبيعات المسجلة: ${profit.toLocaleString()} ل.س</div>
-      <div class="branch-type">المالك: ${ownerText}</div>
-    `;
-    wrap.appendChild(card);
-  });
-}
-
-// ===== RENDER PRODUCTS =====
-let editingId = null;
-
-function renderProducts(){
-  const wrap = document.getElementById("prodGrid");
-  wrap.innerHTML = "";
-  const r = currentUser ? currentUser.role : null;
-  products.forEach(p=>{
-    if(r==="partner_souk" && p.cat!=="souk_partner_food") return;
-    if(r==="partner_castle" && p.cat!=="castle_partner") return;
-
-    const tag = ownerTag(p.cat);
-    const soldQty = sales.filter(s=>s.productId===p.id).reduce((q,s)=>q+s.qty,0);
-    const card = document.createElement("div");
-    card.className = "prod-card";
-    card.innerHTML = `
-      <div class="prod-name">${p.name}</div>
-      <div class="prod-meta">${catLabel(p.cat)} – مبيع: ${soldQty}</div>
-      <div class="prod-price">${p.price.toLocaleString()} ل.س</div>
-      <div class="prod-owner">
-        <span class="tag ${tag.cls}">${tag.txt}</span>
-        <span class="cost" style="margin-right:6px;font-size:9px;color:var(--t2)">تكلفة: ${p.cost.toLocaleString()} ل.س – مخزون: ${p.stock}</span>
-      </div>
-      <div class="prod-actions">
-        <button class="btn btn-edit" data-id="${p.id}">تعديل</button>
-        <button class="btn btn-del" data-id="${p.id}">حذف</button>
-      </div>
-    `;
-    wrap.appendChild(card);
-  });
-
-  if(currentUser && currentUser.role!=="admin"){
-    wrap.querySelectorAll(".btn-edit,.btn-del").forEach(b=>b.style.display="none");
-  }
-}
-
-document.getElementById("btnSaveProd").addEventListener("click",()=>{
-  const name = document.getElementById("fName").value.trim();
-  const cat = document.getElementById("fCat").value;
-  const price = Number(document.getElementById("fPrice").value||0);
-  const cost = Number(document.getElementById("fCost").value||0);
-  const stock = Number(document.getElementById("fStock").value||0);
-  if(!name || !price || !cost){
-    showToast("يرجى إدخال اسم وسعر وتكلفة");
-    return;
-  }
-  if(editingId){
-    const p = products.find(x=>x.id===editingId);
-    if(p){
-      p.name = name;
-      p.cat = cat;
-      p.price = price;
-      p.cost = cost;
-      p.stock,cost,stock});
-    showToast("تم إضافة المنتج");
-  }
-  editingId = null;
-  document.getElementById("fName").value = "";
-  document.getElementById("fPrice").value = "";
-  document.getElementById("fCost").value = "";
-  document.getElementById("fStock").value = "";
-  renderProducts();
-  renderBranches();
-  renderReports();
-});
-
-document.getElementById("prodGrid").addEventListener("click",(e)=>{
-  if(e.target.classList.contains("btn-edit")){
-    const id = Number(e.target.getAttribute("data-id"));
-    const p = products.find(x=>x.id===id);
-    if(p){
-      editingId = id;
-      document.getElementById("fName").value = p.name;
-      document.getElementById("fCat").value = p.cat;
-      document.getElementById("fPrice").value = p.price;
-      document.getElementById("fCost").value = p.cost;
-      document.getElementById("fStock").value = p.stock;
-      showToast("وضع تعديل المنتج");
-    }
-  }else if(e.target.classList.contains("btn-del")){
-    const id = Number(e.target.getAttribute("data-id"));
-    products = products.filter(x=>x.id!==id);
-    showToast("تم حذف المنتج");
-    renderProducts();
-    renderBranches();
-    renderReports();
-  }
-});
-
-// ===== REPORTS =====
-function renderReports(){
-  const acc = computeAccounting();
-  const repCompany = document.getElementById("repCompany");
-  const repSouk = document.getElementById("repSoukPartner");
-  const repCastle = document.getElementById("repCastlePartner");
-
-  repCompany.innerHTML = `
-    <div class="report-row"><span>الشركة (باقي الفروع + سوق المنتجات الأخرى)</span><span></span></div>
-    <div class="report-row"><span>رأس المال (مخزون):</span><span>${acc.companyCapital.toLocaleString()} ل.س</span></div>
-    <div class="report-row"><span>الربح الإجمالي من المبيعات:</span><span style="color:var(--grn)">${acc.companyProfit.toLocaleString()} ل.س</span></div>
-    <div class="report-row"><span>إجمالي المصاريف:</span><span>${acc.totalExpenses.toLocaleString()} ل.س</span></div>
-    <div class="report-row"><span>ربحك الصافي التقريبي:</span><span style="color:var(--grn)">.toLocaleString()} ل.س</span></div>
-  `;
-
-  repSouk.innerHTML = `
-    <div class="report-row"><span>سوق الشراكة - المواد الغذائية</span><span>(شريك سوق)</span></div>
-    <div class="report-row"><span>رأس مال الشريك (مخزون):</span><span>${acc.soukCap.toLocaleString()} ل.س</span></div>
-    <div class="report-row"><span>الربح الإجمالي من هذا القسم:</span><span style="color:var(--grn)">${acc.soukProfit.toLocaleString()} ل.س</span></div>
-  `;
-
-  repCastle.innerHTML = `
-    <div class="report-row"><span>قلعة الشراكة</span><span>(شريك قلعة)</span></div>
-    <div class="report-row"><span>رأس مال الشريك (مخزون):</span><span>${acc.castleCap.toLocaleString()} ل.س</span></div>
-    <div class="report-row"><span>الربح الإجمالي من هذا القسم:</span><span style="color:var(--grn)">${acc.castleProfit.toLocaleString()} ل.س</span></div>
-  `;
-}
-
-// ===== PAYROLL & RENTS =====
-function renderPayroll(){
-  const empBox = document.getElementById("empList");
-  empBox.innerHTML = "";
-  let totalSal=0, totalPaid=0;
-  employees.forEach(e=>{
-    totalSal += e.salary;
-    totalPaid += e.paid;
-    const row = document.createElement("div");
-    row.className = "simple-row";
-    row.innerHTML = `<span>${e.name} – راتب: ${e.salary.toLocaleString()} ل.س</span><span>مدفوع: ${e.paid.toLocaleString()} ل.س</span>`;
-    empBox.appendChild(row);
-  });
-  const sum = document.createElement("div");
-  sum.className = "simple-row";
-  sum.innerHTML = `<span>إجمالي الرواتب</span><span>${totalSal.toLocaleString()} ل.س (مدفوع: ${totalPaid.toLocaleString()} ل.س)</span>`;
-  empBox.appendChild(sum);
-
-  const shopBox = document.getElementById("shopList");
-  shopBox.innerHTML = "";
-  let totalRent=0, totalRentPaid=0;
-  shops.forEach(s=>{
-    totalRent += s.rent;
-    totalRentPaid += s.paid;
-    const row = document.createElement("div");
-    row.className = "simple-row";
-    row.innerHTMLمدفوع: ${s.paid.toLocaleString()} ل.س</span>`;
-    shopBox.appendChild(row);
-  });
-  const sum2 = document.createElement("div");
-  sum2.className = "simple-row";
-  sum2.innerHTML = `<span>إجمالي الإيجارات</span><span>${totalRent.toLocaleString()} ل.س (مدفوع: ${totalRentPaid.toLocaleString()} ل.س)</span>`;
-  shopBox.appendChild(sum2);
-}
-
-// ===== PERSONAL EXPENSES =====
-function renderMyExpenses(){
-  const box = document.getElementById("myExpList");
-  box.innerHTML = "";
-  let total = 0;
-  myExpenses.forEach(e=>{
-    total += e.cost;
-    const row = document.createElement("div");
-    row.className = "simple-row";
-    row.innerHTML = `<span>${e.item} – من: ${e.from}</span><span>${e.cost.toLocaleString()} ل.س</span>`;
-    box.appendChild(row);
-  });
-  const sum = document.createElement("div");
-  sum.className = "simple-row";
-  sum.innerHTML = `<span>إجمالي مصاريفي الشخصية</span><span>${total.toLocaleString()} ل.س</span>`;
-  box.appendChild(sum);
-}
-
-// ===== USERS =====
-function renderUsers(){
-  const box = document.getElementById("userList");
-  if(!box) return;
-  box.innerHTML = "";
-  users.forEach(u=>{
     const row = document.createElement("div");
     row.className = "simple-row";
     row.innerHTML = `
@@ -1678,101 +1172,71 @@ document.addEventListener("click",(e)=>{
     const u = users.find(x=>x.username===uname);
     if(u){
       u.active = !u.active;
-      showToast(u.active ? "تم تفعيل الحساب" : "
-      </button>
-    </div>
-  </div>
+      showToast(u.active ? "تم تفعيل الحساب" : "تم إيقاف الحساب");
+      renderUsers();
+    }
+  }
+});
 
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// ===== USERS & ROLES =====
-let users = [
-  {username:"admin",   password:"admin123", role:"admin",   active:true},
-  {username:"psouk",   password:"123",      role:"partner_souk",   active:true},
-  {username:"pcastle", password:"123",      role:"partner_castle", active:true},
-  {username:"emp1",    password:"emp123",   role:"employee", active:true}
-];
-
-let currentUser = null;
-
-// ===== DATA MODEL =====
-let products = [
-  {id:1,name:"رز شراكة",cat:"souk_partner_food",price:20000,cost:15000,stock:100},
-  {id:2,name:"بهارات مشكلة",cat:"souk_partner_food",price:12000,cost:8000,stock:80},
-  {id:3,name:"حذاء رجالي",cat:"souk_other",price:45000,cost:30000,stock:40},
-  {id:4,name:"عطر نسائي",cat:"company",price:60000,cost:35000,stock:30},
-  {id:5,name:"بطانية شراكة القلعة",cat:"castle_partner",price:80000,cost:60000,stock:20}
-];
-let nextId = 6;
-
-// مبيعات
-let sales = [
-  {id:1, productId:1, qty:5, price:20000, date:"2026-05-03", branch:"souk_partner_food"},
-  {id:2, productId:3, qty:2, price:45000, date:"2026-05-03", branch:"souk_other"}
-];
-
-// مصاريف
-let expenses = [
-  {id:1, type:"salary",  title:"رواتب شهر 5", amount:550000},
-  {id:2, type:"rent",    title:"إيجار محل السوق", amount:400000},
-  {id:3, type:"personal",title:"رز للاستخدام الشخصي", amount:15000}
-];
-
-const branches = [
-  {id:"souk_partner_food", name:"سوق الشراكة - مواد غذائية", type:"مواد غذائية / مكسراتملابس / أحذية / عطور / مكياج / ألعاب / أدوات منزلية / هدايا", owner:"company"},
-  {id:"castle_partner",    name:"قلعة الشراكة",               type:"منتجات القلعة الشراكة", owner:"partner_castle"},
-  {id:"company",           name:"باقي الفروع",                type:"ملكية الشركة الكاملة", owner:"company"}
-];
-
-let employees = [
-  {name:"أحمد", salary:300000, paid:300000},
-  {name:"خالد", salary:250000, paid:0}
-];
-
-let shops = [
-  {name:"محل السوق",  rent:400000, paid:400000},
-  {name:"محل القلعة", rent:350000, paid:0}
-];
-
-let myExpenses = [
-  {item:"رز للاستخدام المنزلي", from:"سوق الشراكة", cost:15000},
-  {item:"عطر شخصي", from:"الشركة", cost:35000}
-];
-
-let chatMessages = [
-  {from:"other",text:"أهلاً، تم تحديث أسعار سوق الشراكة."},
-  {from:"me",text:"تمام، تأكد من إدخال رأس المال الصحيح."}
-];
-
-// ===== HELPERS =====
-function showToast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),1800);
+// ===== CHAT =====
+function renderChat(){
+  const box = document.getElementById("chatMessages");
+  box.innerHTML = "";
+  chatMessages.forEach(m=>{
+    const div = document.createElement("div");
+    div.className = "chat-msg " + (m.from==="me"?"me":"other");
+    div.textContent = (m.from==="me"?"أنا: ":"موظف: ") + m.text;
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
 }
 
-function playNotify(){
-  try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "triangle";
-    osc.frequency.value = 880;
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.15);
-  }catch(e){}
+document.getElementById("chatSend").addEventListener("click",()=>{
+  const inp = document.getElementById("chatInput");
+  const txt = inp.value.trim();
+  if(!txt) return;
+  chatMessages.push({from:"me",text:txt});
+  renderChat();
+  inp.value = "";
+  showToast("تم إرسال الرسالة");
+  playNotify();
+});
+
+document.getElementById("btnChat").addEventListener("click",()=>{
+  activatePanel("pChat");
+});
+
+// ===== NAV PANELS =====
+function activatePanel(id){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".nav-tab").forEach(t=>{
+    if(t.getAttribute("data-panel")===id) t.classList.add("active");
+  });
+  document.querySelectorAll(".bottom-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".bottom-btn").forEach(b=>{
+    if(b.getAttribute("data-panel")===id) b.classList.add("active");
+  });
 }
 
-function catLabel(cat){
-  switch(cat){
-    case "souk_partner_food": return "سوق الشراكة - مواد غذائية";
-    case "souk_other":        return "سوق المنتجات الأخرى";
-    case "castle_partner":    return "قلعة الشراكة";
-    case "company":           return
+document.querySelectorAll(".nav-tab").forEach(t=>{
+  t.addEventListener("click",()=>activatePanel(t.getAttribute("data-panel")));
+});
+document.querySelectorAll(".bottom-btn").forEach(b=>{
+  b.addEventListener("click",()=>activatePanel(b.getAttribute("data-panel")));
+});
+
+// ===== RENDER ALL =====
+function renderAll(){
+  renderBranches();
+  renderProducts();
+  renderReports();
+  renderPayroll();
+  renderMyExpenses();
+  renderUsers();
+  renderChat();
+}
+</script>
+</body>
+</html>
