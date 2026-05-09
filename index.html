@@ -5,10 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0f14">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>مجموعة غرزالدين التجارية</title>
 <link id="fav" rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8F%A2%3C/text%3E%3C/svg%3E">
 <link id="aico" rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8F%A2%3C/text%3E%3C/svg%3E">
+<link rel="manifest" id="manifest-placeholder">
+<meta name="theme-color" content="#ff6b35">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Offline banner */
+#offlineBanner{display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#ef4444;color:#fff;text-align:center;padding:8px;font-size:11px;font-weight:800;font-family:'Tajawal',sans-serif}
+</style>
+<div id="offlineBanner">📴 بدون إنترنت — التطبيق يعمل محلياً بالبيانات المحفوظة</div>
 <style>
 :root{--bg:#0d0f14;--bg3:#1a1e2a;--card:#1e2330;--c2:#242838;--acc:#ff6b35;--gold:#f5c518;--grn:#22c55e;--red:#ef4444;--blu:#3b82f6;--pur:#a855f7;--txt:#f0f2ff;--t2:#8b92a8;--brd:#2a2f3e}
 .day{--bg:#f4f6fa;--bg3:#dde3ed;--card:#fff;--c2:#f0f4f8;--txt:#1a2030;--t2:#4a5568;--brd:#c5cdd8;--acc:#e85d2a;--gold:#b8860b;--grn:#16a34a;--red:#dc2626;--blu:#2563eb;--pur:#7c3aed}
@@ -37,7 +47,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Tajawal',sans-seri
 .le{color:var(--red);font-size:10px;text-align:center;margin-top:5px;display:none}
 .lh{margin-top:10px;padding:8px;background:var(--bg3);border-radius:8px;font-size:9px;color:var(--t2);line-height:2}
 /* TOPBAR — اسم فقط في المنتصف */
-.tb{background:var(--card);border-bottom:1px solid var(--brd);padding:0 12px;height:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.tb{background:var(--card);border-bottom:1px solid var(--brd);padding:0 14px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .tb-logo{display:flex;align-items:center;gap:8px}
 .ti{width:36px;height:36px;border-radius:9px;overflow:hidden;background:linear-gradient(135deg,var(--acc),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .ti img{width:100%;height:100%;object-fit:cover}
@@ -198,11 +208,12 @@ td{padding:7px 8px;border-bottom:1px solid var(--brd);vertical-align:middle;font
 <div id="AS" class="scr">
   <!-- TOPBAR: اسم فقط في المنتصف -->
   <div class="tb">
-    <div class="tb-logo">
+    <div style="width:70px"></div>
+    <div class="tb-logo" style="display:flex;align-items:center;gap:7px;flex:1;justify-content:center">
       <div class="ti" id="TI">🏢</div>
-      <div class="tn" id="TN">مجموعة غرزالدين التجارية</div>
+      <div class="tn" id="TN" style="font-size:14px;font-weight:900">مجموعة غرزالدين</div>
     </div>
-    <button class="tb-exit" onclick="doLogout()">خروج 🚪</button>
+    <button class="tb-exit" onclick="doLogout()" style="white-space:nowrap">خروج 🚪</button>
   </div>
 
   <div class="cnt">
@@ -210,6 +221,8 @@ td{padding:7px 8px;border-bottom:1px solid var(--brd);vertical-align:middle;font
     <div class="pnl" id="pCart"></div>
     <div class="pnl" id="pInv"></div>
     <div class="pnl" id="pPend"></div>
+    <div class="pnl" id="pOffers"></div>
+    <div class="pnl" id="pSuppliers"></div>
     <div class="pnl" id="pRep"></div>
     <div class="pnl" id="pWallet"></div>
     <div class="pnl" id="pDebt"></div>
@@ -225,6 +238,8 @@ td{padding:7px 8px;border-bottom:1px solid var(--brd);vertical-align:middle;font
     <button class="bni" data-p="pCart" id="nCart" style="display:none"><span class="ic">🛒</span>السلة<span class="nb" id="cBdg">0</span></button>
     <button class="bni" data-p="pInv" id="nInv" style="display:none"><span class="ic">📦</span>المخزون</button>
     <button class="bni" data-p="pPend" id="nPend" style="display:none"><span class="ic">📋</span>الجرد<span class="nb" id="pendBdg">0</span></button>
+    <button class="bni" data-p="pOffers" id="nOffers" style="display:none"><span class="ic">🔥</span>العروض</button>
+    <button class="bni" data-p="pSuppliers" id="nSupp" style="display:none"><span class="ic">🏭</span>التجار</button>
     <button class="bni" data-p="pRep" id="nRep" style="display:none"><span class="ic">📊</span>التقارير</button>
     <button class="bni" data-p="pWallet" id="nWal" style="display:none"><span class="ic">💰</span>المحفظة</button>
     <button class="bni" data-p="pDebt" id="nDebt" style="display:none"><span class="ic">📒</span>الديون</button>
@@ -232,6 +247,8 @@ td{padding:7px 8px;border-bottom:1px solid var(--brd);vertical-align:middle;font
     <button class="bni" data-p="pPers" id="nPers" style="display:none"><span class="ic">👤</span>حسابي</button>
     <button class="bni" data-p="pEmp" id="nEmp" style="display:none"><span class="ic">👥</span>الموظفون</button>
     <button class="bni" data-p="pSet" id="nSet" style="display:none"><span class="ic">⚙️</span>الإعدادات</button>
+    <!-- وضع المظهر للجميع -->
+    <button class="bni" id="nThemeStaff" style="display:none" onclick="toggleTheme()"><span class="ic" id="themeIcoStaff">🌙</span>المظهر</button>
     <!-- زبون فقط -->
     <button class="bni" id="nContact" style="display:none" onclick="openContactModal()"><span class="ic">💬</span>تواصل</button>
     <button class="bni" id="nThemeGuest" style="display:none" onclick="toggleTheme()"><span class="ic" id="themeIcoGuest">🌙</span>المظهر</button>
@@ -332,7 +349,8 @@ td{padding:7px 8px;border-bottom:1px solid var(--brd);vertical-align:middle;font
   <div class="fg" id="pCatFG"><label>القسم</label><select id="pCat"></select></div>
   <div id="adminPF">
     <div class="fg"><label>سعر البيع بالمفرق (ل.س)</label><input id="pPrice" type="number"></div>
-    <div class="fg"><label>سعر التكلفة / رأس المال (ل.س)</label><input id="pCost" type="number" value="0"></div>
+    <div class="fg"><label>سعر البيع للشريك (رأس مال الشريك) (ل.س)</label><input id="pCost" type="number" value="0" placeholder="السعر الذي يشتري به الشريك منك"></div>
+    <div class="fg"><label>تكلفتك الحقيقية (سعر الشراء من التاجر) (ل.س)</label><input id="pAdminCost" type="number" value="0" placeholder="تكلفتك الأصلية - لن يراها الشريك"></div>
     <div class="fg"><label>طريقة البيع</label><select id="pUnit"><option value="piece">بالقطعة</option><option value="kg">بالكيلو (كغ)</option><option value="gram">بالغرام (غ)</option><option value="liter">باللتر</option></select></div>
   </div>
   <div class="fg"><label>الوصف</label><input id="pDesc"></div>
@@ -425,6 +443,7 @@ td{padding:7px 8px;border-bottom:1px solid var(--brd);vertical-align:middle;font
   <div class="fg"><label>الصلاحية</label><select id="uR" onchange="updUF()"><option>مدير عام</option><option>رئيس فرع</option><option>رئيس قسم</option><option>موظف</option></select></div>
   <div id="uBF" style="display:none" class="fg"><label>الفرع المسؤول عنه</label><select id="uB"></select></div>
   <div id="uDF" style="display:none" class="fg"><label>القسم المسؤول عنه</label><select id="uD"></select></div>
+  <div class="fg"><label>رقم الواتساب (اختياري)</label><input id="uPhone" type="tel" placeholder="963xxxxxxxxx"></div>
   <div class="fg"><label>الراتب الشهري (ل.س)</label><input id="uSal" type="number" value="0"></div>
   <div class="mbtns"><button class="btn bac" onclick="saveUser()">💾 حفظ</button><button class="btn bgh" onclick="co('mUser')">إلغاء</button></div>
 </div></div>
@@ -434,9 +453,10 @@ td{padding:7px 8px;border-bottom:1px solid var(--brd);vertical-align:middle;font
   <div class="md"></div>
   <div class="mh"><div class="mt">💬 الرسائل الداخلية</div><button class="mc" onclick="co('mMsg')">✕</button></div>
   <div id="chatList" style="max-height:210px;overflow-y:auto;margin-bottom:9px"></div>
-  <div class="fg"><label>إلى</label><select id="msgTo"></select></div>
+  <div class="fg"><label>إلى</label><select id="msgTo" onchange="updMsgWA()"></select></div>
+  <div id="msgWABtn" style="display:none;margin-bottom:8px"><button class="btn" style="background:#25d366;color:#fff;width:100%;justify-content:center" onclick="openMsgWA()">💬 فتح محادثة واتساب مباشرة</button></div>
   <div class="fg"><label>الرسالة</label><textarea id="msgTxt" rows="2" style="width:100%;background:var(--bg3);border:1.5px solid var(--brd);border-radius:9px;color:var(--txt);font-family:inherit;font-size:12px;padding:8px;outline:none;resize:none"></textarea></div>
-  <div class="mbtns"><button class="btn bac" onclick="sendMsg()">إرسال ✈️</button><button class="btn bgh" onclick="co('mMsg')">إغلاق</button></div>
+  <div class="mbtns"><button class="btn bac" onclick="sendMsg()">إرسال ✈️</button><button class="btn" style="background:#25d366;color:#fff" onclick="openWA()">📞 واتساب</button><button class="btn bgh" onclick="co('mMsg')">إغلاق</button></div>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -768,7 +788,7 @@ function addCart(prodId,brId,qty=1){
   const st=p.stock[brId]||0;if(st<qty){toast('❌ غير متوفر','e');return;}
   const ex=cart.find(i=>i.prodId==prodId&&i.branchId==brId);
   if(ex){if(ex.qty+qty>st){toast('❌ غير كافية','e');return;}ex.qty+=qty;}
-  else cart.push({prodId,branchId:brId,name:p.name,price:p.price,cost:p.cost||0,cat:p.cat,qty,unit:p.unit||'piece'});
+  else cart.push({prodId,branchId:brId,name:p.name,price:p.price,cost:p.cost||0,adminCost:p.adminCost||p.cost||0,cat:p.cat,qty,unit:p.unit||'piece'});
   sv('cart',cart);updateCartBdg();toast(`✅ ${p.name}`);
 }
 function updateCartBdg(){const t=cart.reduce((s,i)=>s+i.qty,0);const b=document.getElementById('cBdg');if(b){b.textContent=Math.round(t);b.style.display=t>0?'flex':'none';}}
@@ -895,7 +915,7 @@ function openProdModal(id){
     document.getElementById('pN').value=p.name;
     document.getElementById('pDesc').value=p.desc||'';
     document.getElementById('pCat').value=p.cat;
-    if(isAdmin){document.getElementById('pPrice').value=p.price;document.getElementById('pCost').value=p.cost||0;document.getElementById('pUnit').value=p.unit||'piece';document.getElementById('pImgD').value=p.img||'';document.getElementById('pImgPrev').innerHTML=p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:'📷';}
+    if(isAdmin){document.getElementById('pPrice').value=p.price;document.getElementById('pCost').value=p.cost||0;const acEl=document.getElementById('pAdminCost');if(acEl)acEl.value=p.adminCost||p.cost||0;document.getElementById('pUnit').value=p.unit||'piece';document.getElementById('pImgD').value=p.img||'';document.getElementById('pImgPrev').innerHTML=p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:'📷';}
     Object.keys(BC).forEach(bid=>{const el=document.getElementById(`pSt_${bid}`);if(el)el.value=p.stock[bid]||0;});
   } else {
     ['pN','pDesc'].forEach(f=>document.getElementById(f).value='');
@@ -913,8 +933,8 @@ function saveProd(){
   if(isAdmin){
     const price=parseFloat(document.getElementById('pPrice').value),cost=parseFloat(document.getElementById('pCost').value)||0,unit=document.getElementById('pUnit').value,img=document.getElementById('pImgD').value;
     if(isNaN(price)){toast('⚠️ السعر مطلوب','e');return;}
-    if(editPId){const p=prods.find(x=>x.id==editPId);p.name=name;p.cat=cat;p.price=price;p.cost=cost;p.unit=unit;p.desc=desc;p.stock=stock;if(img)p.img=img;toast('✅ تم التعديل');}
-    else{prods.push({id:nextPId++,name,cat,price,cost,unit,desc,stock,img});toast('✅ تمت الإضافة');}
+    if(editPId){const p=prods.find(x=>x.id==editPId);p.name=name;p.cat=cat;p.price=price;p.cost=cost;p.adminCost=adminCost;p.unit=unit;p.desc=desc;p.stock=stock;if(img)p.img=img;toast('✅ تم التعديل');}
+    else{prods.push({id:nextPId++,name,cat,price,cost,adminCost,unit,desc,stock,img});toast('✅ تمت الإضافة');}
   } else {
     if(!editPId){toast('❌ فقط المدير يضيف مباشرة','e');return;}
     const p=prods.find(x=>x.id==editPId);p.name=name;p.desc=desc;
@@ -1005,12 +1025,25 @@ function renderRep(){
   const el=document.getElementById('pRep'),isAdmin=me.role==='مدير عام';
   const brOpts=isAdmin?`<option value="all">جميع الفروع</option>${Object.entries(BC).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('')}`:Object.entries(BC).filter(([id])=>me.branchId?id===me.branchId:true).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('');
   el.innerHTML=`<div class="sec-hdr"><span class="sec-ico">📊</span><span class="sec-txt">التقارير والمبيعات</span></div>
+  <div style="display:flex;gap:5px;margin-bottom:8px">
+    <button class="btn bsm" id="pDay" onclick="setPeriod('day')" style="background:var(--acc);color:#fff">اليوم</button>
+    <button class="btn bsm bgh" id="pWeek" onclick="setPeriod('week')">الأسبوع</button>
+    <button class="btn bsm bgh" id="pMonth" onclick="setPeriod('month')">الشهر</button>
+    <button class="btn bsm bgh" id="pAll" onclick="setPeriod('all')">الكل</button>
+  </div>
   <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap">
     <select id="repBr" style="flex:1;padding:8px;background:var(--card);border:1.5px solid var(--brd);border-radius:10px;color:var(--txt);font-family:inherit;font-size:11px" onchange="applyRep()">${brOpts}</select>
     <select id="repCat" style="flex:1;padding:8px;background:var(--card);border:1.5px solid var(--brd);border-radius:10px;color:var(--txt);font-family:inherit;font-size:11px" onchange="applyRep()"><option value="all">كل الأقسام</option>${ALL_CATS.map(c=>`<option>${c}</option>`).join('')}</select>
   </div>
   <div id="repStats"></div>
   <div class="cd"><div class="tw"><div id="repTbl"></div></div></div>`;
+  applyRep();
+}
+let repPeriod='all';
+function setPeriod(p){
+  repPeriod=p;
+  const btnMap={'day':'pDay','week':'pWeek','month':'pMonth','all':'pAll'};
+  Object.entries(btnMap).forEach(([k,id])=>{const el=document.getElementById(id);if(el){el.style.background=k===p?'var(--acc)':'var(--bg3)';el.style.color=k===p?'#fff':'var(--txt)';}});
   applyRep();
 }
 function applyRep(){
@@ -1128,7 +1161,11 @@ function filterD(){
     ${d.details?`<div style="font-size:10px;color:var(--t2);margin-bottom:4px">📦 ${d.details}</div>`:''}
     <div style="font-size:9px;color:var(--t2);margin-bottom:7px">🏢 ${d.branchName} | 📅 ${d.date}</div>
     <div style="display:flex;gap:5px;flex-wrap:wrap">
-      ${!d.paid?`<button class="btn bgn bsm" onclick="markPaid(${d.id})">✅ سدّد</button>`:'<span class="bdg bg">✅ مسدد</span>'}
+      ${!d.paid?`
+      ${d.paid_amount?`<div style="font-size:9px;color:var(--grn);margin-bottom:4px">✅ مدفوع: ${(d.paid_amount||0).toLocaleString()} | متبقي: ${(d.amount-(d.paid_amount||0)).toLocaleString()} ل.س</div>`:''}
+      <button class="btn bgn bsm" onclick="markPaid(${d.id})">✅ سداد كامل</button>
+      <button class="btn bblu bsm" onclick="partialPay(${d.id})">💵 دفعة جزئية</button>
+    `:'<span class="bdg bg">✅ مسدد</span>'}
       ${d.phone?`<button class="btn bsm" style="background:#25d366;color:#fff" onclick="waDebt('${d.phone}','${d.name}',${d.amount})">💬 تذكير</button>`:''}
       <button class="btn brd bsm" onclick="delDebt(${d.id})">🗑️</button>
     </div>
@@ -1228,7 +1265,7 @@ function openUserModal(id){
   document.getElementById('mUT').textContent=id?'✏️ تعديل مستخدم':'➕ مستخدم جديد';
   document.getElementById('uB').innerHTML=Object.entries(BC).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('');
   document.getElementById('uD').innerHTML=ALL_CATS.map(c=>`<option>${c}</option>`).join('');
-  if(id){const u=users.find(x=>x.id==id);document.getElementById('uN').value=u.name;document.getElementById('uU').value=u.username;document.getElementById('uP').value=u.password;document.getElementById('uR').value=u.role;if(u.branchId)document.getElementById('uB').value=u.branchId;if(u.dept)document.getElementById('uD').value=u.dept;document.getElementById('uSal').value=u.salary||0;document.getElementById('mUser').dataset.eid=id;}
+  if(id){const u=users.find(x=>x.id==id);document.getElementById('uN').value=u.name;document.getElementById('uU').value=u.username;document.getElementById('uP').value=u.password;document.getElementById('uR').value=u.role;if(u.branchId)document.getElementById('uB').value=u.branchId;if(u.dept)document.getElementById('uD').value=u.dept;document.getElementById('uSal').value=u.salary||0;document.getElementById('uPhone').value=u.phone||'';document.getElementById('mUser').dataset.eid=id;}
   else{['uN','uU','uP'].forEach(f=>document.getElementById(f).value='');document.getElementById('uR').value='موظف';document.getElementById('uSal').value=0;delete document.getElementById('mUser').dataset.eid;}
   updUF();document.getElementById('mUser').classList.add('v');
 }
@@ -1236,11 +1273,12 @@ function updUF(){const r=document.getElementById('uR').value;document.getElement
 function saveUser(){
   const name=document.getElementById('uN').value.trim(),username=document.getElementById('uU').value.trim(),password=document.getElementById('uP').value;
   const role=document.getElementById('uR').value,salary=parseFloat(document.getElementById('uSal').value)||0;
+  const phone=document.getElementById('uPhone')?.value.trim()||'';
   const branchId=(role==='رئيس فرع'||role==='موظف')?document.getElementById('uB').value:null;
   const dept=role==='رئيس قسم'?document.getElementById('uD').value:null;
   if(!name||!username||!password){toast('⚠️ الحقول مطلوبة','e');return;}
   const eid=document.getElementById('mUser').dataset.eid;
-  if(eid){const u=users.find(x=>x.id==eid);u.name=name;u.username=username;u.password=password;u.role=role;u.branchId=branchId;u.dept=dept;u.salary=salary;toast('✅ تم التعديل');}
+  if(eid){const u=users.find(x=>x.id==eid);u.name=name;u.username=username;u.password=password;u.role=role;u.branchId=branchId;u.dept=dept;u.salary=salary;u.phone=phone;toast('✅ تم التعديل');}
   else{if(users.find(u=>u.username===username)){toast('❌ اسم المستخدم موجود','e');return;}users.push({id:nextUId++,name,username,password,role,branchId,dept,salary});toast('✅ تمت الإضافة');}
   sv('users',users);co('mUser');renderEmp();
 }
@@ -1764,6 +1802,13 @@ function renderRep(){
   </div><div id="repStats"></div><div class="cd"><div class="cdt">📋 سجل المبيعات</div><div class="tw"><div id="repTbl"></div></div></div>`;
   applyRep();
 }
+let repPeriod='all';
+function setPeriod(p){
+  repPeriod=p;
+  const btnMap={'day':'pDay','week':'pWeek','month':'pMonth','all':'pAll'};
+  Object.entries(btnMap).forEach(([k,id])=>{const el=document.getElementById(id);if(el){el.style.background=k===p?'var(--acc)':'var(--bg3)';el.style.color=k===p?'#fff':'var(--txt)';}});
+  applyRep();
+}
 function applyRep(){
   let f=[...sales];if(me.branchId)f=f.filter(s=>s.branchId===me.branchId);
   const br=document.getElementById('repBr')?.value,cat=document.getElementById('repCat')?.value;
@@ -1858,7 +1903,11 @@ function filterD(){
     ${d.details?`<div style="font-size:10px;color:var(--t2);margin-bottom:4px">📦 ${d.details}</div>`:''}
     <div style="font-size:9px;color:var(--t2);margin-bottom:7px">🏢 ${d.branchName} | 📅 ${d.date}</div>
     <div style="display:flex;gap:5px;flex-wrap:wrap">
-      ${!d.paid?`<button class="btn bgn bsm" onclick="markPaid(${d.id})">✅ سدّد</button>`:'<span class="bdg bg">✅ مسدد</span>'}
+      ${!d.paid?`
+      ${d.paid_amount?`<div style="font-size:9px;color:var(--grn);margin-bottom:4px">✅ مدفوع: ${(d.paid_amount||0).toLocaleString()} | متبقي: ${(d.amount-(d.paid_amount||0)).toLocaleString()} ل.س</div>`:''}
+      <button class="btn bgn bsm" onclick="markPaid(${d.id})">✅ سداد كامل</button>
+      <button class="btn bblu bsm" onclick="partialPay(${d.id})">💵 دفعة جزئية</button>
+    `:'<span class="bdg bg">✅ مسدد</span>'}
       ${d.phone?`<button class="btn bsm" style="background:#25d366;color:#fff" onclick="waDebt('${d.phone}','${d.name}',${d.amount})">💬 تذكير</button>`:''}
       <button class="btn brd bsm" onclick="delDebt(${d.id})">🗑️</button>
     </div>
@@ -1954,7 +2003,7 @@ function renderEmp(){
   </div>`).join('')}`;
 }
 function paySal(uid){const u=users.find(x=>x.id==uid);if(!u||!u.salary)return;if(confirm(`صرف راتب ${u.name}: ${u.salary.toLocaleString()} ل.س؟`)){expenses.unshift({id:Date.now(),type:'salary',desc:`راتب ${u.name}`,amount:u.salary,branchId:u.branchId||Object.keys(BC)[0],date:new Date().toLocaleDateString('ar-SY'),by:me.username});sv('expenses',expenses);renderEmp();toast(`✅ تم صرف راتب ${u.name}`);}}
-function openUserModal(id){document.getElementById('mUT').textContent=id?'✏️ تعديل مستخدم':'➕ مستخدم';document.getElementById('uB').innerHTML=Object.entries(BC).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('');document.getElementById('uD').innerHTML=ALL_CATS.map(c=>`<option>${c}</option>`).join('');if(id){const u=users.find(x=>x.id==id);document.getElementById('uN').value=u.name;document.getElementById('uU').value=u.username;document.getElementById('uP').value=u.password;document.getElementById('uR').value=u.role;if(u.branchId)document.getElementById('uB').value=u.branchId;if(u.dept)document.getElementById('uD').value=u.dept;document.getElementById('uSal').value=u.salary||0;document.getElementById('mUser').dataset.eid=id;}else{['uN','uU','uP'].forEach(f=>document.getElementById(f).value='');document.getElementById('uR').value='موظف';document.getElementById('uSal').value=0;delete document.getElementById('mUser').dataset.eid;}updUF();document.getElementById('mUser').classList.add('v');}
+function openUserModal(id){document.getElementById('mUT').textContent=id?'✏️ تعديل مستخدم':'➕ مستخدم';document.getElementById('uB').innerHTML=Object.entries(BC).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('');document.getElementById('uD').innerHTML=ALL_CATS.map(c=>`<option>${c}</option>`).join('');if(id){const u=users.find(x=>x.id==id);document.getElementById('uN').value=u.name;document.getElementById('uU').value=u.username;document.getElementById('uP').value=u.password;document.getElementById('uR').value=u.role;if(u.branchId)document.getElementById('uB').value=u.branchId;if(u.dept)document.getElementById('uD').value=u.dept;document.getElementById('uSal').value=u.salary||0;document.getElementById('uPhone').value=u.phone||'';document.getElementById('mUser').dataset.eid=id;}else{['uN','uU','uP'].forEach(f=>document.getElementById(f).value='');document.getElementById('uR').value='موظف';document.getElementById('uSal').value=0;delete document.getElementById('mUser').dataset.eid;}updUF();document.getElementById('mUser').classList.add('v');}
 function updUF(){const r=document.getElementById('uR').value;document.getElementById('uBF').style.display=(r==='رئيس فرع'||r==='موظف')?'block':'none';document.getElementById('uDF').style.display=(r==='رئيس قسم')?'block':'none';}
 function saveUser(){const name=document.getElementById('uN').value.trim(),username=document.getElementById('uU').value.trim(),password=document.getElementById('uP').value,role=document.getElementById('uR').value,salary=parseFloat(document.getElementById('uSal').value)||0;const branchId=(role==='رئيس فرع'||role==='موظف')?document.getElementById('uB').value:null,dept=role==='رئيس قسم'?document.getElementById('uD').value:null;if(!name||!username||!password){toast('⚠️ الحقول مطلوبة','e');return;}const eid=document.getElementById('mUser').dataset.eid;if(eid){const u=users.find(x=>x.id==eid);u.name=name;u.username=username;u.password=password;u.role=role;u.branchId=branchId;u.dept=dept;u.salary=salary;toast('✅ تم التعديل');}else{if(users.find(u=>u.username===username)){toast('❌ اسم موجود','e');return;}users.push({id:nextUId++,name,username,password,role,branchId,dept,salary});toast('✅ تمت الإضافة');}sv('users',users);co('mUser');renderEmp();}
 function delUser(id){if(confirm('حذف؟')){users=users.filter(u=>u.id!=id);sv('users',users);renderEmp();toast('🗑️ تم');}}
@@ -2065,7 +2114,155 @@ function openWA(){window.open(`https://wa.me/${PHONE_WA}?text=${encodeURICompone
 function openGPS(){window.open(`https://www.google.com/maps?q=${GPS_LAT},${GPS_LNG}`,'_blank')}
 function co(id){document.getElementById(id).classList.remove('v')}
 function toast(msg,type='k'){clearTimeout(toastT);const t=document.getElementById('toast');t.textContent=msg;t.style.background=type==='e'?'var(--red)':type==='msg'?'var(--blu)':'var(--grn)';t.classList.add('v');toastT=setTimeout(()=>t.classList.remove('v'),2800);}
+
+// ══ OFFERS (عروض يومية) ══
+function renderOffers(){
+  const el=document.getElementById('pOffers'); if(!el) return;
+  const isAdmin=me.role==='مدير عام';
+  el.innerHTML=`<div class="sec-hdr" style="background:linear-gradient(135deg,#ff4500,#ff6b35)"><span class="sec-ico">🔥</span><span class="sec-txt">العروض اليومية الحصرية</span></div>
+  ${isAdmin?`<button class="btn" style="background:linear-gradient(135deg,#ff4500,#ff6b35);color:#fff;margin-bottom:12px" onclick="openOfferModal()">➕ إضافة عرض</button>`:''}
+  <div id="offersList">${offers.length?offers.map(o=>`<div style="background:linear-gradient(135deg,rgba(255,69,0,.15),rgba(255,107,53,.1));border:2px solid rgba(255,107,53,.4);border-radius:16px;padding:13px;margin-bottom:10px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;background:linear-gradient(135deg,#ff4500,#ff6b35);color:#fff;font-size:9px;font-weight:800;padding:3px 10px;border-radius:0 0 10px 0">🔥 عرض حصري</div>
+    <div style="margin-top:14px;font-size:15px;font-weight:900">${o.title}</div>
+    <div style="font-size:11px;color:var(--t2);margin:4px 0">${o.desc}</div>
+    ${o.oldPrice?`<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="text-decoration:line-through;color:var(--t2);font-size:13px">${parseInt(o.oldPrice).toLocaleString('ar-SY')} ل.س</span><span style="color:var(--red);font-size:18px;font-weight:900">→ ${parseInt(o.price).toLocaleString('ar-SY')} ل.س</span></div>`:`<div style="font-size:18px;font-weight:900;color:var(--acc);margin-top:6px">${parseInt(o.price).toLocaleString('ar-SY')} ل.س</div>`}
+    ${o.expiry?`<div style="font-size:9px;color:var(--gold);margin-top:4px">⏰ ينتهي: ${o.expiry}</div>`:''}
+    ${isAdmin?`<button class="btn brd bsm" style="margin-top:8px" onclick="delOffer(${o.id})">🗑️ حذف</button>`:''}
+  </div>`).join(''):'<div class="empty"><div class="ei">🔥</div><p>لا توجد عروض حالياً</p><p style="font-size:10px;color:var(--t2)">ترقبوا عروضنا القادمة!</p></div>'}</div>`;
+}
+function openOfferModal(){
+  const ov=document.createElement('div');ov.className='ov v';ov.id='mOffer';
+  ov.innerHTML=`<div class="mb"><div class="md"></div>
+    <div class="mh"><div class="mt">🔥 إضافة عرض</div><button class="mc" onclick="document.getElementById('mOffer').remove()">✕</button></div>
+    <div class="fg"><label>عنوان العرض</label><input id="ofT" placeholder="مثال: خصم 30% على الأرز"></div>
+    <div class="fg"><label>الوصف</label><input id="ofD" placeholder="تفاصيل العرض..."></div>
+    <div class="fg"><label>السعر الجديد (ل.س)</label><input id="ofP" type="number"></div>
+    <div class="fg"><label>السعر القديم (ل.س) — اختياري</label><input id="ofOP" type="number" placeholder="لإظهار خط الشطب"></div>
+    <div class="fg"><label>ينتهي في (اختياري)</label><input id="ofE" type="date"></div>
+    <div class="mbtns"><button class="btn" style="background:linear-gradient(135deg,#ff4500,#ff6b35);color:#fff;flex:1;justify-content:center" onclick="saveOffer()">🔥 نشر العرض</button><button class="btn bgh" onclick="document.getElementById('mOffer').remove()">إلغاء</button></div>
+  </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+function saveOffer(){
+  const title=document.getElementById('ofT').value.trim(),desc=document.getElementById('ofD').value.trim();
+  const price=document.getElementById('ofP').value,oldPrice=document.getElementById('ofOP').value,expiry=document.getElementById('ofE').value;
+  if(!title||!price){toast('⚠️ العنوان والسعر مطلوبان','e');return;}
+  offers.unshift({id:Date.now(),title,desc,price,oldPrice,expiry,date:new Date().toLocaleString(),by:me.username});
+  _s('offers',offers);document.getElementById('mOffer')?.remove();renderOffers();toast('✅ تم نشر العرض');
+}
+function delOffer(id){if(confirm('حذف؟')){offers=offers.filter(o=>o.id!=id);_s('offers',offers);renderOffers();toast('🗑️ تم');}}
+
+// ══ SUPPLIERS / التجار ══
+function renderSuppliers(){
+  const el=document.getElementById('pSuppliers'); if(!el) return;
+  const isAdmin=me.role==='مدير عام';
+  if(!isAdmin){el.innerHTML='<div class="empty"><div class="ei">🔒</div><p>هذا القسم للمدير العام فقط</p></div>';return;}
+  const totDebt=suppliers.reduce((a,b)=>a+(b.totalDebt||0),0);
+  const totPaid=suppliers.reduce((a,b)=>a+(b.totalPaid||0),0);
+  const totRem=totDebt-totPaid;
+  el.innerHTML=`<div class="sec-hdr" style="background:linear-gradient(135deg,#1a2030,#2a3a5a)"><span class="sec-ico">🏭</span><span class="sec-txt">دفتر التجار والموردين</span></div>
+  <button class="btn bac bsm" style="margin-bottom:12px" onclick="openSupModal()">➕ إضافة تاجر</button>
+  <div class="sg" style="margin-bottom:12px">
+    <div class="st"><div class="sv" style="color:var(--red);font-size:20px">${totDebt.toLocaleString('ar-SY')}</div><div class="sl">💸 إجمالي الديون للتجار</div></div>
+    <div class="st"><div class="sv" style="color:var(--grn);font-size:20px">${totPaid.toLocaleString('ar-SY')}</div><div class="sl">✅ إجمالي المدفوع</div></div>
+    <div class="st" style="grid-column:1/-1"><div class="sv" style="color:var(--red);font-size:22px">${totRem.toLocaleString('ar-SY')} ل.س</div><div class="sl">🏦 إجمالي المتبقي للتجار</div></div>
+  </div>
+  ${suppliers.length?suppliers.map(s=>{
+    const rem=(s.totalDebt||0)-(s.totalPaid||0);
+    return `<div class="cd" style="border-right:5px solid ${rem>0?'var(--red)':'var(--grn)'}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div><div style="font-size:14px;font-weight:900">🏭 ${s.name}</div><div style="font-size:10px;color:var(--t2)">${s.phone||''}${s.desc?' | '+s.desc:''}</div></div>
+        <div style="text-align:left">
+          <div style="font-size:16px;font-weight:900;color:${rem>0?'var(--red)':'var(--grn)'}">${rem.toLocaleString()}</div>
+          <div style="font-size:8px;color:var(--t2)">ل.س متبقي</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:9px">
+        <div style="background:rgba(239,68,68,.1);border-radius:8px;padding:7px;text-align:center"><div style="font-size:8px;color:var(--t2)">📦 إجمالي الدين</div><div style="font-weight:800;color:var(--red)">${(s.totalDebt||0).toLocaleString()}</div></div>
+        <div style="background:rgba(34,197,94,.1);border-radius:8px;padding:7px;text-align:center"><div style="font-size:8px;color:var(--t2)">✅ المدفوع</div><div style="font-weight:800;color:var(--grn)">${(s.totalPaid||0).toLocaleString()}</div></div>
+        <div style="background:rgba(59,130,246,.1);border-radius:8px;padding:7px;text-align:center"><div style="font-size:8px;color:var(--t2)">🏦 المتبقي</div><div style="font-weight:800;color:${rem>0?'var(--red)':'var(--grn)'}">${rem.toLocaleString()}</div></div>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <button class="btn bac bsm" onclick="addSupDebt(${s.id})">➕ إضافة دين</button>
+        <button class="btn bgn bsm" onclick="addSupPay(${s.id})">💵 تسجيل دفعة</button>
+        <button class="btn brd bsm" onclick="delSup(${s.id})">🗑️</button>
+        ${s.phone?`<button class="btn bsm" style="background:#25d366;color:#fff" onclick="window.open('https://wa.me/+${(s.phone||'').replace(/\D/g,'')}','_blank')">💬</button>`:''}
+      </div>
+      ${(s.log||[]).length?`<div style="margin-top:8px;max-height:100px;overflow-y:auto">${(s.log||[]).slice(0,5).map(l=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd);font-size:9px"><span style="color:var(--t2)">${l.date} — ${l.desc}</span><span style="font-weight:800;color:${l.type==='debt'?'var(--red)':'var(--grn)'}">${l.type==='debt'?'+':'-'}${(l.amount||0).toLocaleString()}</span></div>`).join('')}</div>`:''}
+    </div>`;
+  }).join(''):'<div class="empty"><div class="ei">🏭</div><p>لا يوجد تجار مسجلون</p></div>'}`;
+}
+function openSupModal(){
+  const ov=document.createElement('div');ov.className='ov v';ov.id='mSup';
+  ov.innerHTML=`<div class="mb"><div class="md"></div>
+    <div class="mh"><div class="mt">🏭 إضافة تاجر</div><button class="mc" onclick="document.getElementById('mSup').remove()">✕</button></div>
+    <div class="fg"><label>اسم التاجر / المورد</label><input id="supN" placeholder="مثال: تاجر المواد الغذائية"></div>
+    <div class="fg"><label>رقم الهاتف</label><input id="supPh" type="tel"></div>
+    <div class="fg"><label>ملاحظات</label><input id="supD" placeholder="نوع البضاعة..."></div>
+    <div class="mbtns"><button class="btn bac" onclick="saveSup()">💾 حفظ</button><button class="btn bgh" onclick="document.getElementById('mSup').remove()">إلغاء</button></div>
+  </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+function saveSup(){
+  const name=document.getElementById('supN').value.trim(),phone=document.getElementById('supPh').value.trim(),desc=document.getElementById('supD').value.trim();
+  if(!name){toast('⚠️ الاسم مطلوب','e');return;}
+  suppliers.push({id:Date.now(),name,phone,desc,totalDebt:0,totalPaid:0,log:[]});
+  _s('suppliers',suppliers);document.getElementById('mSup')?.remove();renderSuppliers();toast('✅ تمت الإضافة');
+}
+function addSupDebt(id){
+  const amount=parseFloat(prompt('مبلغ الدين للتاجر (ل.س):'));
+  const desc=prompt('البيان / نوع البضاعة:','بضاعة');
+  if(!amount||isNaN(amount)) return;
+  const s=suppliers.find(x=>x.id==id);if(!s)return;
+  s.totalDebt=(s.totalDebt||0)+amount;
+  s.log=s.log||[];
+  s.log.unshift({type:'debt',amount,desc:desc||'بضاعة',date:new Date().toLocaleDateString('ar-SY')});
+  _s('suppliers',suppliers);renderSuppliers();toast('✅ تم تسجيل الدين');
+}
+function addSupPay(id){
+  const amount=parseFloat(prompt('مبلغ الدفعة للتاجر (ل.س):'));
+  const desc=prompt('البيان:','دفعة');
+  if(!amount||isNaN(amount)) return;
+  const s=suppliers.find(x=>x.id==id);if(!s)return;
+  s.totalPaid=(s.totalPaid||0)+amount;
+  s.log=s.log||[];
+  s.log.unshift({type:'pay',amount,desc:desc||'دفعة',date:new Date().toLocaleDateString('ar-SY')});
+  _s('suppliers',suppliers);renderSuppliers();toast('✅ تم تسجيل الدفعة');
+}
+function delSup(id){if(confirm('حذف؟')){suppliers=suppliers.filter(s=>s.id!=id);_s('suppliers',suppliers);renderSuppliers();toast('🗑️ تم');}}
+
+// ══ DEBT PARTIAL PAYMENT ══
+function partialPay(id){
+  const d=debts.find(x=>x.id===id);if(!d)return;
+  const remaining=d.amount-(d.paid_amount||0);
+  const amount=parseFloat(prompt(`المتبقي: ${remaining.toLocaleString()} ل.س\nأدخل مبلغ الدفعة:`,remaining));
+  if(!amount||isNaN(amount)||amount<=0) return;
+  const newPaid=(d.paid_amount||0)+amount;
+  d.paid_amount=newPaid;
+  if(newPaid>=d.amount) d.paid=true;
+  d.payments=d.payments||[];
+  d.payments.push({amount,date:new Date().toLocaleDateString('ar-SY')});
+  _s('debts',debts);filterD();
+  toast(newPaid>=d.amount?'✅ تم السداد الكامل':`✅ تم تسجيل الدفعة — متبقي: ${(d.amount-newPaid).toLocaleString()} ل.س`);
+}
+
+// ══ REPORTS — PERIOD FILTER ══
+const _origRep = typeof applyRep !== 'undefined' ? applyRep : null;
+
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('v')}));
+// ══ OFFLINE / PWA ══
+// PWA offline: data stored in localStorage - works offline automatically
+// ══ NETWORK STATUS ══
+function checkNet(){
+  const offline=!navigator.onLine;
+  if(offline) toast('📴 بدون إنترنت — التطبيق يعمل محلياً','msg');
+  else toast('🌐 اتصال الإنترنت متاح','k');
+}
+window.addEventListener('offline',()=>toast('📴 انقطع الإنترنت — البيانات محفوظة محلياً','msg'));
+window.addEventListener('online',()=>toast('🌐 عاد الإنترنت — جاري التزامن...','k'));
+
 updateCartBdg();
 if(logo)updateLogos();
 if(telegramLink){const btn=document.getElementById('contactTGBtn');if(btn)btn.style.display='flex';}
@@ -2160,6 +2357,8 @@ let partnerShare= parseFloat(_g('partnerShare', 20));
 let tgLink      = _g('tgLink', '');
 let darkMode    = _g('theme', 'dark') !== 'light';
 let ratings     = _g('ratings', []);
+let suppliers   = _g('suppliers', []); // التجار والموردون
+let offers      = _g('offers', []); // العروض اليومية
 
 let me=null, editPId=null, curBr='oldtown', curDept='الكل';
 let wtProd=null, wtBr=null, pendEditId=null;
@@ -2172,7 +2371,8 @@ function saveAll(){
   _s('pendingProds',pendingProds); _s('fbPages',fbPages);
   _s('buyRate',buyRate); _s('sellRate',sellRate); _s('partnerShare',partnerShare);
   _s('storeName',storeName); _s('tgLink',tgLink); _s('ratings',ratings);
-  if(logo) _s('logo',logo);
+  _s('suppliers',suppliers); _s('offers',offers);
+if(logo) _s('logo',logo);
 }
 
 // ══ THEME ══
@@ -2180,8 +2380,8 @@ function applyTheme(){
   document.documentElement.classList.toggle('day',!darkMode);
   const ico = darkMode ? '🌙' : '☀️';
   const lbl = darkMode ? 'ليلي' : 'نهاري';
-  const ti = document.getElementById('themeIcoGuest');
-  if(ti) ti.textContent = ico;
+  const ti = document.getElementById('themeIcoGuest'); if(ti) ti.textContent = ico;
+  const ts = document.getElementById('themeIcoStaff'); if(ts) ts.textContent = ico;
 }
 function toggleTheme(){
   darkMode=!darkMode; _s('theme',darkMode?'dark':'light'); applyTheme();
@@ -2278,10 +2478,11 @@ function setupNav(){
   const isAdmin=me.role==='مدير عام', isStaff=me.role!=='زبون';
   const isGuest=me.role==='زبون';
   // Show/hide nav buttons
-  const staffNav=['nCart','nInv','nRep','nWal','nDebt','nExp','nPend'];
+  const staffNav=['nCart','nInv','nRep','nWal','nDebt','nExp','nPend','nOffers'];
   const adminNav=['nPers','nEmp','nSet'];
   const guestNav=['nContact','nThemeGuest','nRate'];
   staffNav.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=isStaff?'flex':'none'; });
+  const thS=document.getElementById('nThemeStaff'); if(thS) thS.style.display=isStaff?'flex':'none';
   adminNav.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=isAdmin?'flex':'none'; });
   guestNav.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=isGuest?'flex':'none'; });
   // Message button in settings only for staff
@@ -2335,7 +2536,7 @@ function showPanel(id){
   document.getElementById(id)?.classList.add('v');
   const map={pStore:renderStore,pCart:renderCart,pInv:renderInv,pPend:renderPend,
     pRep:renderRep,pWallet:renderWallet,pDebt:renderDebt,pExp:renderExp,
-    pPers:renderPers,pEmp:renderEmp,pSet:renderSet};
+    pPers:renderPers,pEmp:renderEmp,pSet:renderSet,pOffers:renderOffers,pSuppliers:renderSuppliers};
   if(map[id]) map[id]();
 }
 
@@ -2431,7 +2632,7 @@ function addCart(prodId,brId,qty=1){
   const st=p.stock[brId]||0; if(st<qty){toast('❌ غير متوفر','e');return;}
   const ex=cart.find(i=>i.prodId==prodId&&i.branchId==brId);
   if(ex){if(ex.qty+qty>st){toast('❌ غير كافية','e');return;} ex.qty+=qty;}
-  else cart.push({prodId,branchId:brId,name:p.name,price:p.price,cost:p.cost||0,cat:p.cat,qty,unit:p.unit||'piece'});
+  else cart.push({prodId,branchId:brId,name:p.name,price:p.price,cost:p.cost||0,adminCost:p.adminCost||p.cost||0,cat:p.cat,qty,unit:p.unit||'piece'});
   _s('cart',cart); updateCartBdg(); toast(`✅ ${p.name}`);
 }
 function updateCartBdg(){const t=cart.reduce((s,i)=>s+i.qty,0);const b=document.getElementById('cBdg');if(b){b.textContent=Math.round(t);b.style.display=t>0?'flex':'none';}}
@@ -2456,7 +2657,11 @@ function processCheckout(method,debtorName){
   for(const item of cart){
     const p=prods.find(x=>x.id==item.prodId);
     p.stock[item.branchId]=(p.stock[item.branchId]||0)-item.qty;
-    const total=item.price*item.qty, profit=(item.price-item.cost)*item.qty;
+    const total=item.price*item.qty;
+    // For partner branches: profit = price - adminCost (admin's real margin)
+    // For non-partner: profit = price - cost
+    const realCost=isPartner(item.branchId,item.cat)?(item.adminCost||item.cost):item.cost;
+    const profit=(item.price-realCost)*item.qty;
     const partner=isPartner(item.branchId,item.cat);
     const myProfit=partner?(profit*partnerShare/100):profit;
     const partnerProfit=partner?(profit*(1-partnerShare/100)):0;
@@ -2507,7 +2712,7 @@ function filterInv(){
         <div style="width:46px;height:46px;border-radius:10px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:'📦'}</div>
         <div style="flex:1">
           <div style="font-weight:800;font-size:13px">${p.name}</div>
-          <div style="font-size:9px;color:var(--t2)">${p.cat} | ${p.price.toLocaleString()} ل.س${u?' / '+u:''} ${isAdmin?`| 💰 تكلفة: ${(p.cost||0).toLocaleString()}`:''}  </div>
+          <div style="font-size:9px;color:var(--t2)">${p.cat} | ${p.price.toLocaleString()} ل.س${u?' / '+u:''} ${isAdmin?`| 💰 تكلفتي: ${(p.adminCost||p.cost||0).toLocaleString()} | رأس مال شريك: ${(p.cost||0).toLocaleString()} ل.س`:(me.branchId&&BC[me.branchId]?.partner?`| 💰 رأس مالكم: ${(p.cost||0).toLocaleString()} ل.س`:'')}  </div>
           <div class="ib2"><div class="if2" style="width:${fill}%;background:${low?'var(--red)':'var(--grn)'}"></div></div>
           <div style="font-size:9px;color:${low?'var(--red)':'var(--t2)'};">${sTxt.trim()||'لا مخزون'}</div>
         </div>
@@ -2566,7 +2771,7 @@ function openProdModal(id){
     document.getElementById('pN').value=p.name;
     document.getElementById('pDesc').value=p.desc||'';
     document.getElementById('pCat').value=p.cat;
-    if(isAdmin){document.getElementById('pPrice').value=p.price;document.getElementById('pCost').value=p.cost||0;document.getElementById('pUnit').value=p.unit||'piece';document.getElementById('pImgD').value=p.img||'';document.getElementById('pImgPrev').innerHTML=p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:'📷';}
+    if(isAdmin){document.getElementById('pPrice').value=p.price;document.getElementById('pCost').value=p.cost||0;const acEl=document.getElementById('pAdminCost');if(acEl)acEl.value=p.adminCost||p.cost||0;document.getElementById('pUnit').value=p.unit||'piece';document.getElementById('pImgD').value=p.img||'';document.getElementById('pImgPrev').innerHTML=p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:'📷';}
     Object.keys(BC).forEach(bid=>{const el=document.getElementById(`pSt_${bid}`);if(el)el.value=p.stock[bid]||0;});
   } else {
     ['pN','pDesc'].forEach(f=>document.getElementById(f).value='');
@@ -2582,10 +2787,10 @@ function saveProd(){
   if(!name){toast('⚠️ اسم المنتج مطلوب','e');return;}
   const stock={};Object.keys(BC).forEach(bid=>{const el=document.getElementById(`pSt_${bid}`);if(el)stock[bid]=parseFloat(el.value)||0;});
   if(isAdmin){
-    const price=parseFloat(document.getElementById('pPrice').value), cost=parseFloat(document.getElementById('pCost').value)||0, unit=document.getElementById('pUnit').value, img=document.getElementById('pImgD').value;
+    const price=parseFloat(document.getElementById('pPrice').value), cost=parseFloat(document.getElementById('pCost').value)||0, adminCost=parseFloat(document.getElementById('pAdminCost')?.value)||cost, unit=document.getElementById('pUnit').value, img=document.getElementById('pImgD').value;
     if(isNaN(price)){toast('⚠️ السعر مطلوب','e');return;}
-    if(editPId){const p=prods.find(x=>x.id==editPId);p.name=name;p.cat=cat;p.price=price;p.cost=cost;p.unit=unit;p.desc=desc;p.stock=stock;if(img)p.img=img;toast('✅ تم التعديل');}
-    else{prods.push({id:nextPId++,name,cat,price,cost,unit,desc,stock,img});toast('✅ تمت الإضافة');}
+    if(editPId){const p=prods.find(x=>x.id==editPId);p.name=name;p.cat=cat;p.price=price;p.cost=cost;p.adminCost=adminCost;p.unit=unit;p.desc=desc;p.stock=stock;if(img)p.img=img;toast('✅ تم التعديل');}
+    else{prods.push({id:nextPId++,name,cat,price,cost,adminCost,unit,desc,stock,img});toast('✅ تمت الإضافة');}
   } else {
     if(!editPId){toast('❌ فقط المدير يضيف مباشرة','e');return;}
     const p=prods.find(x=>x.id==editPId);p.name=name;p.desc=desc;
@@ -2680,8 +2885,20 @@ function renderRep(){
   <div class="cd"><div class="cdt">📋 سجل المبيعات</div><div class="tw"><div id="repTbl"></div></div></div>`;
   applyRep();
 }
+let repPeriod='all';
+function setPeriod(p){
+  repPeriod=p;
+  const btnMap={'day':'pDay','week':'pWeek','month':'pMonth','all':'pAll'};
+  Object.entries(btnMap).forEach(([k,id])=>{const el=document.getElementById(id);if(el){el.style.background=k===p?'var(--acc)':'var(--bg3)';el.style.color=k===p?'#fff':'var(--txt)';}});
+  applyRep();
+}
 function applyRep(){
   let f=[...sales]; if(me.branchId) f=f.filter(s=>s.branchId===me.branchId);
+  // Period filter
+  const now=new Date(); const today=now.toISOString().slice(0,10);
+  if(repPeriod==='day') f=f.filter(s=>s.dateOnly===today);
+  else if(repPeriod==='week'){const w=new Date(now.getTime()-7*86400000).toISOString().slice(0,10);f=f.filter(s=>s.dateOnly>=w);}
+  else if(repPeriod==='month'){const m=new Date(now.getTime()-30*86400000).toISOString().slice(0,10);f=f.filter(s=>s.dateOnly>=m);}
   const br=document.getElementById('repBr')?.value, cat=document.getElementById('repCat')?.value;
   if(br&&br!=='all') f=f.filter(s=>s.branchId===br);
   if(cat&&cat!=='all') f=f.filter(s=>s.cat===cat);
@@ -2800,7 +3017,11 @@ function filterD(){
     ${d.details?`<div style="font-size:10px;color:var(--t2);margin-bottom:4px">📦 ${d.details}</div>`:''}
     <div style="font-size:9px;color:var(--t2);margin-bottom:8px">🏢 ${d.branchName} | 📅 ${d.date}</div>
     <div style="display:flex;gap:5px;flex-wrap:wrap">
-      ${!d.paid?`<button class="btn bgn bsm" onclick="markPaid(${d.id})">✅ سدّد</button>`:'<span class="bdg bg">✅ مسدد</span>'}
+      ${!d.paid?`
+      ${d.paid_amount?`<div style="font-size:9px;color:var(--grn);margin-bottom:4px">✅ مدفوع: ${(d.paid_amount||0).toLocaleString()} | متبقي: ${(d.amount-(d.paid_amount||0)).toLocaleString()} ل.س</div>`:''}
+      <button class="btn bgn bsm" onclick="markPaid(${d.id})">✅ سداد كامل</button>
+      <button class="btn bblu bsm" onclick="partialPay(${d.id})">💵 دفعة جزئية</button>
+    `:'<span class="bdg bg">✅ مسدد</span>'}
       ${d.phone?`<button class="btn bsm" style="background:#25d366;color:#fff" onclick="waDebt('${d.phone}','${d.name}',${d.amount})">💬 تذكير</button>`:''}
       <button class="btn brd bsm" onclick="delDebt(${d.id})">🗑️</button>
     </div>
@@ -2903,7 +3124,7 @@ function renderEmp(){
   </div>`).join('')}`;
 }
 function paySal(uid){const u=users.find(x=>x.id==uid);if(!u||!u.salary)return;if(confirm(`صرف راتب ${u.name}: ${u.salary.toLocaleString()} ل.س؟`)){expenses.unshift({id:Date.now(),type:'salary',desc:`راتب ${u.name}`,amount:u.salary,branchId:u.branchId||Object.keys(BC)[0],date:new Date().toLocaleDateString('ar-SY'),by:me.username});_s('expenses',expenses);renderEmp();toast(`✅ تم صرف راتب ${u.name}`);}}
-function openUserModal(id){document.getElementById('mUT').textContent=id?'✏️ تعديل مستخدم':'➕ مستخدم';document.getElementById('uB').innerHTML=Object.entries(BC).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('');document.getElementById('uD').innerHTML=ALL_CATS.map(c=>`<option>${c}</option>`).join('');if(id){const u=users.find(x=>x.id==id);document.getElementById('uN').value=u.name;document.getElementById('uU').value=u.username;document.getElementById('uP').value=u.password;document.getElementById('uR').value=u.role;if(u.branchId)document.getElementById('uB').value=u.branchId;if(u.dept)document.getElementById('uD').value=u.dept;document.getElementById('uSal').value=u.salary||0;document.getElementById('mUser').dataset.eid=id;}else{['uN','uU','uP'].forEach(f=>document.getElementById(f).value='');document.getElementById('uR').value='موظف';document.getElementById('uSal').value=0;delete document.getElementById('mUser').dataset.eid;}updUF();document.getElementById('mUser').classList.add('v');}
+function openUserModal(id){document.getElementById('mUT').textContent=id?'✏️ تعديل مستخدم':'➕ مستخدم';document.getElementById('uB').innerHTML=Object.entries(BC).map(([id,v])=>`<option value="${id}">${v.name}</option>`).join('');document.getElementById('uD').innerHTML=ALL_CATS.map(c=>`<option>${c}</option>`).join('');if(id){const u=users.find(x=>x.id==id);document.getElementById('uN').value=u.name;document.getElementById('uU').value=u.username;document.getElementById('uP').value=u.password;document.getElementById('uR').value=u.role;if(u.branchId)document.getElementById('uB').value=u.branchId;if(u.dept)document.getElementById('uD').value=u.dept;document.getElementById('uSal').value=u.salary||0;document.getElementById('uPhone').value=u.phone||'';document.getElementById('mUser').dataset.eid=id;}else{['uN','uU','uP'].forEach(f=>document.getElementById(f).value='');document.getElementById('uR').value='موظف';document.getElementById('uSal').value=0;delete document.getElementById('mUser').dataset.eid;}updUF();document.getElementById('mUser').classList.add('v');}
 function updUF(){const r=document.getElementById('uR').value;document.getElementById('uBF').style.display=(r==='رئيس فرع'||r==='موظف')?'block':'none';document.getElementById('uDF').style.display=(r==='رئيس قسم')?'block':'none';}
 function saveUser(){const name=document.getElementById('uN').value.trim(),username=document.getElementById('uU').value.trim(),password=document.getElementById('uP').value,role=document.getElementById('uR').value,salary=parseFloat(document.getElementById('uSal').value)||0;const branchId=(role==='رئيس فرع'||role==='موظف')?document.getElementById('uB').value:null;const dept=role==='رئيس قسم'?document.getElementById('uD').value:null;if(!name||!username||!password){toast('⚠️ الحقول مطلوبة','e');return;}const eid=document.getElementById('mUser').dataset.eid;if(eid){const u=users.find(x=>x.id==eid);u.name=name;u.username=username;u.password=password;u.role=role;u.branchId=branchId;u.dept=dept;u.salary=salary;toast('✅ تم التعديل');}else{if(users.find(u=>u.username===username)){toast('❌ اسم موجود','e');return;}users.push({id:nextUId++,name,username,password,role,branchId,dept,salary});toast('✅ تمت الإضافة');}_s('users',users);co('mUser');renderEmp();}
 function delUser(id){if(confirm('حذف؟')){users=users.filter(u=>u.id!=id);_s('users',users);renderEmp();toast('🗑️ تم');}}
@@ -2987,7 +3208,19 @@ function openMsgModal(){
   _s('msgs',msgs); updateMsgBdg(); document.getElementById('mMsg').classList.add('v');
 }
 function renderChat(){const list=document.getElementById('chatList');const myMsgs=msgs.filter(m=>m.from===me.username||m.to===me.username).slice(-30);list.innerHTML=myMsgs.map(m=>{const isMine=m.from===me.username;const sender=isMine?'أنت':users.find(u=>u.username===m.from)?.name||m.from;return `<div class="cmsg ${isMine?'mine':''}"><div style="font-size:10px;font-weight:800;color:var(--acc)">${sender}</div><div style="font-size:12px;margin:2px 0">${m.text}</div><div style="font-size:8px;color:var(--t2)">${m.time}</div></div>`;}).join('')||'<div class="empty"><p>لا توجد رسائل</p></div>';list.scrollTop=list.scrollHeight;}
-function sendMsg(){const to=document.getElementById('msgTo').value,text=document.getElementById('msgTxt').value.trim();if(!text){toast('⚠️ اكتب رسالة','e');return;}msgs.push({id:Date.now(),from:me.username,to,text,time:new Date().toLocaleString(),read:false});_s('msgs',msgs);document.getElementById('msgTxt').value='';renderChat();updateMsgBdg();playSound();toast('✅ تم الإرسال');}
+function sendMsg(){
+  const to=document.getElementById('msgTo').value,text=document.getElementById('msgTxt').value.trim();
+  if(!text){toast('⚠️ اكتب رسالة','e');return;}
+  msgs.push({id:Date.now(),from:me.username,to,text,time:new Date().toLocaleString(),read:false});
+  _s('msgs',msgs);document.getElementById('msgTxt').value='';renderChat();updateMsgBdg();playSound();toast('✅ تم الإرسال');
+}
+function sendWAMsg(){
+  const to=document.getElementById('msgTo').value;
+  const uObj=users.find(u=>u.username===to);
+  if(!uObj?.phone){toast('⚠️ لا يوجد رقم هاتف لهذا المستخدم','e');return;}
+  const text=document.getElementById('msgTxt').value.trim()||'مرحباً';
+  window.open('https://wa.me/+'+uObj.phone.replace(/\D/g,'')+'/text='+encodeURIComponent(text),'_blank');
+}
 function updateMsgBdg(){const stored=_g('msgs',[]);const n=stored.filter(m=>m.to===me?.username&&!m.read).length;['msgBdg'].forEach(id=>{const b=document.getElementById(id);if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}});}
 
 // ══ CONTACT / FB / RATE ══
@@ -3011,7 +3244,155 @@ function openTelegram(){if(tgLink)window.open(tgLink,'_blank');}
 function co(id){document.getElementById(id)?.classList.remove('v')}
 function toast(msg,type='k'){clearTimeout(toastT);const t=document.getElementById('toast');t.textContent=msg;t.style.background=type==='e'?'var(--red)':type==='msg'?'var(--blu)':'var(--grn)';t.classList.add('v');toastT=setTimeout(()=>t.classList.remove('v'),2800);}
 
+
+// ══ OFFERS (عروض يومية) ══
+function renderOffers(){
+  const el=document.getElementById('pOffers'); if(!el) return;
+  const isAdmin=me.role==='مدير عام';
+  el.innerHTML=`<div class="sec-hdr" style="background:linear-gradient(135deg,#ff4500,#ff6b35)"><span class="sec-ico">🔥</span><span class="sec-txt">العروض اليومية الحصرية</span></div>
+  ${isAdmin?`<button class="btn" style="background:linear-gradient(135deg,#ff4500,#ff6b35);color:#fff;margin-bottom:12px" onclick="openOfferModal()">➕ إضافة عرض</button>`:''}
+  <div id="offersList">${offers.length?offers.map(o=>`<div style="background:linear-gradient(135deg,rgba(255,69,0,.15),rgba(255,107,53,.1));border:2px solid rgba(255,107,53,.4);border-radius:16px;padding:13px;margin-bottom:10px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;background:linear-gradient(135deg,#ff4500,#ff6b35);color:#fff;font-size:9px;font-weight:800;padding:3px 10px;border-radius:0 0 10px 0">🔥 عرض حصري</div>
+    <div style="margin-top:14px;font-size:15px;font-weight:900">${o.title}</div>
+    <div style="font-size:11px;color:var(--t2);margin:4px 0">${o.desc}</div>
+    ${o.oldPrice?`<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="text-decoration:line-through;color:var(--t2);font-size:13px">${parseInt(o.oldPrice).toLocaleString('ar-SY')} ل.س</span><span style="color:var(--red);font-size:18px;font-weight:900">→ ${parseInt(o.price).toLocaleString('ar-SY')} ل.س</span></div>`:`<div style="font-size:18px;font-weight:900;color:var(--acc);margin-top:6px">${parseInt(o.price).toLocaleString('ar-SY')} ل.س</div>`}
+    ${o.expiry?`<div style="font-size:9px;color:var(--gold);margin-top:4px">⏰ ينتهي: ${o.expiry}</div>`:''}
+    ${isAdmin?`<button class="btn brd bsm" style="margin-top:8px" onclick="delOffer(${o.id})">🗑️ حذف</button>`:''}
+  </div>`).join(''):'<div class="empty"><div class="ei">🔥</div><p>لا توجد عروض حالياً</p><p style="font-size:10px;color:var(--t2)">ترقبوا عروضنا القادمة!</p></div>'}</div>`;
+}
+function openOfferModal(){
+  const ov=document.createElement('div');ov.className='ov v';ov.id='mOffer';
+  ov.innerHTML=`<div class="mb"><div class="md"></div>
+    <div class="mh"><div class="mt">🔥 إضافة عرض</div><button class="mc" onclick="document.getElementById('mOffer').remove()">✕</button></div>
+    <div class="fg"><label>عنوان العرض</label><input id="ofT" placeholder="مثال: خصم 30% على الأرز"></div>
+    <div class="fg"><label>الوصف</label><input id="ofD" placeholder="تفاصيل العرض..."></div>
+    <div class="fg"><label>السعر الجديد (ل.س)</label><input id="ofP" type="number"></div>
+    <div class="fg"><label>السعر القديم (ل.س) — اختياري</label><input id="ofOP" type="number" placeholder="لإظهار خط الشطب"></div>
+    <div class="fg"><label>ينتهي في (اختياري)</label><input id="ofE" type="date"></div>
+    <div class="mbtns"><button class="btn" style="background:linear-gradient(135deg,#ff4500,#ff6b35);color:#fff;flex:1;justify-content:center" onclick="saveOffer()">🔥 نشر العرض</button><button class="btn bgh" onclick="document.getElementById('mOffer').remove()">إلغاء</button></div>
+  </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+function saveOffer(){
+  const title=document.getElementById('ofT').value.trim(),desc=document.getElementById('ofD').value.trim();
+  const price=document.getElementById('ofP').value,oldPrice=document.getElementById('ofOP').value,expiry=document.getElementById('ofE').value;
+  if(!title||!price){toast('⚠️ العنوان والسعر مطلوبان','e');return;}
+  offers.unshift({id:Date.now(),title,desc,price,oldPrice,expiry,date:new Date().toLocaleString(),by:me.username});
+  _s('offers',offers);document.getElementById('mOffer')?.remove();renderOffers();toast('✅ تم نشر العرض');
+}
+function delOffer(id){if(confirm('حذف؟')){offers=offers.filter(o=>o.id!=id);_s('offers',offers);renderOffers();toast('🗑️ تم');}}
+
+// ══ SUPPLIERS / التجار ══
+function renderSuppliers(){
+  const el=document.getElementById('pSuppliers'); if(!el) return;
+  const isAdmin=me.role==='مدير عام';
+  if(!isAdmin){el.innerHTML='<div class="empty"><div class="ei">🔒</div><p>هذا القسم للمدير العام فقط</p></div>';return;}
+  const totDebt=suppliers.reduce((a,b)=>a+(b.totalDebt||0),0);
+  const totPaid=suppliers.reduce((a,b)=>a+(b.totalPaid||0),0);
+  const totRem=totDebt-totPaid;
+  el.innerHTML=`<div class="sec-hdr" style="background:linear-gradient(135deg,#1a2030,#2a3a5a)"><span class="sec-ico">🏭</span><span class="sec-txt">دفتر التجار والموردين</span></div>
+  <button class="btn bac bsm" style="margin-bottom:12px" onclick="openSupModal()">➕ إضافة تاجر</button>
+  <div class="sg" style="margin-bottom:12px">
+    <div class="st"><div class="sv" style="color:var(--red);font-size:20px">${totDebt.toLocaleString('ar-SY')}</div><div class="sl">💸 إجمالي الديون للتجار</div></div>
+    <div class="st"><div class="sv" style="color:var(--grn);font-size:20px">${totPaid.toLocaleString('ar-SY')}</div><div class="sl">✅ إجمالي المدفوع</div></div>
+    <div class="st" style="grid-column:1/-1"><div class="sv" style="color:var(--red);font-size:22px">${totRem.toLocaleString('ar-SY')} ل.س</div><div class="sl">🏦 إجمالي المتبقي للتجار</div></div>
+  </div>
+  ${suppliers.length?suppliers.map(s=>{
+    const rem=(s.totalDebt||0)-(s.totalPaid||0);
+    return `<div class="cd" style="border-right:5px solid ${rem>0?'var(--red)':'var(--grn)'}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div><div style="font-size:14px;font-weight:900">🏭 ${s.name}</div><div style="font-size:10px;color:var(--t2)">${s.phone||''}${s.desc?' | '+s.desc:''}</div></div>
+        <div style="text-align:left">
+          <div style="font-size:16px;font-weight:900;color:${rem>0?'var(--red)':'var(--grn)'}">${rem.toLocaleString()}</div>
+          <div style="font-size:8px;color:var(--t2)">ل.س متبقي</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:9px">
+        <div style="background:rgba(239,68,68,.1);border-radius:8px;padding:7px;text-align:center"><div style="font-size:8px;color:var(--t2)">📦 إجمالي الدين</div><div style="font-weight:800;color:var(--red)">${(s.totalDebt||0).toLocaleString()}</div></div>
+        <div style="background:rgba(34,197,94,.1);border-radius:8px;padding:7px;text-align:center"><div style="font-size:8px;color:var(--t2)">✅ المدفوع</div><div style="font-weight:800;color:var(--grn)">${(s.totalPaid||0).toLocaleString()}</div></div>
+        <div style="background:rgba(59,130,246,.1);border-radius:8px;padding:7px;text-align:center"><div style="font-size:8px;color:var(--t2)">🏦 المتبقي</div><div style="font-weight:800;color:${rem>0?'var(--red)':'var(--grn)'}">${rem.toLocaleString()}</div></div>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <button class="btn bac bsm" onclick="addSupDebt(${s.id})">➕ إضافة دين</button>
+        <button class="btn bgn bsm" onclick="addSupPay(${s.id})">💵 تسجيل دفعة</button>
+        <button class="btn brd bsm" onclick="delSup(${s.id})">🗑️</button>
+        ${s.phone?`<button class="btn bsm" style="background:#25d366;color:#fff" onclick="window.open('https://wa.me/+${(s.phone||'').replace(/\D/g,'')}','_blank')">💬</button>`:''}
+      </div>
+      ${(s.log||[]).length?`<div style="margin-top:8px;max-height:100px;overflow-y:auto">${(s.log||[]).slice(0,5).map(l=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd);font-size:9px"><span style="color:var(--t2)">${l.date} — ${l.desc}</span><span style="font-weight:800;color:${l.type==='debt'?'var(--red)':'var(--grn)'}">${l.type==='debt'?'+':'-'}${(l.amount||0).toLocaleString()}</span></div>`).join('')}</div>`:''}
+    </div>`;
+  }).join(''):'<div class="empty"><div class="ei">🏭</div><p>لا يوجد تجار مسجلون</p></div>'}`;
+}
+function openSupModal(){
+  const ov=document.createElement('div');ov.className='ov v';ov.id='mSup';
+  ov.innerHTML=`<div class="mb"><div class="md"></div>
+    <div class="mh"><div class="mt">🏭 إضافة تاجر</div><button class="mc" onclick="document.getElementById('mSup').remove()">✕</button></div>
+    <div class="fg"><label>اسم التاجر / المورد</label><input id="supN" placeholder="مثال: تاجر المواد الغذائية"></div>
+    <div class="fg"><label>رقم الهاتف</label><input id="supPh" type="tel"></div>
+    <div class="fg"><label>ملاحظات</label><input id="supD" placeholder="نوع البضاعة..."></div>
+    <div class="mbtns"><button class="btn bac" onclick="saveSup()">💾 حفظ</button><button class="btn bgh" onclick="document.getElementById('mSup').remove()">إلغاء</button></div>
+  </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+function saveSup(){
+  const name=document.getElementById('supN').value.trim(),phone=document.getElementById('supPh').value.trim(),desc=document.getElementById('supD').value.trim();
+  if(!name){toast('⚠️ الاسم مطلوب','e');return;}
+  suppliers.push({id:Date.now(),name,phone,desc,totalDebt:0,totalPaid:0,log:[]});
+  _s('suppliers',suppliers);document.getElementById('mSup')?.remove();renderSuppliers();toast('✅ تمت الإضافة');
+}
+function addSupDebt(id){
+  const amount=parseFloat(prompt('مبلغ الدين للتاجر (ل.س):'));
+  const desc=prompt('البيان / نوع البضاعة:','بضاعة');
+  if(!amount||isNaN(amount)) return;
+  const s=suppliers.find(x=>x.id==id);if(!s)return;
+  s.totalDebt=(s.totalDebt||0)+amount;
+  s.log=s.log||[];
+  s.log.unshift({type:'debt',amount,desc:desc||'بضاعة',date:new Date().toLocaleDateString('ar-SY')});
+  _s('suppliers',suppliers);renderSuppliers();toast('✅ تم تسجيل الدين');
+}
+function addSupPay(id){
+  const amount=parseFloat(prompt('مبلغ الدفعة للتاجر (ل.س):'));
+  const desc=prompt('البيان:','دفعة');
+  if(!amount||isNaN(amount)) return;
+  const s=suppliers.find(x=>x.id==id);if(!s)return;
+  s.totalPaid=(s.totalPaid||0)+amount;
+  s.log=s.log||[];
+  s.log.unshift({type:'pay',amount,desc:desc||'دفعة',date:new Date().toLocaleDateString('ar-SY')});
+  _s('suppliers',suppliers);renderSuppliers();toast('✅ تم تسجيل الدفعة');
+}
+function delSup(id){if(confirm('حذف؟')){suppliers=suppliers.filter(s=>s.id!=id);_s('suppliers',suppliers);renderSuppliers();toast('🗑️ تم');}}
+
+// ══ DEBT PARTIAL PAYMENT ══
+function partialPay(id){
+  const d=debts.find(x=>x.id===id);if(!d)return;
+  const remaining=d.amount-(d.paid_amount||0);
+  const amount=parseFloat(prompt(`المتبقي: ${remaining.toLocaleString()} ل.س\nأدخل مبلغ الدفعة:`,remaining));
+  if(!amount||isNaN(amount)||amount<=0) return;
+  const newPaid=(d.paid_amount||0)+amount;
+  d.paid_amount=newPaid;
+  if(newPaid>=d.amount) d.paid=true;
+  d.payments=d.payments||[];
+  d.payments.push({amount,date:new Date().toLocaleDateString('ar-SY')});
+  _s('debts',debts);filterD();
+  toast(newPaid>=d.amount?'✅ تم السداد الكامل':`✅ تم تسجيل الدفعة — متبقي: ${(d.amount-newPaid).toLocaleString()} ل.س`);
+}
+
+// ══ REPORTS — PERIOD FILTER ══
+const _origRep = typeof applyRep !== 'undefined' ? applyRep : null;
+
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('v')}));
+// ══ OFFLINE / PWA ══
+// PWA offline: data stored in localStorage - works offline automatically
+// ══ NETWORK STATUS ══
+function checkNet(){
+  const offline=!navigator.onLine;
+  if(offline) toast('📴 بدون إنترنت — التطبيق يعمل محلياً','msg');
+  else toast('🌐 اتصال الإنترنت متاح','k');
+}
+window.addEventListener('offline',()=>toast('📴 انقطع الإنترنت — البيانات محفوظة محلياً','msg'));
+window.addEventListener('online',()=>toast('🌐 عاد الإنترنت — جاري التزامن...','k'));
+
 updateCartBdg();
 if(logo)updateLogos();
 if(tgLink){const b=document.getElementById('contactTGBtn');if(b)b.style.display='flex';}
